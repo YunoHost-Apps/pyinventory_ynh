@@ -51,8 +51,8 @@ ynh_psql_remove_db --db_user=$db_user --db_name=$db_name
 ##=================================================
 ## REMOVE REDIS DB
 ##=================================================
-#
-#ynh_redis_remove_db
+
+ynh_redis_remove_db
 
 #=================================================
 # REMOVE DEPENDENCIES

@@ -1,10 +1,9 @@
 #!/bin/bash
 
 #=================================================
-# GENERIC START
-#=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
+
 source _common.sh
 source /usr/share/yunohost/helpers
 
@@ -13,18 +12,17 @@ source /usr/share/yunohost/helpers
 #=================================================
 ynh_script_progression --message="Loading installation settings..."
 
+domain=$(ynh_app_setting_get --app="$app" --key=domain)
 path_url=$(ynh_app_setting_get --app="$app" --key=path)
+admin=$(ynh_app_setting_get --app="$app" --key=admin)
 is_public=$(ynh_app_setting_get --app="$app" --key=is_public)
 public_path=$(ynh_app_setting_get --app="$app" --key=public_path)
 final_path=$(ynh_app_setting_get --app="$app" --key=final_path)
-db_name=$(ynh_app_setting_get --app="$app" --key=db_name)
-db_user=$db_name
-domain=$(ynh_app_setting_get --app="$app" --key=domain)
+log_path=$(ynh_app_setting_get --app="$app" --key=log_path)
+
 db_pwd=$(ynh_app_setting_get --app="$app" --key=psqlpwd)
-admin=$(ynh_app_setting_get --app="$app" --key=admin)
 admin_mail=$(ynh_user_get_info "$admin" mail)
-key=$(ynh_string_random 50)
-#redis_db=$(ynh_app_setting_get --app="$app" --key=redis_db)
+redis_db=$(ynh_app_setting_get --app="$app" --key=redis_db)
 
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
@@ -41,25 +39,6 @@ ynh_clean_setup () {
 ynh_abort_if_errors
 
 #=================================================
-# ENSURE DOWNWARD COMPATIBILITY
-#=================================================
-ynh_script_progression --message="Ensuring downward compatibility..."
-
-# Fix is_public as a boolean value
-if [ "$is_public" = "Yes" ]; then
-	ynh_app_setting_set --app=$app --key=is_public --value=1
-	is_public=1
-elif [ "$is_public" = "No" ]; then
-	ynh_app_setting_set --app=$app --key=is_public --value=0
-	is_public=0
-fi
-
-if [[ -d "$final_path/bin/" ]]
-then
-	ynh_secure_remove --file="$final_path/bin/"
-fi
-
-#=================================================
 # STANDARD UPGRADE STEPS
 #=================================================
 # STOP SYSTEMD SERVICE
@@ -74,7 +53,8 @@ ynh_systemd_action --service_name="$app" --action="stop"
 ynh_script_progression --message="Upgrading nginx web server configuration..."
 
 # Create a dedicated nginx config
-ynh_add_nginx_config
+# https://github.com/YunoHost/yunohost/blob/dev/data/helpers.d/nginx
+ynh_add_nginx_config "public_path" "port"
 
 #=================================================
 # SPECIFIC UPGRADE
@@ -104,94 +84,84 @@ ynh_add_systemd_config --service="$app" --template="pyinventory.service"
 # UPGRADE PYINVENTORY
 #=================================================
 
-upgrade() {
-	new_version=$1
-	settings_template=$2
-	#=================================================
-	# PIP INSTALLATION
-	#=================================================
-	ynh_script_progression --message="Install pyinventory using PIP..." --weight=15
+ynh_script_progression --message="Install pyinventory using PIP..." --weight=15
 
-	virtualenv --python=python3 "${final_path}/venv"
-	chown -R "$app": "$final_path/venv"
+virtualenv --python=python3 "${final_path}/venv"
+sudo chown -R "$app" "$final_path"
 
-	#run source in a 'sub shell'
-	(
-		set +o nounset
-		source "${final_path}/venv/bin/activate"
-		set -o nounset
-		sudo -u $app $final_path/venv/bin/pip install --upgrade pip
-		sudo -u $app $final_path/venv/bin/pip install --upgrade setuptools wheel psycopg2-binary
-		sudo -u $app $final_path/venv/bin/pip install --upgrade pyinventory=="$new_version"
-	)
+#run source in a 'sub shell'
+(
+  set +o nounset
+  source "${final_path}/venv/bin/activate"
+  set -o nounset
+  sudo -u $app $final_path/venv/bin/pip install --upgrade pip
+  sudo -u $app $final_path/venv/bin/pip install --upgrade setuptools wheel psycopg2-binary
+  sudo -u $app $final_path/venv/bin/pip install --upgrade pyinventory=="$pyinventory_version"
+)
 
-	#=================================================
-	# MODIFY A CONFIG FILE
-	#=================================================
-	ynh_script_progression --message="Create pyinventory configuration file..."
+#=================================================
+# copy config files
+# ================================================
+ynh_script_progression --message="Create pyinventory configuration file..."
 
-  ynh_backup_if_checksum_is_different --file="$final_path/wsgi.py"
-  cp ../conf/wsgi.py "$final_path/wsgi.py"
+gunicorn_conf="$final_path/gunicorn.conf.py"
+ynh_backup_if_checksum_is_different --file="$gunicorn_conf"
+cp "../conf/gunicorn.conf.py" "$gunicorn_conf"
+ynh_replace_string --match_string="__FINAL_HOME_PATH__" --replace_string="$final_path" --target_file="$gunicorn_conf"
+ynh_replace_string --match_string="__LOG_FILE__" --replace_string="$log_file" --target_file="$gunicorn_conf"
+ynh_replace_string --match_string="__PORT__" --replace_string="$port" --target_file="$gunicorn_conf"
+ynh_store_file_checksum --file="$gunicorn_conf"
 
-  ynh_backup_if_checksum_is_different --file="$final_path/manage.py"
-  cp ../conf/wsgi.py "$final_path/manage.py"
-  chmod +x "$final_path/manage.py"
+ynh_backup_if_checksum_is_different --file="$final_path/manage.py"
+cp ../conf/manage.py "$final_path/manage.py"
+chmod +x "$final_path/manage.py"
 
-	# save old settings file
-  settings="$final_path/ynh_pyinventory_settings.py"
+ynh_backup_if_checksum_is_different --file="$final_path/wsgi.py"
+cp ../conf/wsgi.py "$final_path/wsgi.py"
 
-	ynh_backup_if_checksum_is_different --file="$settings"
-	cp "$settings_template" "$settings"
+# save old settings file
+settings="$final_path/ynh_pyinventory_settings.py"
+ynh_backup_if_checksum_is_different --file="$settings"
 
-	ynh_replace_string --match_string="__APP__" --replace_string="$app" --target_file="$settings"
-	ynh_replace_string --match_string="__DB_PWD__" --replace_string="$db_pwd" --target_file="$settings"
-	ynh_replace_string --match_string="__ADMIN__" --replace_string="$admin" --target_file="$settings"
-	ynh_replace_string --match_string="__ADMINMAIL__" --replace_string="$admin_mail" --target_file="$settings"
-	ynh_replace_string --match_string="__DOMAIN__" --replace_string="$domain" --target_file="$settings"
-	ynh_replace_string --match_string="__KEY__" --replace_string="$key" --target_file="$settings"
-	ynh_replace_string --match_string="__FINAL_HOME_PATH__" --replace_string="$final_path" --target_file="$settings"
-  ynh_replace_string --match_string="__FINAL_WWW_PATH__" --replace_string="$public_path" --target_file="$settings"
-	ynh_replace_string --match_string="__PYTHON_VERSION__" --replace_string="$python_version" --target_file="$settings"
+cp "../conf/ynh_pyinventory_settings.py" "$settings"
 
-	# remove last "/" of $path_url
-	ynh_replace_string --match_string="__PATHURL__" --replace_string="${path_url%/}" --target_file="$settings"
+ynh_replace_string --match_string="__APP__" --replace_string="$app" --target_file="$settings"
+ynh_replace_string --match_string="__DB_PWD__" --replace_string="$db_pwd" --target_file="$settings"
+ynh_replace_string --match_string="__ADMIN__" --replace_string="$admin" --target_file="$settings"
+ynh_replace_string --match_string="__ADMINMAIL__" --replace_string="$admin_mail" --target_file="$settings"
+ynh_replace_string --match_string="__DOMAIN__" --replace_string="$domain" --target_file="$settings"
+ynh_replace_string --match_string="__FINAL_HOME_PATH__" --replace_string="$final_path" --target_file="$settings"
+ynh_replace_string --match_string="__FINAL_WWW_PATH__" --replace_string="$public_path" --target_file="$settings"
+ynh_replace_string --match_string="__LOG_FILE__" --replace_string="$log_file" --target_file="$settings"
+ynh_replace_string --match_string="__REDIS_DB__" --replace_string="$redis_db" --target_file="$settings"
 
-	# Recalculate and store the config file checksum into the app settings
-	ynh_store_file_checksum --file="$settings"
+# Recalculate and store the config file checksum into the app settings
+ynh_store_file_checksum --file="$settings"
 
-	touch "$final_path/local_settings.py"
+touch "$final_path/local_settings.py"
 
-	#=================================================
-	# MIGRATE PYINVENTORY
-	#=================================================
-	ynh_script_progression --message="Run migration scripts..." --weight=10
+#=================================================
+# MIGRATE PYINVENTORY
+#=================================================
+ynh_script_progression --message="migrate/collectstatic/createadmin..." --weight=10
 
-	(
-		set +o nounset
-		source "${final_path}/venv/bin/activate"
-		set -o nounset
-		cd "${final_path}"
+(
+	set +o nounset
+	source "${final_path}/venv/bin/activate"
+	set -o nounset
+	cd "${final_path}"
 
-		./manage.py migrate --noinput
-		./manage.py collectstatic --noinput
-		
-		# Check the configuration
-		# This may fail in some cases with errors, etc., but the app works and the user can fix issues later.
-		if [ "$new_version" == "$pyinventory_version" ]; then
-			./manage.py check --deploy || true
-		fi
-	)
-}
+  # Just for debugging:
+  ./manage.py diffsettings
 
-file_version="${final_path}/venv/lib/python$python_version/site-packages/pyinventory/__init__.py"
-if [ -e $file_version ]
-then
-	current_version=$(cat $file_version | grep "^VERSION = " | grep -o "[0-9].[0-9]" | head -n1 | cut -d"." -f1)
-else
-	current_version=3
-fi
+	./manage.py migrate --no-input
+	./manage.py collectstatic --no-input
+	echo "from django.contrib.auth import get_user_model; get_user_model().objects.create_superuser('$admin', '$admin_mail', 'pyinventory')" | ./manage.py shell
 
-upgrade $pyinventory_version "../conf/ynh_pyinventory_settings.py"
+	# Check the configuration
+	# This may fail in some cases with errors, etc., but the app works and the user can fix issues later.
+	./manage.py check --deploy || true
+)
 
 #=================================================
 # SETUP LOGROTATE
@@ -206,7 +176,7 @@ ynh_use_logrotate --non-append
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..."
 
-yunohost service add "$app" --log "/var/log/$app/pyinventory.log"
+yunohost service add "$app" --log "${log_file}"
 
 #=================================================
 # GENERIC FINALIZATION
@@ -214,15 +184,10 @@ yunohost service add "$app" --log "/var/log/$app/pyinventory.log"
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
-# Set right permissions for curl installation
-chown -R "$app": "$final_path"
-
-#=================================================
-# START SYSTEMD SERVICES
-#=================================================
-ynh_script_progression --message="Starting systemd services..." --weight=5
-
-ynh_systemd_action --service_name="$app" --action="start"
+# Set permissions to app files
+sudo chown -R "$app" "$log_path"
+sudo chown -R "$app" "$public_path"
+sudo chown -R "$app" "$final_path"
 
 #=================================================
 # SETUP SSOWAT
@@ -235,6 +200,13 @@ then
 	# unprotected_uris allows SSO credentials to be passed anyway.
 	ynh_app_setting_set --app="$app" --key=unprotected_uris --value="/"
 fi
+
+#=================================================
+# Start pyinventory via systemd
+#=================================================
+ynh_script_progression --message="Starting PyInventory's services..." --weight=5
+
+ynh_systemd_action --service_name="$app" --action="start"
 
 #=================================================
 # RELOAD NGINX

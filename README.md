@@ -48,9 +48,56 @@ Developer info
 
 Please send your pull request to https://github.com/jedie/pyinventory_ynh
 
-Try e.g.:
-```
+Try 'main' branch, e.g.:
+```bash
 sudo yunohost app install https://github.com/jedie/pyinventory_ynh/tree/main --debug
 or
 sudo yunohost app upgrade pyinventory -u https://github.com/jedie/pyinventory_ynh/tree/main --debug
+```
+
+Try 'testing' branch, e.g.:
+```bash
+sudo yunohost app install https://github.com/jedie/pyinventory_ynh/tree/testing --debug
+or
+sudo yunohost app upgrade pyinventory -u https://github.com/jedie/pyinventory_ynh/tree/testing --debug
+```
+
+To remove call e.g.:
+```bash
+sudo yunohost app remove pyinventory
+```
+
+Debug installation, e.g.:
+```bash
+root@yunohost:~# ls -la /var/www/pyinventory/
+total 18
+drwxr-xr-x 4 root root 4 Dec  8 08:36 .
+drwxr-xr-x 6 root root 6 Dec  8 08:36 ..
+drwxr-xr-x 2 root root 2 Dec  8 08:36 media
+drwxr-xr-x 7 root root 8 Dec  8 08:40 static
+
+root@yunohost:~# ls -la /opt/yunohost/pyinventory/
+total 58
+drwxr-xr-x 5 pyinventory pyinventory   11 Dec  8 08:39 .
+drwxr-xr-x 3 root        root           3 Dec  8 08:36 ..
+-rw-r--r-- 1 pyinventory pyinventory  460 Dec  8 08:39 gunicorn.conf.py
+-rw-r--r-- 1 pyinventory pyinventory    0 Dec  8 08:39 local_settings.py
+-rwxr-xr-x 1 pyinventory pyinventory  274 Dec  8 08:39 manage.py
+-rw-r--r-- 1 pyinventory pyinventory  171 Dec  8 08:39 secret.txt
+drwxr-xr-x 6 pyinventory pyinventory    6 Dec  8 08:37 venv
+-rw-r--r-- 1 pyinventory pyinventory  115 Dec  8 08:39 wsgi.py
+-rw-r--r-- 1 pyinventory pyinventory 4737 Dec  8 08:39 ynh_pyinventory_settings.py
+
+root@yunohost:~# cd /opt/yunohost/pyinventory/
+root@yunohost:/opt/yunohost/pyinventory# source venv/bin/activate
+(venv) root@yunohost:/opt/yunohost/pyinventory# ./manage.py check
+PyInventory v0.8.1rc1 (Django v2.2.17)
+DJANGO_SETTINGS_MODULE='ynh_pyinventory_settings'
+PROJECT_PATH:/opt/yunohost/pyinventory/venv/lib/python3.7/site-packages
+BASE_PATH:/opt/yunohost/pyinventory
+System check identified no issues (0 silenced).
+
+root@yunohost:~# tail -f /var/log/pyinventory/pyinventory.log
+root@yunohost:~# cat /etc/systemd/system/pyinventory.service
+root@yunohost:~# ynh_systemd_action --service_name="pyinventory" --action="restart"
 ```

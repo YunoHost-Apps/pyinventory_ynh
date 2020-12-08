@@ -8,7 +8,7 @@
 
 ################################################################################
 ################################################################################
-from logging.handlers import SysLogHandler
+
 from pathlib import Path as __Path
 
 from inventory_project.settings.base import *  # noqa
@@ -17,8 +17,14 @@ DEBUG = False
 
 # -----------------------------------------------------------------------------
 
-FINAL_HOME_PATH = '__FINAL_HOME_PATH__'
-FINAL_WWW_PATH = '__FINAL_WWW_PATH__'
+FINAL_HOME_PATH = __Path('__FINAL_HOME_PATH__')
+assert FINAL_HOME_PATH.is_dir(), f'Directory not exists: {FINAL_HOME_PATH}'
+
+FINAL_WWW_PATH = __Path('__FINAL_WWW_PATH__')
+assert FINAL_WWW_PATH.is_dir(), f'Directory not exists: {FINAL_WWW_PATH}'
+
+LOG_FILE = __Path('__LOG_FILE__')
+assert LOG_FILE.is_file(), f'File not exists: {LOG_FILE}'
 
 # -----------------------------------------------------------------------------
 
@@ -27,8 +33,6 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
-
-SECRET_KEY = '__KEY__'
 
 DATABASES = {
     'default': {
@@ -62,7 +66,6 @@ DEFAULT_FROM_EMAIL = '__ADMINMAIL__'
 # List of URLs your site is supposed to serve
 ALLOWED_HOSTS = ['__DOMAIN__']
 
-
 # _____________________________________________________________________________
 # Configuration for caching
 CACHES = {
@@ -86,10 +89,10 @@ CACHES = {
 # Static files (CSS, JavaScript, Images)
 
 STATIC_URL = '/static/'
-STATIC_ROOT = str(__Path(FINAL_WWW_PATH, 'static'))
+STATIC_ROOT = str(FINAL_WWW_PATH / 'static')
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = str(__Path(FINAL_WWW_PATH, 'media'))
+MEDIA_ROOT = str(FINAL_WWW_PATH / 'media')
 
 # -----------------------------------------------------------------------------
 
@@ -111,18 +114,17 @@ LOGGING = {
         },
         'syslog': {
             'level': 'DEBUG',
-            'class': 'logging.handlers.SysLogHandler',
+            'class': 'logging.handlers.WatchedFileHandler',
             'formatter': 'verbose',
-            'address': '/dev/log',
-            'facility': SysLogHandler.LOG_LOCAL2,
+            'filename': str(LOG_FILE),
         },
     },
     'loggers': {
-        '': {'handlers': ['syslog', 'mail_admins'], 'level': 'DEBUG', 'propagate': False},
+        '': {'handlers': ['syslog', 'mail_admins'], 'level': 'INFO', 'propagate': False},
         'django': {'handlers': ['syslog', 'mail_admins'], 'level': 'INFO', 'propagate': False},
         'axes': {'handlers': ['syslog', 'mail_admins'], 'level': 'WARNING', 'propagate': False},
         'django_tools': {'handlers': ['syslog', 'mail_admins'], 'level': 'INFO', 'propagate': False},
-        'inventory': {'handlers': ['syslog', 'mail_admins'], 'level': 'DEBUG', 'propagate': False},
+        'inventory': {'handlers': ['syslog', 'mail_admins'], 'level': 'INFO', 'propagate': False},
     },
 }
 
