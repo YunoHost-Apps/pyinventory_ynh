@@ -120,6 +120,9 @@ chown -R "$app" "$final_path"
 # ================================================
 ynh_script_progression --message="Create pyinventory configuration file..."
 
+cp ../conf/create_superuser.py "$final_path/create_superuser.py"
+chmod +x "$final_path/create_superuser.py"
+
 gunicorn_conf="$final_path/gunicorn.conf.py"
 cp "../conf/gunicorn.conf.py" "$gunicorn_conf"
 ynh_replace_string --match_string="__FINAL_HOME_PATH__" --replace_string="$final_path" --target_file="$gunicorn_conf"
@@ -171,7 +174,7 @@ ynh_script_progression --message="migrate/collectstatic/createadmin..." --weight
 
 	./manage.py migrate --no-input
 	./manage.py collectstatic --no-input
-	echo "from django.contrib.auth import get_user_model; get_user_model().objects.create_superuser('$admin', '$admin_mail', 'pyinventory')" | ./manage.py shell
+	./create_superuser.py --username="$admin" --email="$admin_mail" --password="pyinventory"
 
 	# Check the configuration
 	# This may fail in some cases with errors, etc., but the app works and the user can fix issues later.
