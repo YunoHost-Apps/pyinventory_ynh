@@ -102,7 +102,7 @@ systemctl enable $app.service --quiet
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..."
 
-yunohost service add "$app" --log="${log_file}"
+yunohost service add $app --description="Web based management to catalog things" --log="${log_file}"
 
 #=================================================
 # RESTORE THE LOGROTATE CONFIGURATION
