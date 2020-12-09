@@ -180,7 +180,7 @@ ynh_use_logrotate --non-append
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..."
 
-yunohost service add "$app" --log "${log_file}"
+yunohost service add "$app" --log="${log_file}"
 
 #=================================================
 # GENERIC FINALIZATION
@@ -189,9 +189,9 @@ yunohost service add "$app" --log "${log_file}"
 #=================================================
 
 # Set permissions to app files
-sudo chown -R "$app" "$log_path"
-sudo chown -R "$app" "$public_path"
-sudo chown -R "$app" "$final_path"
+chown -R "$app" "$log_path"
+chown -R "$app" "$public_path"
+chown -R "$app" "$final_path"
 
 #=================================================
 # SETUP SSOWAT

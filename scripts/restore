@@ -102,7 +102,7 @@ systemctl enable $app.service --quiet
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..."
 
-yunohost service add "$app" --log "/var/log/$app/pyinventory.log"
+yunohost service add "$app" --log="${log_file}"
 
 #=================================================
 # RESTORE THE LOGROTATE CONFIGURATION
