@@ -92,7 +92,7 @@ drwxr-xr-x 6 pyinventory pyinventory    6 Dec  8 08:37 venv
 root@yunohost:~# cd /opt/yunohost/pyinventory/
 root@yunohost:/opt/yunohost/pyinventory# source venv/bin/activate
 (venv) root@yunohost:/opt/yunohost/pyinventory# ./manage.py check
-PyInventory v0.8.1rc2 (Django v2.2.17)
+PyInventory v0.8.1 (Django v2.2.17)
 DJANGO_SETTINGS_MODULE='ynh_pyinventory_settings'
 PROJECT_PATH:/opt/yunohost/pyinventory/venv/lib/python3.7/site-packages
 BASE_PATH:/opt/yunohost/pyinventory
