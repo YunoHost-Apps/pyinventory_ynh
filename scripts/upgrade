@@ -95,9 +95,9 @@ sudo chown -R "$app" "$final_path"
   set +o nounset
   source "${final_path}/venv/bin/activate"
   set -o nounset
-  sudo -u $app $final_path/venv/bin/pip install --upgrade pip
-  sudo -u $app $final_path/venv/bin/pip install --upgrade setuptools wheel psycopg2-binary
-  sudo -u $app $final_path/venv/bin/pip install --upgrade pyinventory=="$pyinventory_version"
+  ynh_exec_as $app $final_path/venv/bin/pip install --upgrade pip
+  ynh_exec_as $app $final_path/venv/bin/pip install --upgrade setuptools wheel psycopg2-binary
+  ynh_exec_as $app $final_path/venv/bin/pip install --upgrade pyinventory=="$pyinventory_version"
 )
 
 #=================================================
