@@ -88,16 +88,16 @@ ynh_add_systemd_config --service="$app" --template="pyinventory.service"
 ynh_script_progression --message="Install pyinventory using PIP..." --weight=15
 
 virtualenv --python=python3 "${final_path}/venv"
-sudo chown -R "$app" "$final_path"
+chown -R "$app" "$final_path"
 
 #run source in a 'sub shell'
 (
   set +o nounset
   source "${final_path}/venv/bin/activate"
   set -o nounset
-  sudo -u $app $final_path/venv/bin/pip install --upgrade pip
-  sudo -u $app $final_path/venv/bin/pip install --upgrade setuptools wheel psycopg2-binary
-  sudo -u $app $final_path/venv/bin/pip install --upgrade pyinventory=="$pyinventory_version"
+  ynh_exec_as $app $final_path/venv/bin/pip install --upgrade pip
+  ynh_exec_as $app $final_path/venv/bin/pip install --upgrade setuptools wheel psycopg2-binary
+  ynh_exec_as $app $final_path/venv/bin/pip install --upgrade pyinventory=="$pyinventory_version"
 )
 
 #=================================================
@@ -180,7 +180,7 @@ ynh_use_logrotate --non-append
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..."
 
-yunohost service add "$app" --log "${log_file}"
+yunohost service add $app --description="Web based management to catalog things" --log="${log_file}"
 
 #=================================================
 # GENERIC FINALIZATION
@@ -189,21 +189,9 @@ yunohost service add "$app" --log "${log_file}"
 #=================================================
 
 # Set permissions to app files
-sudo chown -R "$app" "$log_path"
-sudo chown -R "$app" "$public_path"
-sudo chown -R "$app" "$final_path"
-
-#=================================================
-# SETUP SSOWAT
-#=================================================
-ynh_script_progression --message="Upgrading SSOwat configuration..."
-
-# Make app public if necessary
-if [ "$is_public" -eq 1 ]
-then
-	# unprotected_uris allows SSO credentials to be passed anyway.
-	ynh_app_setting_set --app="$app" --key=unprotected_uris --value="/"
-fi
+chown -R "$app" "$log_path"
+chown -R "$app" "$public_path"
+chown -R "$app" "$final_path"
 
 #=================================================
 # Start pyinventory via systemd

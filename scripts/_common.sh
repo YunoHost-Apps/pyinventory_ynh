@@ -72,3 +72,18 @@ ynh_redis_remove_db() {
 	local db=$1
 	redis-cli -n "$db" flushall
 }
+
+#=================================================
+
+# Execute a command as another user
+# usage: ynh_exec_as USER COMMAND [ARG ...]
+ynh_exec_as() {
+  local USER=$1
+  shift 1
+
+  if [[ $USER = $(whoami) ]]; then
+    eval "$@"
+  else
+    sudo -u "$USER" "$@"
+  fi
+}
