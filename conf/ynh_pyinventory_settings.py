@@ -28,6 +28,10 @@ assert LOG_FILE.is_file(), f'File not exists: {LOG_FILE}'
 
 # -----------------------------------------------------------------------------
 
+ROOT_URLCONF = 'ynh_urls'  # /opt/yunohost/pyinventory/ynh_urls.py
+
+# -----------------------------------------------------------------------------
+
 ADMINS = (
     ('__ADMIN__', '__ADMINMAIL__'),
 )

@@ -5,7 +5,7 @@
 #=================================================
 
 domain=$YNH_APP_ARG_DOMAIN
-path_url="/"
+path_url=$YNH_APP_ARG_PATH
 admin=$YNH_APP_ARG_ADMIN
 is_public=$YNH_APP_ARG_IS_PUBLIC
 app=$YNH_APP_INSTANCE_NAME
@@ -28,7 +28,7 @@ pkg_dependencies="build-essential python3-dev python3-pip python3-virtualenv vir
 	postgresql postgresql-contrib"
 
 # PyInventory's version for PIP and settings file
-pyinventory_version="0.8.1rc1"
+pyinventory_version="0.8.1rc2"
 
 
 #=================================================

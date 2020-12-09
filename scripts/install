@@ -125,6 +125,7 @@ cp "../conf/gunicorn.conf.py" "$gunicorn_conf"
 ynh_replace_string --match_string="__FINAL_HOME_PATH__" --replace_string="$final_path" --target_file="$gunicorn_conf"
 ynh_replace_string --match_string="__LOG_FILE__" --replace_string="$log_file" --target_file="$gunicorn_conf"
 ynh_replace_string --match_string="__PORT__" --replace_string="$port" --target_file="$gunicorn_conf"
+ynh_store_file_checksum --file="$gunicorn_conf"
 
 cp ../conf/manage.py "$final_path/manage.py"
 chmod +x "$final_path/manage.py"
@@ -150,6 +151,11 @@ ynh_store_file_checksum --file="$settings"
 ynh_app_setting_set --app="$app" --key=redis_db --value="$redis_db"
 
 touch "$final_path/local_settings.py"
+
+ynh_urls="$final_path/ynh_urls.py"
+cp "../conf/ynh_urls.py" "$ynh_urls"
+ynh_replace_string --match_string="__PATH_URL__" --replace_string="$path_url" --target_file="$ynh_urls"
+ynh_store_file_checksum --file="$ynh_urls"
 
 #=================================================
 # MIGRATE / COLLECTSTATIC / CREATEADMIN

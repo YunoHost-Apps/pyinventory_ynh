@@ -140,6 +140,12 @@ ynh_store_file_checksum --file="$settings"
 
 touch "$final_path/local_settings.py"
 
+ynh_urls="$final_path/ynh_urls.py"
+ynh_backup_if_checksum_is_different --file="$ynh_urls"
+cp "../conf/ynh_urls.py" "$ynh_urls"
+ynh_replace_string --match_string="__PATH_URL__" --replace_string="$path_url" --target_file="$ynh_urls"
+ynh_store_file_checksum --file="$ynh_urls"
+
 #=================================================
 # MIGRATE PYINVENTORY
 #=================================================

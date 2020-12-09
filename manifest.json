@@ -5,7 +5,7 @@
 	"description": {
 		"en": "Web based management to catalog things including state and location etc."
 	},
-	"version": "0.8.1rc1~ynh2",
+	"version": "0.8.1rc2~ynh1",
 	"url": "https://github.com/jedie/PyInventory",
 	"license": "GPL-3.0",
 	"maintainer": {
@@ -30,6 +30,16 @@
 					"fr": "Choisissez un domaine pour PyInventory"
 				},
 				"example": "domain.org"
+			},
+			{
+				"name": "path",
+				"type": "path",
+				"ask": {
+				    "en": "Choose a path for PyInventory",
+				    "fr": "Choisissez un chemin pour PyInventory"
+				},
+				"example": "/pyinventory",
+				"default": "/pyinventory"
 			},
 			{
 				"name": "admin",
