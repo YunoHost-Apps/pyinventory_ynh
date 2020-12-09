@@ -132,6 +132,7 @@ ynh_replace_string --match_string="__ADMINMAIL__" --replace_string="$admin_mail"
 ynh_replace_string --match_string="__DOMAIN__" --replace_string="$domain" --target_file="$settings"
 ynh_replace_string --match_string="__FINAL_HOME_PATH__" --replace_string="$final_path" --target_file="$settings"
 ynh_replace_string --match_string="__FINAL_WWW_PATH__" --replace_string="$public_path" --target_file="$settings"
+ynh_replace_string --match_string="__PATH_URL__" --replace_string="$path_url" --target_file="$settings"
 ynh_replace_string --match_string="__LOG_FILE__" --replace_string="$log_file" --target_file="$settings"
 ynh_replace_string --match_string="__REDIS_DB__" --replace_string="$redis_db" --target_file="$settings"
 
@@ -140,11 +141,7 @@ ynh_store_file_checksum --file="$settings"
 
 touch "$final_path/local_settings.py"
 
-ynh_urls="$final_path/ynh_urls.py"
-ynh_backup_if_checksum_is_different --file="$ynh_urls"
-cp "../conf/ynh_urls.py" "$ynh_urls"
-ynh_replace_string --match_string="__PATH_URL__" --replace_string="$path_url" --target_file="$ynh_urls"
-ynh_store_file_checksum --file="$ynh_urls"
+cp "../conf/ynh_urls.py" "$final_path/ynh_urls.py"
 
 #=================================================
 # MIGRATE PYINVENTORY
