@@ -88,7 +88,7 @@ ynh_add_systemd_config --service="$app" --template="pyinventory.service"
 ynh_script_progression --message="Install pyinventory using PIP..." --weight=15
 
 virtualenv --python=python3 "${final_path}/venv"
-sudo chown -R "$app" "$final_path"
+chown -R "$app" "$final_path"
 
 #run source in a 'sub shell'
 (
