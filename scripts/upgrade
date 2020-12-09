@@ -20,6 +20,7 @@ public_path=$(ynh_app_setting_get --app="$app" --key=public_path)
 final_path=$(ynh_app_setting_get --app="$app" --key=final_path)
 log_path=$(ynh_app_setting_get --app="$app" --key=log_path)
 
+port=$(ynh_app_setting_get --app="$app" --key=port)
 db_pwd=$(ynh_app_setting_get --app="$app" --key=psqlpwd)
 admin_mail=$(ynh_user_get_info "$admin" mail)
 redis_db=$(ynh_app_setting_get --app="$app" --key=redis_db)
