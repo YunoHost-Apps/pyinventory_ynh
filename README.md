@@ -37,7 +37,7 @@ TODO: https://github.com/django-auth-ldap/django-auth-ldap
 
 ## Links
 
- * Report a bug about this package: https://github.com/jedie/pyinventory_ynh
+ * Report a bug about this package: https://github.com/YunoHost-Apps/pyinventory_ynh
  * Report a bug about PyInventory itself: https://github.com/jedie/PyInventory
  * YunoHost website: https://yunohost.org/
 
@@ -46,20 +46,20 @@ TODO: https://github.com/django-auth-ldap/django-auth-ldap
 Developer info
 ----------------
 
-Please send your pull request to https://github.com/jedie/pyinventory_ynh
+Please send your pull request to https://github.com/YunoHost-Apps/pyinventory_ynh
 
 Try 'main' branch, e.g.:
 ```bash
-sudo yunohost app install https://github.com/jedie/pyinventory_ynh/tree/main --debug
+sudo yunohost app install https://github.com/YunoHost-Apps/pyinventory_ynh/tree/main --debug
 or
-sudo yunohost app upgrade pyinventory -u https://github.com/jedie/pyinventory_ynh/tree/main --debug
+sudo yunohost app upgrade pyinventory -u https://github.com/YunoHost-Apps/pyinventory_ynh/tree/main --debug
 ```
 
 Try 'testing' branch, e.g.:
 ```bash
-sudo yunohost app install https://github.com/jedie/pyinventory_ynh/tree/testing --debug
+sudo yunohost app install https://github.com/YunoHost-Apps/pyinventory_ynh/tree/testing --debug
 or
-sudo yunohost app upgrade pyinventory -u https://github.com/jedie/pyinventory_ynh/tree/testing --debug
+sudo yunohost app upgrade pyinventory -u https://github.com/YunoHost-Apps/pyinventory_ynh/tree/testing --debug
 ```
 
 To remove call e.g.:
