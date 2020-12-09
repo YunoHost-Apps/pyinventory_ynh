@@ -194,18 +194,6 @@ chown -R "$app" "$public_path"
 chown -R "$app" "$final_path"
 
 #=================================================
-# SETUP SSOWAT
-#=================================================
-ynh_script_progression --message="Upgrading SSOwat configuration..."
-
-# Make app public if necessary
-if [ "$is_public" -eq 1 ]
-then
-	# unprotected_uris allows SSO credentials to be passed anyway.
-	ynh_app_setting_set --app="$app" --key=unprotected_uris --value="/"
-fi
-
-#=================================================
 # Start pyinventory via systemd
 #=================================================
 ynh_script_progression --message="Starting PyInventory's services..." --weight=5
