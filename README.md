@@ -43,8 +43,9 @@ TODO: https://github.com/django-auth-ldap/django-auth-ldap
 
 ---
 
-Developer info
-----------------
+# Developer info
+
+## package installation / debugging
 
 Please send your pull request to https://github.com/YunoHost-Apps/pyinventory_ynh
 
@@ -103,3 +104,31 @@ root@yunohost:~# cat /etc/systemd/system/pyinventory.service
 root@yunohost:~# systemctl reload-or-restart pyinventory
 root@yunohost:~# journalctl --unit=pyinventory --follow
 ```
+
+## local test
+
+For quicker developing of PyInventory in the context of YunoHost app,
+it's possible to run the Django developer server with the settings
+and urls made for YunoHost installation.
+
+For this, just run `local_test.py` in a PyInventory virtualenv. 
+
+e.g.:
+```bash
+~$ git clone https://github.com/jedie/PyInventory.git
+~$ git clone https://github.com/YunoHost-Apps/pyinventory_ynh.git
+~$ cd PyInventory/
+~/PyInventory$ make install
+~/PyInventory$ poetry shell
+(pyinventory-yd_5sxYx-py3.8) ~/PyInventory$ cd ../pyinventory_ynh/
+(pyinventory-yd_5sxYx-py3.8) ~/pyinventory_ynh$ ./local_test.py
+...
+Django version 2.2.17, using settings 'ynh_pyinventory_settings'
+Starting development server at http://127.0.0.1:8000/
+```
+
+Notes:
+
+* SQlite database will be used
+* A super user with username `test` and password `test` is created
+* The page is available under `http://127.0.0.1:8000/app_path/`
