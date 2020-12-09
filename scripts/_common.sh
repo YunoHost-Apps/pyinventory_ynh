@@ -28,7 +28,7 @@ pkg_dependencies="build-essential python3-dev python3-pip python3-virtualenv vir
 	postgresql postgresql-contrib"
 
 # PyInventory's version for PIP and settings file
-pyinventory_version="0.8.1rc2"
+pyinventory_version="0.8.1"
 
 
 #=================================================
