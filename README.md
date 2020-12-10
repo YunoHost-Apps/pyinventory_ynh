@@ -37,29 +37,30 @@ TODO: https://github.com/django-auth-ldap/django-auth-ldap
 
 ## Links
 
- * Report a bug about this package: https://github.com/jedie/pyinventory_ynh
+ * Report a bug about this package: https://github.com/YunoHost-Apps/pyinventory_ynh
  * Report a bug about PyInventory itself: https://github.com/jedie/PyInventory
  * YunoHost website: https://yunohost.org/
 
 ---
 
-Developer info
-----------------
+# Developer info
 
-Please send your pull request to https://github.com/jedie/pyinventory_ynh
+## package installation / debugging
+
+Please send your pull request to https://github.com/YunoHost-Apps/pyinventory_ynh
 
 Try 'main' branch, e.g.:
 ```bash
-sudo yunohost app install https://github.com/jedie/pyinventory_ynh/tree/main --debug
+sudo yunohost app install https://github.com/YunoHost-Apps/pyinventory_ynh/tree/main --debug
 or
-sudo yunohost app upgrade pyinventory -u https://github.com/jedie/pyinventory_ynh/tree/main --debug
+sudo yunohost app upgrade pyinventory -u https://github.com/YunoHost-Apps/pyinventory_ynh/tree/main --debug
 ```
 
 Try 'testing' branch, e.g.:
 ```bash
-sudo yunohost app install https://github.com/jedie/pyinventory_ynh/tree/testing --debug
+sudo yunohost app install https://github.com/YunoHost-Apps/pyinventory_ynh/tree/testing --debug
 or
-sudo yunohost app upgrade pyinventory -u https://github.com/jedie/pyinventory_ynh/tree/testing --debug
+sudo yunohost app upgrade pyinventory -u https://github.com/YunoHost-Apps/pyinventory_ynh/tree/testing --debug
 ```
 
 To remove call e.g.:
@@ -91,7 +92,7 @@ drwxr-xr-x 6 pyinventory pyinventory    6 Dec  8 08:37 venv
 root@yunohost:~# cd /opt/yunohost/pyinventory/
 root@yunohost:/opt/yunohost/pyinventory# source venv/bin/activate
 (venv) root@yunohost:/opt/yunohost/pyinventory# ./manage.py check
-PyInventory v0.8.1rc2 (Django v2.2.17)
+PyInventory v0.8.1 (Django v2.2.17)
 DJANGO_SETTINGS_MODULE='ynh_pyinventory_settings'
 PROJECT_PATH:/opt/yunohost/pyinventory/venv/lib/python3.7/site-packages
 BASE_PATH:/opt/yunohost/pyinventory
@@ -103,3 +104,31 @@ root@yunohost:~# cat /etc/systemd/system/pyinventory.service
 root@yunohost:~# systemctl reload-or-restart pyinventory
 root@yunohost:~# journalctl --unit=pyinventory --follow
 ```
+
+## local test
+
+For quicker developing of PyInventory in the context of YunoHost app,
+it's possible to run the Django developer server with the settings
+and urls made for YunoHost installation.
+
+For this, just run `local_test.py` in a PyInventory virtualenv. 
+
+e.g.:
+```bash
+~$ git clone https://github.com/jedie/PyInventory.git
+~$ git clone https://github.com/YunoHost-Apps/pyinventory_ynh.git
+~$ cd PyInventory/
+~/PyInventory$ make install
+~/PyInventory$ poetry shell
+(pyinventory-yd_5sxYx-py3.8) ~/PyInventory$ cd ../pyinventory_ynh/
+(pyinventory-yd_5sxYx-py3.8) ~/pyinventory_ynh$ ./local_test.py
+...
+Django version 2.2.17, using settings 'ynh_pyinventory_settings'
+Starting development server at http://127.0.0.1:8000/
+```
+
+Notes:
+
+* SQlite database will be used
+* A super user with username `test` and password `test` is created
+* The page is available under `http://127.0.0.1:8000/app_path/`

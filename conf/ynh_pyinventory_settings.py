@@ -23,7 +23,7 @@ assert FINAL_HOME_PATH.is_dir(), f'Directory not exists: {FINAL_HOME_PATH}'
 FINAL_WWW_PATH = __Path('__FINAL_WWW_PATH__')  # /var/www/$app
 assert FINAL_WWW_PATH.is_dir(), f'Directory not exists: {FINAL_WWW_PATH}'
 
-LOG_FILE = __Path('__LOG_FILE__')  # /var/log/$app//pyinventory.log
+LOG_FILE = __Path('__LOG_FILE__')  # /var/log/$app/pyinventory.log
 assert LOG_FILE.is_file(), f'File not exists: {LOG_FILE}'
 
 PATH_URL = '__PATH_URL__'  # $YNH_APP_ARG_PATH

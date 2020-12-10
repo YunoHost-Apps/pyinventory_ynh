@@ -1,4 +1,6 @@
 .*
+!.github
 !.gitignore
 __pycache__
 secret.txt
+/local_test/

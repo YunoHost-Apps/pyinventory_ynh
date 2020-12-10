@@ -20,6 +20,7 @@ public_path=$(ynh_app_setting_get --app="$app" --key=public_path)
 final_path=$(ynh_app_setting_get --app="$app" --key=final_path)
 log_path=$(ynh_app_setting_get --app="$app" --key=log_path)
 
+port=$(ynh_app_setting_get --app="$app" --key=port)
 db_pwd=$(ynh_app_setting_get --app="$app" --key=psqlpwd)
 admin_mail=$(ynh_user_get_info "$admin" mail)
 redis_db=$(ynh_app_setting_get --app="$app" --key=redis_db)
@@ -87,22 +88,26 @@ ynh_add_systemd_config --service="$app" --template="pyinventory.service"
 ynh_script_progression --message="Install pyinventory using PIP..." --weight=15
 
 virtualenv --python=python3 "${final_path}/venv"
-sudo chown -R "$app" "$final_path"
+chown -R "$app" "$final_path"
 
 #run source in a 'sub shell'
 (
   set +o nounset
   source "${final_path}/venv/bin/activate"
   set -o nounset
-  sudo -u $app $final_path/venv/bin/pip install --upgrade pip
-  sudo -u $app $final_path/venv/bin/pip install --upgrade setuptools wheel psycopg2-binary
-  sudo -u $app $final_path/venv/bin/pip install --upgrade pyinventory=="$pyinventory_version"
+  ynh_exec_as $app $final_path/venv/bin/pip install --upgrade pip
+  ynh_exec_as $app $final_path/venv/bin/pip install --upgrade setuptools wheel psycopg2-binary
+  ynh_exec_as $app $final_path/venv/bin/pip install --upgrade pyinventory=="$pyinventory_version"
 )
 
 #=================================================
 # copy config files
 # ================================================
 ynh_script_progression --message="Create pyinventory configuration file..."
+
+ynh_backup_if_checksum_is_different --file="$final_path/create_superuser.py"
+cp ../conf/create_superuser.py "$final_path/create_superuser.py"
+chmod +x "$final_path/create_superuser.py"
 
 gunicorn_conf="$final_path/gunicorn.conf.py"
 ynh_backup_if_checksum_is_different --file="$gunicorn_conf"
@@ -159,7 +164,7 @@ ynh_script_progression --message="migrate/collectstatic/createadmin..." --weight
 
 	./manage.py migrate --no-input
 	./manage.py collectstatic --no-input
-	echo "from django.contrib.auth import get_user_model; get_user_model().objects.create_superuser('$admin', '$admin_mail', 'pyinventory')" | ./manage.py shell
+	./create_superuser.py --username="$admin" --email="$admin_mail" --password="pyinventory"
 
 	# Check the configuration
 	# This may fail in some cases with errors, etc., but the app works and the user can fix issues later.
@@ -179,7 +184,7 @@ ynh_use_logrotate --non-append
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..."
 
-yunohost service add "$app" --log "${log_file}"
+yunohost service add $app --description="Web based management to catalog things" --log="${log_file}"
 
 #=================================================
 # GENERIC FINALIZATION
@@ -188,21 +193,9 @@ yunohost service add "$app" --log "${log_file}"
 #=================================================
 
 # Set permissions to app files
-sudo chown -R "$app" "$log_path"
-sudo chown -R "$app" "$public_path"
-sudo chown -R "$app" "$final_path"
-
-#=================================================
-# SETUP SSOWAT
-#=================================================
-ynh_script_progression --message="Upgrading SSOwat configuration..."
-
-# Make app public if necessary
-if [ "$is_public" -eq 1 ]
-then
-	# unprotected_uris allows SSO credentials to be passed anyway.
-	ynh_app_setting_set --app="$app" --key=unprotected_uris --value="/"
-fi
+chown -R "$app" "$log_path"
+chown -R "$app" "$public_path"
+chown -R "$app" "$final_path"
 
 #=================================================
 # Start pyinventory via systemd

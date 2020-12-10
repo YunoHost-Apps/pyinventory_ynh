@@ -31,8 +31,8 @@ ynh_webpath_register --app="$app" --domain="$domain" --path_url="$path_url"
 mkdir -p "$public_path/media" "$public_path/static"
 mkdir -p "$final_path"
 
-sudo mkdir -p "$log_path"
-sudo touch "${log_file}"
+mkdir -p "$log_path"
+touch "${log_file}"
 
 #=================================================
 # STORE SETTINGS FROM MANIFEST
@@ -103,22 +103,25 @@ ynh_system_user_create --username="$app" --home_dir="$final_path" --use_shell
 ynh_script_progression --message="Install PyInventory using PIP..." --weight=80
 
 virtualenv --python=python3 "${final_path}/venv"
-sudo chown -R "$app" "$final_path"
+chown -R "$app" "$final_path"
 
 #run source in a 'sub shell'
 (
 	set +o nounset
 	source "${final_path}/venv/bin/activate"
 	set -o nounset
-	sudo -u $app $final_path/venv/bin/pip install --upgrade pip
-	sudo -u $app $final_path/venv/bin/pip install --upgrade setuptools wheel psycopg2-binary
-	sudo -u $app $final_path/venv/bin/pip install --upgrade pyinventory=="$pyinventory_version"
+	ynh_exec_as $app $final_path/venv/bin/pip install --upgrade pip
+	ynh_exec_as $app $final_path/venv/bin/pip install --upgrade setuptools wheel psycopg2-binary
+	ynh_exec_as $app $final_path/venv/bin/pip install --upgrade pyinventory=="$pyinventory_version"
 )
 
 #=================================================
 # copy config files
 # ================================================
 ynh_script_progression --message="Create pyinventory configuration file..."
+
+cp ../conf/create_superuser.py "$final_path/create_superuser.py"
+chmod +x "$final_path/create_superuser.py"
 
 gunicorn_conf="$final_path/gunicorn.conf.py"
 cp "../conf/gunicorn.conf.py" "$gunicorn_conf"
@@ -171,7 +174,7 @@ ynh_script_progression --message="migrate/collectstatic/createadmin..." --weight
 
 	./manage.py migrate --no-input
 	./manage.py collectstatic --no-input
-	echo "from django.contrib.auth import get_user_model; get_user_model().objects.create_superuser('$admin', '$admin_mail', 'pyinventory')" | ./manage.py shell
+	./create_superuser.py --username="$admin" --email="$admin_mail" --password="pyinventory"
 
 	# Check the configuration
 	# This may fail in some cases with errors, etc., but the app works and the user can fix issues later.
@@ -191,7 +194,7 @@ ynh_use_logrotate "$log_file"
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..."
 
-yunohost service add "$app" --log "${log_file}"
+yunohost service add $app --description="Web based management to catalog things" --log="${log_file}"
 
 #=================================================
 # GENERIC FINALIZATION
@@ -200,9 +203,9 @@ yunohost service add "$app" --log "${log_file}"
 #=================================================
 
 # Set permissions to app files
-sudo chown -R "$app" "$log_path"
-sudo chown -R "$app" "$public_path"
-sudo chown -R "$app" "$final_path"
+chown -R "$app" "$log_path"
+chown -R "$app" "$public_path"
+chown -R "$app" "$final_path"
 
 #=================================================
 # SETUP SYSTEMD
@@ -217,11 +220,12 @@ ynh_add_systemd_config --service="$app" --template="pyinventory.service"
 #=================================================
 ynh_script_progression --message="Configuring SSOwat..."
 
-# Make app public if necessary
-if [ "$is_public" -eq 1 ]
+# Make app public if necessary or protect it
+if [ $is_public -eq 1 ]
 then
-	# unprotected_uris allows SSO credentials to be passed anyway.
-	ynh_app_setting_set --app="$app" --key=unprotected_uris --value="/"
+	# Everyone can access the app.
+	# The "main" permission is automatically created before the install script.
+	ynh_permission_update --permission "main" --add "visitors"
 fi
 
 #=================================================
@@ -238,6 +242,8 @@ ynh_script_progression --message="Reloading nginx web server..."
 
 ynh_systemd_action --service_name="nginx" --action="reload"
 
-
+#=================================================
+# END OF SCRIPT
+#=================================================
 
 ynh_script_progression --message="Installation of $app completed" --last

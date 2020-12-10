@@ -28,7 +28,7 @@ pkg_dependencies="build-essential python3-dev python3-pip python3-virtualenv vir
 	postgresql postgresql-contrib"
 
 # PyInventory's version for PIP and settings file
-pyinventory_version="0.8.1rc2"
+pyinventory_version="0.8.1"
 
 
 #=================================================
@@ -71,4 +71,19 @@ ynh_redis_get_free_db() {
 ynh_redis_remove_db() {
 	local db=$1
 	redis-cli -n "$db" flushall
+}
+
+#=================================================
+
+# Execute a command as another user
+# usage: ynh_exec_as USER COMMAND [ARG ...]
+ynh_exec_as() {
+  local USER=$1
+  shift 1
+
+  if [[ $USER = $(whoami) ]]; then
+    eval "$@"
+  else
+    sudo -u "$USER" "$@"
+  fi
 }
