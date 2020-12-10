@@ -51,9 +51,9 @@ Please send your pull request to https://github.com/YunoHost-Apps/pyinventory_yn
 
 Try 'main' branch, e.g.:
 ```bash
-sudo yunohost app install https://github.com/YunoHost-Apps/pyinventory_ynh/tree/main --debug
+sudo yunohost app install https://github.com/YunoHost-Apps/pyinventory_ynh/tree/master --debug
 or
-sudo yunohost app upgrade pyinventory -u https://github.com/YunoHost-Apps/pyinventory_ynh/tree/main --debug
+sudo yunohost app upgrade pyinventory -u https://github.com/YunoHost-Apps/pyinventory_ynh/tree/master --debug
 ```
 
 Try 'testing' branch, e.g.:
