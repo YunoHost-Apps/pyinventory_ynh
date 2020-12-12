@@ -147,6 +147,7 @@ ynh_store_file_checksum --file="$settings"
 
 touch "$final_path/local_settings.py"
 
+cp "../conf/ynh_sso_ldap_backend.py" "$final_path/ynh_sso_ldap_backend.py"
 cp "../conf/ynh_urls.py" "$final_path/ynh_urls.py"
 
 #=================================================
