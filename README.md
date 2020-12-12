@@ -20,9 +20,6 @@ PyInventory is a libre web-based management to catalog things including state an
 ![](https://raw.githubusercontent.com/jedie/jedie.github.io/master/screenshots/PyInventory/PyInventory%20v0.1.0%20screenshot%202.png)
 ![](https://raw.githubusercontent.com/jedie/jedie.github.io/master/screenshots/PyInventory/PyInventory%20v0.1.0%20screenshot%203.png)
 
-## Admin account
-
-An admin user is created at installation, the login is what you provided at installation, the password is **pyinventory**.
 
 ## Settings and upgrades
 
