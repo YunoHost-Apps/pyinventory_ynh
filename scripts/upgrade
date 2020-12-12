@@ -87,7 +87,7 @@ ynh_add_systemd_config --service="$app" --template="pyinventory.service"
 
 ynh_script_progression --message="Install pyinventory using PIP..." --weight=15
 
-virtualenv --python=python3 "${final_path}/venv"
+python3 -m venv "${final_path}/venv"
 chown -R "$app" "$final_path"
 
 #run source in a 'sub shell'
@@ -98,6 +98,7 @@ chown -R "$app" "$final_path"
   ynh_exec_as $app $final_path/venv/bin/pip install --upgrade pip
   ynh_exec_as $app $final_path/venv/bin/pip install --upgrade setuptools wheel psycopg2-binary
   ynh_exec_as $app $final_path/venv/bin/pip install --upgrade pyinventory=="$pyinventory_version"
+	ynh_exec_as $app $final_path/venv/bin/pip install --upgrade ${pypi_extras}
 )
 
 #=================================================

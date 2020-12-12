@@ -102,7 +102,7 @@ ynh_system_user_create --username="$app" --home_dir="$final_path" --use_shell
 #=================================================
 ynh_script_progression --message="Install PyInventory using PIP..." --weight=80
 
-virtualenv --python=python3 "${final_path}/venv"
+python3 -m venv "${final_path}/venv"
 chown -R "$app" "$final_path"
 
 #run source in a 'sub shell'
@@ -113,6 +113,7 @@ chown -R "$app" "$final_path"
 	ynh_exec_as $app $final_path/venv/bin/pip install --upgrade pip
 	ynh_exec_as $app $final_path/venv/bin/pip install --upgrade setuptools wheel psycopg2-binary
 	ynh_exec_as $app $final_path/venv/bin/pip install --upgrade pyinventory=="$pyinventory_version"
+	ynh_exec_as $app $final_path/venv/bin/pip install --upgrade ${pypi_extras}
 )
 
 #=================================================

@@ -11,6 +11,8 @@
 
 from pathlib import Path as __Path
 
+import ldap
+from django_auth_ldap.config import LDAPSearch
 from inventory_project.settings.base import *  # noqa
 
 DEBUG = False
@@ -34,6 +36,45 @@ PATH_URL = PATH_URL.strip('/')
 ROOT_URLCONF = 'ynh_urls'  # /opt/yunohost/pyinventory/ynh_urls.py
 
 # -----------------------------------------------------------------------------
+# https://github.com/django-auth-ldap/django-auth-ldap
+
+LDAP_SERVER_URI = 'ldap://localhost:389'
+LDAP_START_TLS = True
+
+# enable anonymous searches
+# https://django-auth-ldap.readthedocs.io/en/latest/authentication.html?highlight=anonymous#search-bind
+LDAP_BIND_DN = ''
+LDAP_BIND_PASSWORD = ''
+
+LDAP_ROOT_DN = 'ou=users,dc=yunohost,dc=org'
+
+AUTH_LDAP_USER_SEARCH = LDAPSearch(LDAP_ROOT_DN, ldap.SCOPE_SUBTREE, '(uid=%(user)s)')
+
+# Populate the Django user from the LDAP directory.
+AUTH_LDAP_USER_ATTR_MAP = {
+    'username': 'uid',
+    'first_name': 'givenName',
+    'last_name': 'sn',
+    'email': 'mail',
+}
+
+# This is the default, but I like to be explicit.
+AUTH_LDAP_ALWAYS_UPDATE_USER = True
+
+# Use LDAP group membership to calculate group permissions.
+AUTH_LDAP_FIND_GROUP_PERMS = True
+
+# Cache distinguished names and group memberships for an hour to minimize LDAP traffic
+AUTH_LDAP_CACHE_TIMEOUT = 3600
+
+# Keep ModelBackend around for per-user permissions and superuser
+AUTHENTICATION_BACKENDS = (
+    'django_auth_ldap.backend.LDAPBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+# -----------------------------------------------------------------------------
+
 
 ADMINS = (
     ('__ADMIN__', '__ADMINMAIL__'),
@@ -84,9 +125,6 @@ CACHES = {
         # 'LOCATION': 'unix:///var/run/redis/redis.sock?db=1',
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-            'PARSER_CLASS': 'redis.connection.HiredisParser',
-            'PASSWORD': None,
-            'CONNECTION_POOL_KWARGS': {},
         },
         'KEY_PREFIX': '__APP__',
     },
@@ -137,6 +175,7 @@ LOGGING = {
         'django': {'handlers': ['syslog', 'mail_admins'], 'level': 'INFO', 'propagate': False},
         'axes': {'handlers': ['syslog', 'mail_admins'], 'level': 'WARNING', 'propagate': False},
         'django_tools': {'handlers': ['syslog', 'mail_admins'], 'level': 'INFO', 'propagate': False},
+        'django_auth_ldap': {'handlers': ['syslog', 'mail_admins'], 'level': 'DEBUG', 'propagate': False},
         'inventory': {'handlers': ['syslog', 'mail_admins'], 'level': 'INFO', 'propagate': False},
     },
 }
