@@ -24,7 +24,7 @@ log_file="${log_path}/pyinventory.log"
 #=================================================
 
 # dependencies used by the app
-pkg_dependencies="build-essential python3-dev python3-pip python3-venv python3-virtualenv git \
+pkg_dependencies="build-essential python3-dev python3-pip python3-venv git \
 	postgresql postgresql-contrib python3-ldap libldap2-dev libsasl2-dev"
 
 # PyInventory's version for PIP and settings file
