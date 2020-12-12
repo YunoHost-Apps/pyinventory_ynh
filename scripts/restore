@@ -51,6 +51,7 @@ ynh_restore_file --origin_path="/etc/nginx/conf.d/$domain.d/$app.conf"
 #=================================================
 ynh_script_progression --message="Restoring the app main directory..."
 
+ynh_restore_file --origin_path="$public_path"
 ynh_restore_file --origin_path="$final_path"
 
 touch "$final_path/local_settings.py"
