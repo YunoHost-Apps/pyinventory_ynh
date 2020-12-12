@@ -58,11 +58,12 @@ AUTH_LDAP_USER_ATTR_MAP = {
     'email': 'mail',
 }
 
-# This is the default, but I like to be explicit.
 AUTH_LDAP_ALWAYS_UPDATE_USER = True
 
-# Use LDAP group membership to calculate group permissions.
-AUTH_LDAP_FIND_GROUP_PERMS = True
+# Don't use LDAP group membership to calculate group permissions
+AUTH_LDAP_FIND_GROUP_PERMS = False
+
+AUTH_LDAP_GROUP_TYPE = 'normal user'  # Same as: inventory.permissions.NORMAL_USER_GROUP_NAME
 
 # Cache distinguished names and group memberships for an hour to minimize LDAP traffic
 AUTH_LDAP_CACHE_TIMEOUT = 3600

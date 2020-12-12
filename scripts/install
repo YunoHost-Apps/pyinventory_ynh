@@ -157,6 +157,7 @@ ynh_app_setting_set --app="$app" --key=redis_db --value="$redis_db"
 
 touch "$final_path/local_settings.py"
 
+cp "../conf/ynh_sso_ldap_backend.py" "$final_path/ynh_sso_ldap_backend.py"
 cp "../conf/ynh_urls.py" "$final_path/ynh_urls.py"
 
 #=================================================
