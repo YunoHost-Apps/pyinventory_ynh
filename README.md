@@ -31,9 +31,9 @@ You can edit the file `$final_path/local_settings.py` to enable or disable featu
 
 # Miscellaneous
 
-## LDAP connexion
+## LDAP connection
 
-TODO: https://github.com/django-auth-ldap/django-auth-ldap
+Supported by https://github.com/django-auth-ldap/django-auth-ldap
 
 ## Links
 
