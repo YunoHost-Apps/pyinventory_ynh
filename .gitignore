@@ -1,5 +1,6 @@
 .*
 !.github
+!.editorconfig
 !.gitignore
 __pycache__
 secret.txt
