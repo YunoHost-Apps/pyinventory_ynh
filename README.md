@@ -10,7 +10,7 @@ Pull requests welcome ;)
 
 ## Overview
 
-PyInventory is a libre web-based management to catalog things including state and location etc. using Python/Django.
+[PyInventory](https://github.com/jedie/PyInventory) is a libre web-based management to catalog things including state and location etc. using Python/Django.
 
 ## Screenshots
 
