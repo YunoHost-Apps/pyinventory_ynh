@@ -150,6 +150,11 @@ MEDIA_ROOT = str(FINAL_WWW_PATH / 'media')
 
 CKEDITOR_BASEPATH = STATIC_URL + 'ckeditor/ckeditor/'
 
+# _____________________________________________________________________________
+# Django-dbbackup
+
+DBBACKUP_STORAGE_OPTIONS['location']=str(FINAL_HOME_PATH / 'backups')
+
 # -----------------------------------------------------------------------------
 
 LOGGING = {
