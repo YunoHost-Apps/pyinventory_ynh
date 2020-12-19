@@ -145,6 +145,10 @@ else:
 STATIC_ROOT = str(FINAL_WWW_PATH / 'static')
 MEDIA_ROOT = str(FINAL_WWW_PATH / 'media')
 
+# _____________________________________________________________________________
+# django-ckeditor
+
+CKEDITOR_BASEPATH = STATIC_URL + 'ckeditor/ckeditor/'
 
 # -----------------------------------------------------------------------------
 
