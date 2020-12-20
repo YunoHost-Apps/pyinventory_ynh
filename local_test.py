@@ -130,6 +130,10 @@ def main():
     # conf/ynh_urls.py -> local_test/ynh_urls.py
     copy_patch(src_file=URLS_FILE, replaces=REPLACES)
 
+    with Path(FINAL_HOME_PATH / 'local_settings.py').open('w') as f:
+        f.write('# Only for local test run\n')
+        f.write('SERVE_FILES=True # used in src/inventory_project/urls.py\n')
+
     # call "local_test/manage.py" via subprocess:
     call_manage_py('check --deploy')
     call_manage_py('migrate --no-input')

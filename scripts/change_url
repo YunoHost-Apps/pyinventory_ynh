@@ -24,10 +24,18 @@ new_path=$YNH_APP_NEW_PATH
 #=================================================
 ynh_script_progression --message="Loading installation settings..."
 
+domain=$(ynh_app_setting_get --app="$app" --key=domain)
+path_url=$(ynh_app_setting_get --app="$app" --key=path)
+admin=$(ynh_app_setting_get --app="$app" --key=admin)
+is_public=$(ynh_app_setting_get --app="$app" --key=is_public)
 public_path=$(ynh_app_setting_get --app="$app" --key=public_path)
 final_path=$(ynh_app_setting_get --app="$app" --key=final_path)
-is_public=$(ynh_app_setting_get --app="$app" --key=is_public)
+log_path=$(ynh_app_setting_get --app="$app" --key=log_path)
+
 port=$(ynh_app_setting_get --app="$app" --key=port)
+db_pwd=$(ynh_app_setting_get --app="$app" --key=psqlpwd)
+admin_mail=$(ynh_user_get_info "$admin" mail)
+redis_db=$(ynh_app_setting_get --app="$app" --key=redis_db
 
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
@@ -109,26 +117,24 @@ fi
 #=================================================
 ynh_script_progression --message="Modify PyInventory's config file..."
 
+# save old settings file
 settings="$final_path/ynh_pyinventory_settings.py"
 ynh_backup_if_checksum_is_different --file="$settings"
 
-# Change the path in the nginx config file
-if [ $change_path -eq 1 ]
-then
-	ynh_replace_string --match_string="URL_PREFIX = \"${old_path%/}\"" --replace_string="URL_PREFIX = \"${new_path%/}\"" --target_file="$settings"
-fi
+cp "../conf/ynh_pyinventory_settings.py" "$settings"
 
-# Change the domain for nginx
-if [ $change_domain -eq 1 ]
-then
-	# replace SERVER_EMAIL
-	ynh_replace_string --match_string="noreply@$old_domain" --replace_string="noreply@$new_domain" --target_file="$settings"
-	# replace SITE_DOMAIN
-	ynh_replace_string --match_string="SITE_DOMAIN = \"$old_domain\"" --replace_string="SITE_DOMAIN = \"$new_domain\"" --target_file="$settings"
-	# replace ALLOWED_HOSTS
-	ynh_replace_string --match_string="ALLOWED_HOSTS = \[\"$old_domain\"\]" --replace_string="ALLOWED_HOSTS = \[\"$new_domain\"\]" --target_file="$settings"
-fi
+ynh_replace_string --match_string="__APP__" --replace_string="$app" --target_file="$settings"
+ynh_replace_string --match_string="__DB_PWD__" --replace_string="$db_pwd" --target_file="$settings"
+ynh_replace_string --match_string="__ADMIN__" --replace_string="$admin" --target_file="$settings"
+ynh_replace_string --match_string="__ADMINMAIL__" --replace_string="$admin_mail" --target_file="$settings"
+ynh_replace_string --match_string="__DOMAIN__" --replace_string="$domain" --target_file="$settings"
+ynh_replace_string --match_string="__FINAL_HOME_PATH__" --replace_string="$final_path" --target_file="$settings"
+ynh_replace_string --match_string="__FINAL_WWW_PATH__" --replace_string="$public_path" --target_file="$settings"
+ynh_replace_string --match_string="__PATH_URL__" --replace_string="$path_url" --target_file="$settings"
+ynh_replace_string --match_string="__LOG_FILE__" --replace_string="$log_file" --target_file="$settings"
+ynh_replace_string --match_string="__REDIS_DB__" --replace_string="$redis_db" --target_file="$settings"
 
+# Recalculate and store the config file checksum into the app settings
 ynh_store_file_checksum --file="$settings"
 
 #=================================================
