@@ -1,9 +1,9 @@
 # PyInventory for YunoHost
 
 [![Integration level](https://dash.yunohost.org/integration/pyinventory.svg)](https://dash.yunohost.org/appci/app/pyinventory) ![](https://ci-apps.yunohost.org/ci/badges/pyinventory.status.svg) ![](https://ci-apps.yunohost.org/ci/badges/pyinventory.maintain.svg)  
-[![Install PyInventory with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=pyinventory)
+[![Install PyInventory with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=pyinventory)
 
-> *This package allows you to install PyInventory quickly and simply on a YunoHost server.  
+> *This package allows you to install PyInventory quickly and simply on a YunoHost server.
 If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/install) to learn how to install it.*
 
 Pull requests welcome ;)
@@ -87,7 +87,7 @@ drwxr-xr-x 6 pyinventory pyinventory    6 Dec  8 08:37 venv
 root@yunohost:~# cd /opt/yunohost/pyinventory/
 root@yunohost:/opt/yunohost/pyinventory# source venv/bin/activate
 (venv) root@yunohost:/opt/yunohost/pyinventory# ./manage.py check
-PyInventory v0.8.1 (Django v2.2.17)
+PyInventory v0.8.2 (Django v2.2.17)
 DJANGO_SETTINGS_MODULE='ynh_pyinventory_settings'
 PROJECT_PATH:/opt/yunohost/pyinventory/venv/lib/python3.7/site-packages
 BASE_PATH:/opt/yunohost/pyinventory
@@ -106,20 +106,18 @@ For quicker developing of PyInventory in the context of YunoHost app,
 it's possible to run the Django developer server with the settings
 and urls made for YunoHost installation.
 
-For this, just run `local_test.py` in a PyInventory virtualenv. 
-
 e.g.:
 ```bash
-~$ git clone https://github.com/jedie/PyInventory.git
 ~$ git clone https://github.com/YunoHost-Apps/pyinventory_ynh.git
-~$ cd PyInventory/
-~/PyInventory$ make install
-~/PyInventory$ poetry shell
-(pyinventory-yd_5sxYx-py3.8) ~/PyInventory$ cd ../pyinventory_ynh/
-(pyinventory-yd_5sxYx-py3.8) ~/pyinventory_ynh$ ./local_test.py
-...
-Django version 2.2.17, using settings 'ynh_pyinventory_settings'
-Starting development server at http://127.0.0.1:8000/
+~$ cd pyinventory_ynh/
+~/pyinventory_ynh$ make
+install-poetry         install or update poetry
+install                install PyInventory via poetry
+update                 update the sources and installation
+local-test             Run local_test.py to run pyinventory_ynh locally
+~/pyinventory_ynh$ make install-poetry
+~/pyinventory_ynh$ make install
+~/pyinventory_ynh$ make local-test
 ```
 
 Notes:

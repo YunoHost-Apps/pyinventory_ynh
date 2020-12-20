@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "pyinventory_ynh"
+version = "0.8.1~ynh7"
+description = "Test pyinventory_ynh via local_test.py"
+authors = ["JensDiemer <git@jensdiemer.de>"]
+license = "GPL"
+
+[tool.poetry.dependencies]
+python = ">=3.7,<4.0.0"
+pyinventory = "*"
+django-auth-ldap = "*"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
