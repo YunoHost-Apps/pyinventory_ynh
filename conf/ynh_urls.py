@@ -4,12 +4,27 @@ from django.contrib import admin
 from django.urls import path
 from django.views.generic import RedirectView
 
+
+# def debug_view(request):
+#     """ debug request.META """
+#     if not request.user.is_authenticated:
+#         from django.shortcuts import redirect
+#         return redirect('admin:index')
+#
+#     import pprint
+#     meta = pprint.pformat(request.META)
+#     html = f'<html><body>request.META: <pre>{meta}</pre></body></html>'
+#     from django.http import HttpResponse
+#     return HttpResponse(html)
+
+
 # settings.PATH_URL is the $YNH_APP_ARG_PATH
 if settings.PATH_URL:
     # Prefix all urls with "PATH_URL":
     urlpatterns = [
         path(f'{settings.PATH_URL}/admin/', admin.site.urls),
 
+        # path(f'{settings.PATH_URL}/', debug_view),
         path(f'{settings.PATH_URL}/', RedirectView.as_view(pattern_name='admin:index')),
 
         path(f'{settings.PATH_URL}/ckeditor/', include('ckeditor_uploader.urls')),

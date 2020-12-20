@@ -157,7 +157,7 @@ ynh_app_setting_set --app="$app" --key=redis_db --value="$redis_db"
 
 touch "$final_path/local_settings.py"
 
-cp "../conf/ynh_sso_ldap_backend.py" "$final_path/ynh_sso_ldap_backend.py"
+cp "../conf/ynh_authenticate.py" "$final_path/ynh_authenticate.py"
 cp "../conf/ynh_urls.py" "$final_path/ynh_urls.py"
 
 #=================================================
@@ -166,21 +166,21 @@ cp "../conf/ynh_urls.py" "$final_path/ynh_urls.py"
 ynh_script_progression --message="migrate/collectstatic/createadmin..." --weight=10
 
 (
-	set +o nounset
-	source "${final_path}/venv/bin/activate"
-	set -o nounset
-	cd "${final_path}"
+    set +o nounset
+    source "${final_path}/venv/bin/activate"
+    set -o nounset
+    cd "${final_path}"
 
-  # Just for debugging:
-  ./manage.py diffsettings
+    # Just for debugging:
+    ./manage.py diffsettings
 
-	./manage.py migrate --no-input
-	./manage.py collectstatic --no-input
-	./create_superuser.py --username="$admin" --email="$admin_mail" --password="pyinventory"
+    ./manage.py migrate --no-input
+    ./manage.py collectstatic --no-input
+    ./create_superuser.py --username="$admin" --email="$admin_mail" --password="pyinventory"
 
-	# Check the configuration
-	# This may fail in some cases with errors, etc., but the app works and the user can fix issues later.
-	./manage.py check --deploy || true
+    # Check the configuration
+    # This may fail in some cases with errors, etc., but the app works and the user can fix issues later.
+    ./manage.py check --deploy || true
 )
 
 #=================================================

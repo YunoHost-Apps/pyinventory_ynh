@@ -1,6 +1,6 @@
 # PyInventory for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/pyinventory.svg)](https://dash.yunohost.org/appci/app/pyinventory) ![](https://ci-apps.yunohost.org/ci/badges/pyinventory.status.svg) ![](https://ci-apps.yunohost.org/ci/badges/pyinventory.maintain.svg)  
+[![Integration level](https://dash.yunohost.org/integration/pyinventory.svg)](https://dash.yunohost.org/appci/app/pyinventory) ![](https://ci-apps.yunohost.org/ci/badges/pyinventory.status.svg) ![](https://ci-apps.yunohost.org/ci/badges/pyinventory.maintain.svg)
 [![Install PyInventory with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=pyinventory)
 
 > *This package allows you to install PyInventory quickly and simply on a YunoHost server.
@@ -26,9 +26,16 @@ You can edit the file `$final_path/local_settings.py` to enable or disable featu
 
 # Miscellaneous
 
-## LDAP connection
 
-Supported by https://github.com/django-auth-ldap/django-auth-ldap
+## SSO authentication
+
+[SSOwat](https://github.com/YunoHost/SSOwat) is fully supported:
+
+* First user (`$YNH_APP_ARG_ADMIN`) will be created as Django's super user
+* All new users will be created as normal users
+* Login via SSO is fully supported
+* User Email, First / Last name will be updated from SSO data
+
 
 ## Links
 
