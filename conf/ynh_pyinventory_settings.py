@@ -11,8 +11,6 @@
 
 from pathlib import Path as __Path
 
-import ldap
-from django_auth_ldap.config import LDAPSearch
 from inventory_project.settings.base import *  # noqa
 
 DEBUG = False
@@ -36,42 +34,29 @@ PATH_URL = PATH_URL.strip('/')
 ROOT_URLCONF = 'ynh_urls'  # /opt/yunohost/pyinventory/ynh_urls.py
 
 # -----------------------------------------------------------------------------
-# https://github.com/django-auth-ldap/django-auth-ldap
-
-LDAP_SERVER_URI = 'ldap://localhost:389'
-LDAP_START_TLS = True
-
-# enable anonymous searches
-# https://django-auth-ldap.readthedocs.io/en/latest/authentication.html?highlight=anonymous#search-bind
-LDAP_BIND_DN = ''
-LDAP_BIND_PASSWORD = ''
-
-LDAP_ROOT_DN = 'ou=users,dc=yunohost,dc=org'
-
-AUTH_LDAP_USER_SEARCH = LDAPSearch(LDAP_ROOT_DN, ldap.SCOPE_SUBTREE, '(uid=%(user)s)')
-
-# Populate the Django user from the LDAP directory.
-AUTH_LDAP_USER_ATTR_MAP = {
-    'username': 'uid',
-    'first_name': 'givenName',
-    'last_name': 'sn',
-    'email': 'mail',
-}
-
-AUTH_LDAP_ALWAYS_UPDATE_USER = True
-
-# Don't use LDAP group membership to calculate group permissions
-AUTH_LDAP_FIND_GROUP_PERMS = False
-
-AUTH_LDAP_GROUP_TYPE = 'normal user'  # Same as: inventory.permissions.NORMAL_USER_GROUP_NAME
-
-# Cache distinguished names and group memberships for an hour to minimize LDAP traffic
-AUTH_LDAP_CACHE_TIMEOUT = 3600
 
 # Keep ModelBackend around for per-user permissions and superuser
 AUTHENTICATION_BACKENDS = (
-    'django_auth_ldap.backend.LDAPBackend',
+    'axes.backends.AxesBackend',  # AxesBackend should be the first backend!
+
+    # Authenticate via SSO and nginx 'HTTP_REMOTE_USER' header:
+    'ynh_authenticate.RemoteUserBackend',
+
+    # Fallback to normal Django model backend:
     'django.contrib.auth.backends.ModelBackend',
+)
+LOGIN_REDIRECT_URL = None
+LOGIN_URL = '/yunohost/sso/'
+LOGOUT_REDIRECT_URL = '/yunohost/sso/'
+# /yunohost/sso/?action=logout
+
+# -----------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/2.2/howto/auth-remote-user/
+# Add RemoteUserMiddleware after AuthenticationMiddleware
+
+MIDDLEWARE.insert(
+    MIDDLEWARE.index('django.contrib.auth.middleware.AuthenticationMiddleware') + 1,
+    'ynh_authenticate.RemoteUserMiddleware',
 )
 
 # -----------------------------------------------------------------------------
@@ -153,7 +138,7 @@ CKEDITOR_BASEPATH = STATIC_URL + 'ckeditor/ckeditor/'
 # _____________________________________________________________________________
 # Django-dbbackup
 
-DBBACKUP_STORAGE_OPTIONS['location']=str(FINAL_HOME_PATH / 'backups')
+DBBACKUP_STORAGE_OPTIONS['location'] = str(FINAL_HOME_PATH / 'backups')
 
 # -----------------------------------------------------------------------------
 
@@ -173,7 +158,7 @@ LOGGING = {
             'class': 'django.utils.log.AdminEmailHandler',
             'include_html': True,
         },
-        'syslog': {
+        'log_file': {
             'level': 'DEBUG',
             'class': 'logging.handlers.WatchedFileHandler',
             'formatter': 'verbose',
@@ -181,12 +166,12 @@ LOGGING = {
         },
     },
     'loggers': {
-        '': {'handlers': ['syslog', 'mail_admins'], 'level': 'INFO', 'propagate': False},
-        'django': {'handlers': ['syslog', 'mail_admins'], 'level': 'INFO', 'propagate': False},
-        'axes': {'handlers': ['syslog', 'mail_admins'], 'level': 'WARNING', 'propagate': False},
-        'django_tools': {'handlers': ['syslog', 'mail_admins'], 'level': 'INFO', 'propagate': False},
-        'django_auth_ldap': {'handlers': ['syslog', 'mail_admins'], 'level': 'DEBUG', 'propagate': False},
-        'inventory': {'handlers': ['syslog', 'mail_admins'], 'level': 'INFO', 'propagate': False},
+        '': {'handlers': ['log_file', 'mail_admins'], 'level': 'INFO', 'propagate': False},
+        'django': {'handlers': ['log_file', 'mail_admins'], 'level': 'INFO', 'propagate': False},
+        'axes': {'handlers': ['log_file', 'mail_admins'], 'level': 'WARNING', 'propagate': False},
+        'django_tools': {'handlers': ['log_file', 'mail_admins'], 'level': 'INFO', 'propagate': False},
+        'django_auth_ldap': {'handlers': ['log_file', 'mail_admins'], 'level': 'DEBUG', 'propagate': False},
+        'inventory': {'handlers': ['log_file', 'mail_admins'], 'level': 'INFO', 'propagate': False},
     },
 }
 

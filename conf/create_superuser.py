@@ -24,12 +24,15 @@ def main():
 
     from django.contrib.auth import get_user_model
     User = get_user_model()
-    super_user = User.objects.filter(username=username).first()
-    if super_user:
-        print('Update existing super user and set his password.', file=sys.stderr)
-        super_user.set_password(password)
-        super_user.email=email
-        super_user.save()
+    user = User.objects.filter(username=username).first()
+    if user:
+        print('Update existing user and set his password.', file=sys.stderr)
+        user.is_active = True
+        user.is_staff = True
+        user.is_superuser = True
+        user.set_password(password)
+        user.email = email
+        user.save()
     else:
         print('Create new super user', file=sys.stderr)
         User.objects.create_superuser(

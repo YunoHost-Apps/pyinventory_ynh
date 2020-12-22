@@ -6,6 +6,7 @@
 
 domain=$YNH_APP_ARG_DOMAIN
 path_url=$YNH_APP_ARG_PATH
+
 admin=$YNH_APP_ARG_ADMIN
 is_public=$YNH_APP_ARG_IS_PUBLIC
 app=$YNH_APP_INSTANCE_NAME
@@ -25,13 +26,13 @@ log_file="${log_path}/pyinventory.log"
 
 # dependencies used by the app
 pkg_dependencies="build-essential python3-dev python3-pip python3-venv git \
-	postgresql postgresql-contrib python3-ldap libldap2-dev libsasl2-dev"
+	postgresql postgresql-contrib"
 
 # PyInventory's version for PIP and settings file
 pyinventory_version="0.8.2"
 
 # Extra python packages:
-pypi_extras="django-redis django-auth-ldap"
+pypi_extras="django-redis"
 
 #=================================================
 # Redis HELPERS
