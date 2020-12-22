@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyinventory_ynh"
-version = "0.8.2~ynh2"
+version = "0.8.2~ynh3"
 description = "Test pyinventory_ynh via local_test.py"
 authors = ["JensDiemer <git@jensdiemer.de>"]
 license = "GPL"
