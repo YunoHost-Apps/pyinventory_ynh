@@ -18,14 +18,13 @@ check-poetry:
 install-poetry:  ## install or update poetry
 	pip3 install -U poetry
 
-install: check-poetry  ## install PyInventory via poetry
-	sudo apt install python3-ldap libldap2-dev libsasl2-dev
+install: check-poetry  ## install project via poetry
 	poetry install
 
 update: install-poetry  ## update the sources and installation
 	poetry update
 
-local-test: check-poetry  ## Run local_test.py to run pyinventory_ynh locally
+local-test: check-poetry  ## Run local_test.py to run the project locally
 	poetry run ./local_test.py
 
 local-diff-settings:  ## Run "manage.py diffsettings" with local test
