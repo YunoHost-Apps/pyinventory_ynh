@@ -70,6 +70,17 @@ To remove call e.g.:
 sudo yunohost app remove pyinventory
 ```
 
+Backup / remove / restore cycle, e.g.:
+```bash
+yunohost backup create --apps pyinventory
+yunohost backup list
+archives:
+  - pyinventory-pre-upgrade1
+  - 20201223-163434
+yunohost app remove pyinventory
+yunohost backup restore 20201223-163434 --apps pyinventory
+```
+
 Debug installation, e.g.:
 ```bash
 root@yunohost:~# ls -la /var/www/pyinventory/
