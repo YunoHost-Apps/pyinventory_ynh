@@ -12,6 +12,11 @@ django_ynh = "*"
 
 [tool.poetry.dev-dependencies]
 bx_py_utils = "*"
+tox = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-django = "*"
+coveralls = "*"
 isort = "*"
 flake8 = "*"
 flynt = "*"

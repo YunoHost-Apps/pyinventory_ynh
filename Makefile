@@ -38,6 +38,15 @@ fix-code-style: ## Fix code formatting
 	poetry run black --verbose --safe --line-length=${MAX_LINE_LENGTH} --skip-string-normalization .
 	poetry run isort .
 
+tox-listenvs: check-poetry ## List all tox test environments
+	poetry run tox --listenvs
+
+tox: check-poetry ## Run pytest via tox with all environments
+	poetry run tox
+
+pytest: install  ## Run pytest
+	poetry run python3 ./run_pytest.py
+
 local-test: install  ## Run local_test.py to run the project locally
 	poetry run python3 ./local_test.py
 
