@@ -29,7 +29,7 @@ You can edit the file `$final_path/local_settings.py` to enable or disable featu
 
 ## SSO authentication
 
-[SSOwat](https://github.com/YunoHost/SSOwat) is fully supported:
+[SSOwat](https://github.com/YunoHost/SSOwat) is fully supported via [django_ynh](https://github.com/YunoHost-Apps/django_ynh):
 
 * First user (`$YNH_APP_ARG_ADMIN`) will be created as Django's super user
 * All new users will be created as normal users
