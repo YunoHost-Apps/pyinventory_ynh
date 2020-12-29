@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "pyinventory_ynh"
-version = "0.8.2~ynh5"
+version = "0.8.3~ynh1"
 description = "Test pyinventory_ynh via local_test.py"
 authors = ["JensDiemer <git@jensdiemer.de>"]
 license = "GPL"
 
 [tool.poetry.dependencies]
 python = ">=3.7,<4.0.0"
-pyinventory = "*"
+pyinventory = "==0.8.3"
 django_ynh = "*"
 
 [tool.poetry.dev-dependencies]

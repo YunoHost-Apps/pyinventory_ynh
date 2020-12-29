@@ -10,7 +10,7 @@ certifi==2020.12.5; python_version >= "3.7" and python_full_version < "3.0.0" or
 chardet==4.0.0; python_version >= "3.7" and python_full_version < "3.0.0" or python_version >= "3.7" and python_full_version < "4.0.0" and python_full_version >= "3.5.0" \
     --hash=sha256:f864054d66fd9118f2e67044ac8981a54775ec5b67aed0441892edb553d21da5 \
     --hash=sha256:0d6f53a15db4120f2b08c94f11e7d93d2c911ee118b6b30a04ec3ee8310179fa
-colorama==0.4.4; python_version >= "3.7" and python_full_version < "3.0.0" and sys_platform == "win32" or python_version >= "3.7" and python_full_version < "4.0.0" and python_full_version >= "3.5.0" and sys_platform == "win32" \
+colorama==0.4.4; python_version >= "3.7" and python_full_version < "3.0.0" and sys_platform == "win32" or python_version >= "3.7" and python_full_version < "4.0.0" and sys_platform == "win32" and python_full_version >= "3.5.0" \
     --hash=sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2 \
     --hash=sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b
 colorlog==4.6.2; python_version >= "3.7" and python_full_version < "4.0.0" \
@@ -159,9 +159,9 @@ psycopg2-binary==2.8.6; python_version >= "3.7" and python_full_version < "3.0.0
     --hash=sha256:7312e931b90fe14f925729cde58022f5d034241918a5c4f9797cac62f6b3a9dd \
     --hash=sha256:6422f2ff0919fd720195f64ffd8f924c1395d30f9a495f31e2392c2efafb5056 \
     --hash=sha256:15978a1fbd225583dd8cdaf37e67ccc278b5abecb4caf6b2d6b8e2b948e953f6
-pyinventory==0.8.2; python_version >= "3.7" and python_full_version < "4.0.0" \
-    --hash=sha256:f772cdae9d34f77a31a943f796a02bf706bba1f4ff7b2ecba87afc96234a64c2 \
-    --hash=sha256:c3badc4db1d488d49fd693536ba3c93b84bf880841d109e9bce9e2be864ce9e0
+pyinventory==0.8.3; python_version >= "3.7" and python_full_version < "4.0.0" \
+    --hash=sha256:03f028a508b9a4e303b5561083476b5c7099914c792b66f20d94f034a8b0db50 \
+    --hash=sha256:e7a09820b2aaf1d17e9ca6896e83e69999cce99d7d399141648e0d303cef10c7
 pyparsing==2.4.7; python_version >= "3.7" and python_full_version < "3.0.0" or python_version >= "3.7" and python_full_version < "4.0.0" and python_full_version >= "3.5.0" \
     --hash=sha256:ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b \
     --hash=sha256:c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1
