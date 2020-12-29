@@ -18,12 +18,12 @@ check-poetry:
 install-poetry:  ## install or update poetry
 	pip3 install -U pip
 	pip3 install -U poetry
-	poetry run pip install -U pip
 
 install: check-poetry  ## install project via poetry
 	poetry install
 
-update: install-poetry  ## update the sources and installation
+update: install-poetry  ## update the sources and installation and generate "conf/requirements.txt"
+	poetry run pip install -U pip
 	poetry update
 	poetry export -f requirements.txt --output conf/requirements.txt
 
