@@ -20,11 +20,6 @@ def assert_file_contains_string(file_path, string):
 def test_version():
     version = inventory.__version__
 
-    if 'dev' not in version and 'rc' not in version:
-        version_string = f'v{version}'
-
-        assert_file_contains_string(file_path=Path(PACKAGE_ROOT, 'README.md'), string=version_string)
-
     assert_file_contains_string(file_path=Path(PACKAGE_ROOT, 'pyproject.toml'), string=f'version = "{version}~ynh')
     assert_file_contains_string(file_path=Path(PACKAGE_ROOT, 'pyproject.toml'), string=f'pyinventory = "=={version}"')
     assert_file_contains_string(file_path=Path(PACKAGE_ROOT, 'manifest.json'), string=f'"version": "{version}~ynh')
