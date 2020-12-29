@@ -16,13 +16,16 @@ check-poetry:
 	fi
 
 install-poetry:  ## install or update poetry
+	pip3 install -U pip
 	pip3 install -U poetry
+	poetry run pip install -U pip
 
 install: check-poetry  ## install project via poetry
 	poetry install
 
 update: install-poetry  ## update the sources and installation
 	poetry update
+	poetry export -f requirements.txt --output conf/requirements.txt
 
 local-test: check-poetry  ## Run local_test.py to run the project locally
 	poetry run ./local_test.py
