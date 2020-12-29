@@ -101,7 +101,7 @@ ynh_system_user_create --username="$app" --home_dir="$final_path" --use_shell
 #=================================================
 # PIP INSTALLATION
 #=================================================
-ynh_script_progression --message="Install PyInventory using PIP..." --weight=80
+ynh_script_progression --message="Install project via pip..." --weight=80
 
 python3 -m venv "${final_path}/venv"
 cp ../conf/requirements.txt "$final_path/requirements.txt"
@@ -119,10 +119,7 @@ chown -R "$app" "$final_path"
 #=================================================
 # copy config files
 # ================================================
-ynh_script_progression --message="Create pyinventory configuration file..."
-
-cp ../conf/create_superuser.py "$final_path/create_superuser.py"
-chmod +x "$final_path/create_superuser.py"
+ynh_script_progression --message="Create project configuration files..."
 
 gunicorn_conf="$final_path/gunicorn.conf.py"
 cp "../conf/gunicorn.conf.py" "$gunicorn_conf"
@@ -134,10 +131,8 @@ ynh_store_file_checksum --file="$gunicorn_conf"
 cp ../conf/manage.py "$final_path/manage.py"
 chmod +x "$final_path/manage.py"
 
-cp ../conf/wsgi.py "$final_path/wsgi.py"
-
-settings="$final_path/ynh_pyinventory_settings.py"
-cp "../conf/ynh_pyinventory_settings.py" "$settings"
+settings="$final_path/settings.py"
+cp "../conf/settings.py" "$settings"
 
 ynh_replace_string --match_string="__APP__" --replace_string="$app" --target_file="$settings"
 ynh_replace_string --match_string="__DB_PWD__" --replace_string="$db_pwd" --target_file="$settings"
@@ -156,10 +151,11 @@ ynh_store_file_checksum --file="$settings"
 
 ynh_app_setting_set --app="$app" --key=redis_db --value="$redis_db"
 
-touch "$final_path/local_settings.py"
+cp ../conf/setup_user.py "$final_path/setup_user.py"
+cp ../conf/urls.py "$final_path/urls.py"
+cp ../conf/wsgi.py "$final_path/wsgi.py"
 
-cp "../conf/ynh_authenticate.py" "$final_path/ynh_authenticate.py"
-cp "../conf/ynh_urls.py" "$final_path/ynh_urls.py"
+touch "$final_path/local_settings.py"
 
 #=================================================
 # MIGRATE / COLLECTSTATIC / CREATEADMIN
@@ -177,7 +173,9 @@ ynh_script_progression --message="migrate/collectstatic/createadmin..." --weight
 
     ./manage.py migrate --no-input
     ./manage.py collectstatic --no-input
-    ./create_superuser.py --username="$admin" --email="$admin_mail" --password="pyinventory"
+
+	# Create/update Django superuser (set unusable password, because auth done via SSOwat):
+	./manage.py create_superuser --username="$admin" --email="$admin_mail"
 
     # Check the configuration
     # This may fail in some cases with errors, etc., but the app works and the user can fix issues later.

@@ -21,7 +21,7 @@ Pull requests welcome ;)
 
 ## Settings and upgrades
 
-Almost everything related to PyInventory's configuration is handled in a `"../conf/ynh_pyinventory_settings.py"` file.
+Almost everything related to PyInventory's configuration is handled in a `"../conf/settings.py"` file.
 You can edit the file `$final_path/local_settings.py` to enable or disable features.
 
 # Miscellaneous
@@ -100,13 +100,13 @@ drwxr-xr-x 3 root        root           3 Dec  8 08:36 ..
 -rw-r--r-- 1 pyinventory pyinventory  171 Dec  8 08:39 secret.txt
 drwxr-xr-x 6 pyinventory pyinventory    6 Dec  8 08:37 venv
 -rw-r--r-- 1 pyinventory pyinventory  115 Dec  8 08:39 wsgi.py
--rw-r--r-- 1 pyinventory pyinventory 4737 Dec  8 08:39 ynh_pyinventory_settings.py
+-rw-r--r-- 1 pyinventory pyinventory 4737 Dec  8 08:39 settings.py
 
 root@yunohost:~# cd /opt/yunohost/pyinventory/
 root@yunohost:/opt/yunohost/pyinventory# source venv/bin/activate
 (venv) root@yunohost:/opt/yunohost/pyinventory# ./manage.py check
 PyInventory v0.8.2 (Django v2.2.17)
-DJANGO_SETTINGS_MODULE='ynh_pyinventory_settings'
+DJANGO_SETTINGS_MODULE='settings'
 PROJECT_PATH:/opt/yunohost/pyinventory/venv/lib/python3.7/site-packages
 BASE_PATH:/opt/yunohost/pyinventory
 System check identified no issues (0 silenced).

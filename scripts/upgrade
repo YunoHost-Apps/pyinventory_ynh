@@ -83,10 +83,9 @@ ynh_script_progression --message="Configuring a systemd service..."
 ynh_add_systemd_config --service="$app" --template="pyinventory.service"
 
 #=================================================
-# UPGRADE PYINVENTORY
+# UPGRADE VENV
 #=================================================
-
-ynh_script_progression --message="Install pyinventory using PIP..." --weight=15
+ynh_script_progression --message="Upgrade project via pip..." --weight=80
 
 python3 -m venv "${final_path}/venv"
 cp ../conf/requirements.txt "$final_path/requirements.txt"
@@ -94,21 +93,17 @@ chown -R "$app" "$final_path"
 
 #run source in a 'sub shell'
 (
-    set +o nounset
-    source "${final_path}/venv/bin/activate"
-    set -o nounset
-    ynh_exec_as $app $final_path/venv/bin/pip install --upgrade pip
-    ynh_exec_as $app $final_path/venv/bin/pip install -r "$final_path/requirements.txt"
+	set +o nounset
+	source "${final_path}/venv/bin/activate"
+	set -o nounset
+	ynh_exec_as $app $final_path/venv/bin/pip install --upgrade pip
+	ynh_exec_as $app $final_path/venv/bin/pip install -r "$final_path/requirements.txt"
 )
 
 #=================================================
 # copy config files
 # ================================================
-ynh_script_progression --message="Create pyinventory configuration file..."
-
-ynh_backup_if_checksum_is_different --file="$final_path/create_superuser.py"
-cp ../conf/create_superuser.py "$final_path/create_superuser.py"
-chmod +x "$final_path/create_superuser.py"
+ynh_script_progression --message="Create project configuration files..."
 
 gunicorn_conf="$final_path/gunicorn.conf.py"
 ynh_backup_if_checksum_is_different --file="$gunicorn_conf"
@@ -122,14 +117,11 @@ ynh_backup_if_checksum_is_different --file="$final_path/manage.py"
 cp ../conf/manage.py "$final_path/manage.py"
 chmod +x "$final_path/manage.py"
 
-ynh_backup_if_checksum_is_different --file="$final_path/wsgi.py"
-cp ../conf/wsgi.py "$final_path/wsgi.py"
-
 # save old settings file
-settings="$final_path/ynh_pyinventory_settings.py"
+settings="$final_path/settings.py"
 ynh_backup_if_checksum_is_different --file="$settings"
 
-cp "../conf/ynh_pyinventory_settings.py" "$settings"
+cp "../conf/settings.py" "$settings"
 
 ynh_replace_string --match_string="__APP__" --replace_string="$app" --target_file="$settings"
 ynh_replace_string --match_string="__DB_PWD__" --replace_string="$db_pwd" --target_file="$settings"
@@ -146,10 +138,16 @@ ynh_replace_string --match_string="__PATH_URL__" --replace_string="$path_url" --
 # Recalculate and store the config file checksum into the app settings
 ynh_store_file_checksum --file="$settings"
 
-touch "$final_path/local_settings.py"
+ynh_backup_if_checksum_is_different --file="$final_path/setup_user.py"
+cp ../conf/setup_user.py "$final_path/setup_user.py"
 
-cp "../conf/ynh_authenticate.py" "$final_path/ynh_authenticate.py"
-cp "../conf/ynh_urls.py" "$final_path/ynh_urls.py"
+ynh_backup_if_checksum_is_different --file="$final_path/urls.py"
+cp ../conf/urls.py "$final_path/urls.py"
+
+ynh_backup_if_checksum_is_different --file="$final_path/wsgi.py"
+cp ../conf/wsgi.py "$final_path/wsgi.py"
+
+touch "$final_path/local_settings.py"
 
 #=================================================
 # MIGRATE PYINVENTORY
@@ -167,7 +165,9 @@ ynh_script_progression --message="migrate/collectstatic/createadmin..." --weight
 
 	./manage.py migrate --no-input
 	./manage.py collectstatic --no-input
-	./create_superuser.py --username="$admin" --email="$admin_mail" --password="pyinventory"
+
+	# Create/update Django superuser (set unusable password, because auth done via SSOwat):
+	./manage.py create_superuser --username="$admin" --email="$admin_mail"
 
 	# Check the configuration
 	# This may fail in some cases with errors, etc., but the app works and the user can fix issues later.

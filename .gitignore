@@ -6,3 +6,5 @@ __pycache__
 secret.txt
 /local_test/
 /poetry.lock
+/coverage.xml
+/htmlcov/

@@ -1,7 +1,7 @@
 bleach==3.2.1; python_version >= "3.7" and python_full_version < "3.0.0" or python_version >= "3.7" and python_full_version < "4.0.0" and python_full_version >= "3.5.0" \
     --hash=sha256:9f8ccbeb6183c6e6cddea37592dfb0167485c1e3b13b3363bc325aa8bda3adbd \
     --hash=sha256:52b5919b81842b1854196eaae5ca29679a2f2e378905c346d3ca8227c2c66080
-bx-py-utils==18; python_version >= "3.7" and python_full_version < "4.0.0" \
+bx-py-utils==18; python_version >= "3.6" and python_full_version < "4.0.0" \
     --hash=sha256:72a6090822544603e3a7547ce07f0120ae67940ca2ec4590ac907b3b09ad70ca \
     --hash=sha256:195ea1b3d5d277354ea33e34ec3ebd4fc2a6e8d94d646ede902f80527f06ec75
 certifi==2020.12.5; python_version >= "3.7" and python_full_version < "3.0.0" or python_version >= "3.7" and python_full_version < "4.0.0" and python_full_version >= "3.5.0" \
@@ -61,9 +61,9 @@ django-tagulous==1.1.0; python_version >= "3.7" and python_full_version < "4.0.0
 django-tools==0.48.3; python_version >= "3.7" and python_full_version < "4.0.0" \
     --hash=sha256:08ed2ae606067f49c2c3949055227a826c8b880e5816114925eca386cf1823af \
     --hash=sha256:40444fa16b703b7c6960a800ba76aad42472c9aa70040d549a4d91dbb47a5ddb
-django-ynh==0.1.0; python_version >= "3.7" and python_full_version < "4.0.0" \
-    --hash=sha256:db75d5d9f0b1744187168a1b815272cd8c86c9ecb0fd77c58517e82a2cd9b09b \
-    --hash=sha256:955dc29f55c449e116876c7c920dc8451157bae2a246b1375822f5e47d4c6fd4
+django-ynh==0.1.2; python_version >= "3.7" and python_full_version < "4.0.0" \
+    --hash=sha256:2efa30444f67252bbb7601e1b5631ce93ddf72a70b2216bb61363990de78ad4f \
+    --hash=sha256:711b0f9ac183b2507a58cf644081aafefdc025ce585f6a8dad427ca3baf55a19
 django==2.2.17; python_version >= "3.7" and python_full_version < "4.0.0" and python_version < "4.0" \
     --hash=sha256:558cb27930defd9a6042133258caf797b2d1dee233959f537e3dc475cb49bd7c \
     --hash=sha256:cf5370a4d7765a9dd6d42a7b96b53c74f9446cd38209211304b210fe0404b861

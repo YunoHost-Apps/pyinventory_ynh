@@ -1,4 +1,5 @@
 SHELL := /bin/bash
+MAX_LINE_LENGTH := 119
 
 all: help
 
@@ -27,8 +28,18 @@ update: install-poetry  ## update the sources and installation and generate "con
 	poetry update
 	poetry export -f requirements.txt --output conf/requirements.txt
 
-local-test: check-poetry  ## Run local_test.py to run the project locally
-	poetry run ./local_test.py
+lint: ## Run code formatters and linter
+	poetry run flynt --fail-on-change --line_length=${MAX_LINE_LENGTH} .
+	poetry run isort --check-only .
+	poetry run flake8 .
+
+fix-code-style: ## Fix code formatting
+	poetry run flynt --line_length=${MAX_LINE_LENGTH} .
+	poetry run black --verbose --safe --line-length=${MAX_LINE_LENGTH} --skip-string-normalization .
+	poetry run isort .
+
+local-test: install  ## Run local_test.py to run the project locally
+	poetry run python3 ./local_test.py
 
 local-diff-settings:  ## Run "manage.py diffsettings" with local test
 	poetry run python3 local_test/opt_yunohost/manage.py diffsettings
