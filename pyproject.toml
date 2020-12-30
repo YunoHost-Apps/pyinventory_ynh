@@ -1,16 +1,87 @@
 [tool.poetry]
 name = "pyinventory_ynh"
-version = "0.8.2~ynh4"
+version = "0.8.3~ynh1"
 description = "Test pyinventory_ynh via local_test.py"
 authors = ["JensDiemer <git@jensdiemer.de>"]
 license = "GPL"
 
 [tool.poetry.dependencies]
 python = ">=3.7,<4.0.0"
-pyinventory = "*"
+pyinventory = "==0.8.3"
+django_ynh = "*"
 
 [tool.poetry.dev-dependencies]
+bx_py_utils = "*"
+tox = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-django = "*"
+coveralls = "*"
+isort = "*"
+flake8 = "*"
+flynt = "*"
+black = "*"
+pyupgrade = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.isort]
+# https://pycqa.github.io/isort/docs/configuration/config_files/#pyprojecttoml-preferred-format
+atomic=true
+line_length=120
+case_sensitive=false
+skip_glob=["*/htmlcov/*","*/migrations/*"]
+multi_line_output=3
+include_trailing_comma=true
+known_first_party=["inventory"]
+no_lines_before="LOCALFOLDER"
+default_section="THIRDPARTY"
+sections=["FUTURE","STDLIB","THIRDPARTY","FIRSTPARTY","LOCALFOLDER"]
+lines_after_imports=2
+
+
+[tool.pytest.ini_options]
+# https://docs.pytest.org/en/latest/customize.html#pyproject-toml
+minversion = "6.0"
+norecursedirs = ".* .git __pycache__ conf coverage* dist htmlcov"
+# sometimes helpfull "addopts" arguments:
+#    -vv
+#    --verbose
+#    --capture=no
+#    --trace-config
+#    --full-trace
+#    -p no:warnings
+addopts = """
+    --import-mode=importlib
+    --reuse-db
+    --nomigrations
+    --cov=.
+    --cov-report term-missing
+    --cov-report html
+    --cov-report xml
+    --no-cov-on-fail
+    --showlocals
+    --doctest-modules
+    --failed-first
+    --last-failed-no-failures all
+    --new-first
+"""
+
+
+[tool.tox]
+# https://tox.readthedocs.io/en/latest/example/basic.html#pyproject-toml-tox-legacy-ini
+legacy_tox_ini = """
+[tox]
+isolated_build = True
+envlist = py39,py38,py37
+skip_missing_interpreters = True
+
+[testenv]
+passenv = *
+whitelist_externals = make
+commands =
+    make pytest
+"""
