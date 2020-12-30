@@ -25,14 +25,7 @@ log_file="${log_path}/pyinventory.log"
 #=================================================
 
 # dependencies used by the app
-pkg_dependencies="build-essential python3-dev python3-pip python3-venv git \
-	postgresql postgresql-contrib"
-
-# PyInventory's version for PIP and settings file
-pyinventory_version="0.8.2"
-
-# Extra python packages:
-pypi_extras="django-redis"
+pkg_dependencies="build-essential python3-dev python3-pip python3-venv git postgresql postgresql-contrib"
 
 #=================================================
 # Redis HELPERS

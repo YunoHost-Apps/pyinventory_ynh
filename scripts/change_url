@@ -116,10 +116,10 @@ fi
 ynh_script_progression --message="Modify PyInventory's config file..."
 
 # save old settings file
-settings="$final_path/ynh_pyinventory_settings.py"
+settings="$final_path/settings.py"
 ynh_backup_if_checksum_is_different --file="$settings"
 
-cp "../conf/ynh_pyinventory_settings.py" "$settings"
+cp "../conf/settings.py" "$settings"
 
 ynh_replace_string --match_string="__APP__" --replace_string="$app" --target_file="$settings"
 ynh_replace_string --match_string="__DB_PWD__" --replace_string="$db_pwd" --target_file="$settings"
