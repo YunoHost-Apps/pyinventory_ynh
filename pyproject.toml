@@ -10,7 +10,11 @@ python = ">=3.7,<4.0.0"
 pyinventory = "==0.8.4"
 django_ynh = {version = "*", extras = ["ynh"]}
 
+[tool.poetry.scripts]
+devshell = 'inventory_project.dev_shell:devshell_cmdloop'
+
 [tool.poetry.dev-dependencies]
+dev_shell = "*"  # https://github.com/jedie/dev-shell
 bx_py_utils = "*"
 tox = "*"
 pytest = "*"
@@ -28,12 +32,18 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 
+[tool.autopep8]
+# https://github.com/hhatto/autopep8#pyprojecttoml
+max_line_length = 120
+exclude=".*,*/htmlcov/*,*/migrations/*"
+
+
 [tool.isort]
 # https://pycqa.github.io/isort/docs/configuration/config_files/#pyprojecttoml-preferred-format
 atomic=true
 line_length=120
 case_sensitive=false
-skip_glob=["*/htmlcov/*","*/migrations/*"]
+skip_glob=[".*", "*/htmlcov/*","*/migrations/*"]
 multi_line_output=3
 include_trailing_comma=true
 known_first_party=["inventory"]
@@ -41,6 +51,10 @@ no_lines_before="LOCALFOLDER"
 default_section="THIRDPARTY"
 sections=["FUTURE","STDLIB","THIRDPARTY","FIRSTPARTY","LOCALFOLDER"]
 lines_after_imports=2
+
+
+[tool.coverage.run]
+omit = [".*"]
 
 
 [tool.pytest.ini_options]
