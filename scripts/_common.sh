@@ -1,26 +1,6 @@
 #!/bin/bash
 
 #=================================================
-# RETRIEVE ARGUMENTS FROM THE MANIFEST
-#=================================================
-
-domain=$YNH_APP_ARG_DOMAIN
-path_url=$YNH_APP_ARG_PATH
-
-admin=$YNH_APP_ARG_ADMIN
-is_public=$YNH_APP_ARG_IS_PUBLIC
-app=$YNH_APP_INSTANCE_NAME
-
-#=================================================
-# SET CONSTANTS
-#=================================================
-
-public_path=/var/www/$app
-final_path=/opt/yunohost/$app
-log_path=/var/log/$app
-log_file="${log_path}/pyinventory.log"
-
-#=================================================
 # COMMON VARIABLES
 #=================================================
 

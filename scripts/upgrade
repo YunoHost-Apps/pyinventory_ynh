@@ -1,6 +1,8 @@
 #!/bin/bash
 
 #=================================================
+# GENERIC START
+#=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
 
@@ -12,19 +14,26 @@ source /usr/share/yunohost/helpers
 #=================================================
 ynh_script_progression --message="Loading installation settings..."
 
-admin=$(ynh_app_setting_get --app="$app" --key=admin)
-is_public=$(ynh_app_setting_get --app="$app" --key=is_public)
-public_path=$(ynh_app_setting_get --app="$app" --key=public_path)
-final_path=$(ynh_app_setting_get --app="$app" --key=final_path)
-log_path=$(ynh_app_setting_get --app="$app" --key=log_path)
+app=$YNH_APP_INSTANCE_NAME
 
-domain=$(ynh_app_setting_get --app="$app" --key=domain)
-path_url=$(ynh_app_setting_get --app="$app" --key=path)
+domain=$(ynh_app_setting_get --app=$app --key=domain)
+path_url=$(ynh_app_setting_get --app=$app --key=path)
+admin=$(ynh_app_setting_get --app=$app --key=admin)
+final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+public_path=$(ynh_app_setting_get --app=$app --key=public_path)
+log_file=$(ynh_app_setting_get --app=$app --key=log_file)
 
-port=$(ynh_app_setting_get --app="$app" --key=port)
-db_pwd=$(ynh_app_setting_get --app="$app" --key=psqlpwd)
+port=$(ynh_app_setting_get --app=$app --key=port)
+db_pwd=$(ynh_app_setting_get --app=$app --key=psqlpwd)
 admin_mail=$(ynh_user_get_info "$admin" mail)
-redis_db=$(ynh_app_setting_get --app="$app" --key=redis_db)
+redis_db=$(ynh_app_setting_get --app=$app --key=redis_db)
+
+#=================================================
+# CHECK VERSION
+#=================================================
+ynh_script_progression --message="Checking version..."
+
+upgrade_type=$(ynh_check_app_version_changed)
 
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
@@ -34,7 +43,7 @@ ynh_script_progression --message="Backing up the app before upgrading (may take 
 # Backup the current version of the app
 ynh_backup_before_upgrade
 ynh_clean_setup () {
-	# restore it if the upgrade fails
+	# Restore it if the upgrade fails
 	ynh_restore_upgradebackup
 }
 # Exit if an error occurs during the execution of the script
@@ -45,42 +54,68 @@ ynh_abort_if_errors
 #=================================================
 # STOP SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Stopping systemd services..." --weight=5
+ynh_script_progression --message="Stopping a systemd service..." --weight=5
 
-ynh_systemd_action --service_name="$app" --action="stop"
-
-#=================================================
-# NGINX CONFIGURATION
-#=================================================
-ynh_script_progression --message="Upgrading nginx web server configuration..."
-
-# Create a dedicated nginx config
-# https://github.com/YunoHost/yunohost/blob/dev/data/helpers.d/nginx
-ynh_add_nginx_config "public_path" "port"
+ynh_systemd_action --service_name=$app --action="stop"
 
 #=================================================
-# SPECIFIC UPGRADE
+# ENSURE DOWNWARD COMPATIBILITY
 #=================================================
-# Update dependencies
-#=================================================
-ynh_script_progression --message="Upgrading dependencies..."
+ynh_script_progression --message="Ensuring downward compatibility..."
 
-ynh_exec_warn_less ynh_install_app_dependencies "$pkg_dependencies"
+# Cleaning legacy permissions
+if ynh_legacy_permissions_exists; then
+	ynh_legacy_permissions_delete_all
+
+	ynh_app_setting_delete --app=$app --key=is_public
+fi
 
 #=================================================
 # CREATE DEDICATED USER
 #=================================================
 ynh_script_progression --message="Making sure dedicated system user exists..."
 
-# Create a system user
-ynh_system_user_create --username="$app" --home_dir="$final_path" --use_shell
+# Create a dedicated user (if not existing)
+ynh_system_user_create --username=$app --home_dir=$final_path --use_shell
+
+#=================================================
+# NGINX CONFIGURATION
+#=================================================
+ynh_script_progression --message="Upgrading NGINX web server configuration..."
+
+# Create a dedicated NGINX config
+ynh_add_nginx_config
+
+#=================================================
+# UPGRADE DEPENDENCIES
+#=================================================
+ynh_script_progression --message="Upgrading dependencies..."
+
+ynh_exec_warn_less ynh_install_app_dependencies $pkg_dependencies
+
+#=================================================
+# SPECIFIC UPGRADE
+#=================================================
+# UPDATE A CONFIG FILE
+#=================================================
+ynh_script_progression --message="Updating a configuration file..."
+
+ynh_add_config --template="../conf/gunicorn.conf.py" --destination="$final_path/gunicorn.conf.py"
+ynh_add_config --template="../conf/manage.py" --destination="$final_path/manage.py"
+chmod +x "$final_path/manage.py"
+ynh_add_config --template="../conf/settings.py" --destination="$final_path/settings.py"
+ynh_add_config --template="../conf/setup_user.py" --destination="$final_path/setup_user.py"
+ynh_add_config --template="../conf/urls.py" --destination="$final_path/urls.py"
+ynh_add_config --template="../conf/wsgi.py" --destination="$final_path/wsgi.py"
+touch "$final_path/local_settings.py"
 
 #=================================================
 # SETUP SYSTEMD
 #=================================================
-ynh_script_progression --message="Configuring a systemd service..."
+ynh_script_progression --message="Upgrading systemd configuration..."
 
-ynh_add_systemd_config --service="$app" --template="pyinventory.service"
+# Create a dedicated systemd config
+ynh_add_systemd_config
 
 #=================================================
 # UPGRADE VENV
@@ -101,67 +136,18 @@ chown -R "$app" "$final_path"
 )
 
 #=================================================
-# copy config files
-# ================================================
-ynh_script_progression --message="Create project configuration files..."
-
-gunicorn_conf="$final_path/gunicorn.conf.py"
-ynh_backup_if_checksum_is_different --file="$gunicorn_conf"
-cp "../conf/gunicorn.conf.py" "$gunicorn_conf"
-ynh_replace_string --match_string="__FINAL_HOME_PATH__" --replace_string="$final_path" --target_file="$gunicorn_conf"
-ynh_replace_string --match_string="__LOG_FILE__" --replace_string="$log_file" --target_file="$gunicorn_conf"
-ynh_replace_string --match_string="__PORT__" --replace_string="$port" --target_file="$gunicorn_conf"
-ynh_store_file_checksum --file="$gunicorn_conf"
-
-ynh_backup_if_checksum_is_different --file="$final_path/manage.py"
-cp ../conf/manage.py "$final_path/manage.py"
-chmod +x "$final_path/manage.py"
-
-# save old settings file
-settings="$final_path/settings.py"
-ynh_backup_if_checksum_is_different --file="$settings"
-
-cp "../conf/settings.py" "$settings"
-
-ynh_replace_string --match_string="__APP__" --replace_string="$app" --target_file="$settings"
-ynh_replace_string --match_string="__DB_PWD__" --replace_string="$db_pwd" --target_file="$settings"
-ynh_replace_string --match_string="__ADMIN__" --replace_string="$admin" --target_file="$settings"
-ynh_replace_string --match_string="__ADMINMAIL__" --replace_string="$admin_mail" --target_file="$settings"
-ynh_replace_string --match_string="__FINAL_HOME_PATH__" --replace_string="$final_path" --target_file="$settings"
-ynh_replace_string --match_string="__FINAL_WWW_PATH__" --replace_string="$public_path" --target_file="$settings"
-ynh_replace_string --match_string="__LOG_FILE__" --replace_string="$log_file" --target_file="$settings"
-ynh_replace_string --match_string="__REDIS_DB__" --replace_string="$redis_db" --target_file="$settings"
-
-ynh_replace_string --match_string="__DOMAIN__" --replace_string="$domain" --target_file="$settings"
-ynh_replace_string --match_string="__PATH_URL__" --replace_string="$path_url" --target_file="$settings"
-
-# Recalculate and store the config file checksum into the app settings
-ynh_store_file_checksum --file="$settings"
-
-ynh_backup_if_checksum_is_different --file="$final_path/setup_user.py"
-cp ../conf/setup_user.py "$final_path/setup_user.py"
-
-ynh_backup_if_checksum_is_different --file="$final_path/urls.py"
-cp ../conf/urls.py "$final_path/urls.py"
-
-ynh_backup_if_checksum_is_different --file="$final_path/wsgi.py"
-cp ../conf/wsgi.py "$final_path/wsgi.py"
-
-touch "$final_path/local_settings.py"
-
-#=================================================
 # MIGRATE PYINVENTORY
 #=================================================
 ynh_script_progression --message="migrate/collectstatic/createadmin..." --weight=10
 
-(
+pushd $final_path
 	set +o nounset
 	source "${final_path}/venv/bin/activate"
 	set -o nounset
-	cd "${final_path}"
+	#cd "${final_path}"
 
-  # Just for debugging:
-  ./manage.py diffsettings
+	# Just for debugging:
+	./manage.py diffsettings
 
 	./manage.py migrate --no-input
 	./manage.py collectstatic --no-input
@@ -172,8 +158,10 @@ ynh_script_progression --message="migrate/collectstatic/createadmin..." --weight
 	# Check the configuration
 	# This may fail in some cases with errors, etc., but the app works and the user can fix issues later.
 	./manage.py check --deploy || true
-)
+popd
 
+#=================================================
+# GENERIC FINALIZATION
 #=================================================
 # SETUP LOGROTATE
 #=================================================
@@ -190,27 +178,16 @@ ynh_script_progression --message="Integrating service in YunoHost..."
 yunohost service add $app --description="Web based management to catalog things" --log="${log_file}"
 
 #=================================================
-# GENERIC FINALIZATION
+# START SYSTEMD SERVICE
 #=================================================
-# SECURE FILES AND DIRECTORIES
-#=================================================
+ynh_script_progression --message="Starting a systemd service..." --weight=5
 
-# Set permissions to app files
-chown -R "$app" "$log_path"
-chown -R "$app" "$public_path"
-chown -R "$app" "$final_path"
-
-#=================================================
-# Start pyinventory via systemd
-#=================================================
-ynh_script_progression --message="Starting PyInventory's services..." --weight=5
-
-ynh_systemd_action --service_name="$app" --action="start"
+ynh_systemd_action --service_name=$app --action="start"
 
 #=================================================
 # RELOAD NGINX
 #=================================================
-ynh_script_progression --message="Reloading nginx web server..."
+ynh_script_progression --message="Reloading NGINX web server..."
 
 ynh_systemd_action --service_name=nginx --action=reload
 

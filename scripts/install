@@ -1,6 +1,8 @@
 #!/bin/bash
 
 #=================================================
+# GENERIC START
+#=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
 
@@ -11,92 +13,162 @@ source /usr/share/yunohost/helpers
 # MANAGE SCRIPT FAILURE
 #=================================================
 
+ynh_clean_setup () {
+	ynh_clean_check_starting
+}
 # Exit if an error occurs during the execution of the script
 ynh_abort_if_errors
+
+#=================================================
+# RETRIEVE ARGUMENTS FROM THE MANIFEST
+#=================================================
+
+domain=$YNH_APP_ARG_DOMAIN
+path_url=$YNH_APP_ARG_PATH
+admin=$YNH_APP_ARG_ADMIN
+is_public=$YNH_APP_ARG_IS_PUBLIC
+admin_mail=$(ynh_user_get_info --username="$admin" --key=mail)
+redis_db=$(ynh_redis_get_free_db)
+
+app=$YNH_APP_INSTANCE_NAME
 
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
 #=================================================
 ynh_script_progression --message="Validating installation parameters..."
 
+public_path=/var/www/$app
 # Path for e.g. "static" files, served by nginx:
 test ! -e "$public_path" || ynh_die --message="This path already contains a folder"
 
+final_path=/opt/yunohost/$app
 # Path for own config files, e.g.: Django's settings.py:
 test ! -e "$final_path" || ynh_die --message="This path already contains a folder"
 
+log_file="/var/log/$app/pyinventory.log"
+
 # Register (book) web path
-ynh_webpath_register --app="$app" --domain="$domain" --path_url="$path_url"
-
-mkdir -p "$public_path/media" "$public_path/static"
-mkdir -p "$final_path"
-
-mkdir -p "$log_path"
-touch "${log_file}"
+ynh_webpath_register --app=$app --domain=$domain --path_url=$path_url
 
 #=================================================
 # STORE SETTINGS FROM MANIFEST
 #=================================================
 ynh_script_progression --message="Storing installation settings..."
 
-ynh_app_setting_set --app="$app" --key=admin --value="$admin"
-ynh_app_setting_set --app="$app" --key=is_public --value="$is_public"
-ynh_app_setting_set --app="$app" --key=public_path --value="$public_path"
-ynh_app_setting_set --app="$app" --key=final_path --value="$final_path"
-ynh_app_setting_set --app="$app" --key=log_path --value="$log_file"
-
-ynh_app_setting_set --app="$app" --key=domain --value="$domain"
-ynh_app_setting_set --app="$app" --key=path --value="$path_url"
-
-# Find a free port
-port=$(ynh_find_port --port=8000)
-# Set port as application setting
-# https://github.com/YunoHost/yunohost/blob/dev/data/helpers.d/setting
-ynh_app_setting_set --app="$app" --key=port --value="$port"
-
-db_pwd=$(ynh_app_setting_get --app="$app" --key=psqlpwd)
-admin_mail=$(ynh_user_get_info --username="$admin" --key=mail)
-redis_db=$(ynh_redis_get_free_db)
+ynh_app_setting_set --app=$app --key=domain --value=$domain
+ynh_app_setting_set --app=$app --key=path --value=$path_url
+ynh_app_setting_set --app=$app --key=admin --value=$admin
+ynh_app_setting_set --app=$app --key=log_file --value=$log_file
+ynh_app_setting_set --app=$app --key=redis_db --value=$redis_db
 
 #=================================================
 # STANDARD MODIFICATIONS
+#=================================================
+# FIND AND OPEN A PORT
+#=================================================
+ynh_script_progression --message="Finding an available port..."
+
+# Find an available port
+port=$(ynh_find_port --port=8000)
+ynh_app_setting_set --app=$app --key=port --value=$port
+
 #=================================================
 # INSTALL DEPENDENCIES
 #=================================================
 ynh_script_progression --message="Installing dependencies..." --weight=40
 
-ynh_exec_warn_less ynh_install_app_dependencies "$pkg_dependencies"
-
-#=================================================
-# CREATE A PostgreSQL DATABASE
-#=================================================
-ynh_script_progression --message="Creating a PostgreSQL database..."
-
-db_name=$(ynh_sanitize_dbid --db_name="$app")
-db_user=$db_name
-ynh_app_setting_set --app="$app" --key=db_name --value="$db_name"
-
-ynh_psql_test_if_first_run
-
-# Initialize database and store postgres password for upgrade
-ynh_psql_setup_db --db_user="$db_user" --db_name="$db_name"
-
-#=================================================
-# NGINX CONFIGURATION
-#=================================================
-ynh_script_progression --message="Configuring nginx web server..."
-
-# Create a dedicated nginx config
-# https://github.com/YunoHost/yunohost/blob/dev/data/helpers.d/nginx
-ynh_add_nginx_config "public_path" "port"
+ynh_exec_warn_less ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
 # CREATE DEDICATED USER
 #=================================================
 ynh_script_progression --message="Configuring system user..."
 
-# A home directory for venv and settings etc.
-ynh_system_user_create --username="$app" --home_dir="$final_path" --use_shell
+# Create a system user
+ynh_system_user_create --username=$app --home_dir=$final_path --use_shell
+
+#=================================================
+# CREATE A POSTGRESQL DATABASE
+#=================================================
+ynh_script_progression --message="Creating a PostgreSQL database..."
+
+ynh_psql_test_if_first_run
+# Create PostgreSQL database
+db_name=$(ynh_sanitize_dbid --db_name=$app)
+db_user=$db_name
+db_pwd=$(ynh_string_random)
+ynh_app_setting_set --app=$app --key=db_name --value=$db_name
+ynh_app_setting_set --app=$app --key=db_pwd --value=$db_pwd
+
+# Initialize database and store postgres password for upgrade
+ynh_psql_setup_db --db_user=$db_user --db_name=$db_name --db_pwd=$db_pwd
+
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
+ynh_script_progression --message="Setting up source files..."
+
+ynh_app_setting_set --app=$app --key=final_path --value=$final_path
+# Download, check integrity, uncompress and patch the source from app.src
+mkdir -p "$final_path"
+
+chmod 750 "$final_path"
+chmod -R o-rwx "$final_path"
+chown -R $app "$final_path"
+
+#=================================================
+# NGINX CONFIGURATION
+#=================================================
+ynh_script_progression --message="Configuring NGINX web server..."
+
+# Create a dedicated NGINX config
+ynh_add_nginx_config
+
+#=================================================
+# SPECIFIC SETUP
+#=================================================
+# CREATE DATA DIRECTORY
+#=================================================
+ynh_script_progression --message="Creating a data directory..."
+
+ynh_app_setting_set --app=$app --key=public_path --value=$public_path
+
+mkdir -p "$public_path/media" "$public_path/static"
+
+chmod 750 "$public_path"
+chmod -R o-rwx "$public_path"
+chown -R $app:www-data "$public_path"
+
+#=================================================
+# CREATE LOG DIRECTORY
+#=================================================
+ynh_script_progression --message="Creating a log directory..."
+
+mkdir -p /var/log/$app
+touch /var/log/$app/pyinventory.log
+chown -R $app /var/log/$app
+
+#=================================================
+# ADD A CONFIGURATION
+#=================================================
+ynh_script_progression --message="Adding a configuration file..."
+
+ynh_add_config --template="../conf/gunicorn.conf.py" --destination="$final_path/gunicorn.conf.py"
+ynh_add_config --template="../conf/manage.py" --destination="$final_path/manage.py"
+chmod +x "$final_path/manage.py"
+ynh_add_config --template="../conf/settings.py" --destination="$final_path/settings.py"
+ynh_add_config --template="../conf/setup_user.py" --destination="$final_path/setup_user.py"
+ynh_add_config --template="../conf/urls.py" --destination="$final_path/urls.py"
+ynh_add_config --template="../conf/wsgi.py" --destination="$final_path/wsgi.py"
+touch "$final_path/local_settings.py"
+
+#=================================================
+# SETUP SYSTEMD
+#=================================================
+ynh_script_progression --message="Configuring a systemd service..."
+
+# Create a dedicated systemd config
+ynh_add_systemd_config
 
 #=================================================
 # PIP INSTALLATION
@@ -117,56 +189,14 @@ chown -R "$app" "$final_path"
 )
 
 #=================================================
-# copy config files
-# ================================================
-ynh_script_progression --message="Create project configuration files..."
-
-gunicorn_conf="$final_path/gunicorn.conf.py"
-cp "../conf/gunicorn.conf.py" "$gunicorn_conf"
-ynh_replace_string --match_string="__FINAL_HOME_PATH__" --replace_string="$final_path" --target_file="$gunicorn_conf"
-ynh_replace_string --match_string="__LOG_FILE__" --replace_string="$log_file" --target_file="$gunicorn_conf"
-ynh_replace_string --match_string="__PORT__" --replace_string="$port" --target_file="$gunicorn_conf"
-ynh_store_file_checksum --file="$gunicorn_conf"
-
-cp ../conf/manage.py "$final_path/manage.py"
-chmod +x "$final_path/manage.py"
-
-settings="$final_path/settings.py"
-cp "../conf/settings.py" "$settings"
-
-ynh_replace_string --match_string="__APP__" --replace_string="$app" --target_file="$settings"
-ynh_replace_string --match_string="__DB_PWD__" --replace_string="$db_pwd" --target_file="$settings"
-ynh_replace_string --match_string="__ADMIN__" --replace_string="$admin" --target_file="$settings"
-ynh_replace_string --match_string="__ADMINMAIL__" --replace_string="$admin_mail" --target_file="$settings"
-ynh_replace_string --match_string="__FINAL_HOME_PATH__" --replace_string="$final_path" --target_file="$settings"
-ynh_replace_string --match_string="__FINAL_WWW_PATH__" --replace_string="$public_path" --target_file="$settings"
-ynh_replace_string --match_string="__LOG_FILE__" --replace_string="$log_file" --target_file="$settings"
-ynh_replace_string --match_string="__REDIS_DB__" --replace_string="$redis_db" --target_file="$settings"
-
-ynh_replace_string --match_string="__DOMAIN__" --replace_string="$domain" --target_file="$settings"
-ynh_replace_string --match_string="__PATH_URL__" --replace_string="$path_url" --target_file="$settings"
-
-# Calculate and store the config file checksum into the app settings
-ynh_store_file_checksum --file="$settings"
-
-ynh_app_setting_set --app="$app" --key=redis_db --value="$redis_db"
-
-cp ../conf/setup_user.py "$final_path/setup_user.py"
-cp ../conf/urls.py "$final_path/urls.py"
-cp ../conf/wsgi.py "$final_path/wsgi.py"
-
-touch "$final_path/local_settings.py"
-
-#=================================================
 # MIGRATE / COLLECTSTATIC / CREATEADMIN
 #=================================================
 ynh_script_progression --message="migrate/collectstatic/createadmin..." --weight=10
 
-(
+pushd $final_path
     set +o nounset
     source "${final_path}/venv/bin/activate"
     set -o nounset
-    cd "${final_path}"
 
     # Just for debugging:
     ./manage.py diffsettings
@@ -180,15 +210,17 @@ ynh_script_progression --message="migrate/collectstatic/createadmin..." --weight
     # Check the configuration
     # This may fail in some cases with errors, etc., but the app works and the user can fix issues later.
     ./manage.py check --deploy || true
-)
+popd
 
+#=================================================
+# GENERIC FINALIZATION
 #=================================================
 # SETUP LOGROTATE
 #=================================================
 ynh_script_progression --message="Configuring log rotation..."
 
-# Use logrotate to manage app-specific logfile(s)
-ynh_use_logrotate "$log_file"
+# Use logrotate to manage application logfile(s)
+ynh_use_logrotate --logfile="/var/log/$app/pyinventory.log"
 
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
@@ -198,50 +230,32 @@ ynh_script_progression --message="Integrating service in YunoHost..."
 yunohost service add $app --description="Web based management to catalog things" --log="${log_file}"
 
 #=================================================
-# GENERIC FINALIZATION
+# START SYSTEMD SERVICE
 #=================================================
-# SECURE FILES AND DIRECTORIES
-#=================================================
+ynh_script_progression --message="Starting a systemd service..." --weight=5
 
-# Set permissions to app files
-chown -R "$app" "$log_path"
-chown -R "$app" "$public_path"
-chown -R "$app" "$final_path"
-
-#=================================================
-# SETUP SYSTEMD
-#=================================================
-ynh_script_progression --message="Configuring a systemd service..."
-
-# https://github.com/YunoHost/yunohost/blob/dev/data/helpers.d/systemd
-ynh_add_systemd_config --service="$app" --template="pyinventory.service"
+# Start a systemd service
+ynh_systemd_action --service_name=$app --action="start"
 
 #=================================================
 # SETUP SSOWAT
 #=================================================
-ynh_script_progression --message="Configuring SSOwat..."
+ynh_script_progression --message="Configuring permissions..."
 
-# Make app public if necessary or protect it
+# Make app public if necessary
 if [ $is_public -eq 1 ]
 then
 	# Everyone can access the app.
 	# The "main" permission is automatically created before the install script.
-	ynh_permission_update --permission "main" --add "visitors"
+	ynh_permission_update --permission="main" --add="visitors"
 fi
-
-#=================================================
-# Start pyinventory via systemd
-#=================================================
-ynh_script_progression --message="Starting PyInventory's services..." --weight=5
-
-ynh_systemd_action --service_name="$app" --action="start"
 
 #=================================================
 # RELOAD NGINX
 #=================================================
-ynh_script_progression --message="Reloading nginx web server..."
+ynh_script_progression --message="Reloading NGINX web server..."
 
-ynh_systemd_action --service_name="nginx" --action="reload"
+ynh_systemd_action --service_name=nginx --action=reload
 
 #=================================================
 # END OF SCRIPT

@@ -2,7 +2,7 @@
 ################################################################################
 
 # Please do not modify this file, it will be reset at the next update.
-# You can edit the file __FINAL_HOME_PATH__/local_settings.py and add/modify the settings you need.
+# You can edit the file __FINALPATH__/local_settings.py and add/modify the settings you need.
 # The parameters you add in local_settings.py will overwrite these,
 # but you can use the options and documentation in this file to find out what can be done.
 
@@ -19,10 +19,10 @@ DEBUG = False  # Don't turn DEBUG on in production!
 
 # -----------------------------------------------------------------------------
 
-FINAL_HOME_PATH = __Path('__FINAL_HOME_PATH__')  # /opt/yunohost/$app
+FINAL_HOME_PATH = __Path('__FINALPATH__')  # /opt/yunohost/$app
 assert FINAL_HOME_PATH.is_dir(), f'Directory not exists: {FINAL_HOME_PATH}'
 
-FINAL_WWW_PATH = __Path('__FINAL_WWW_PATH__')  # /var/www/$app
+FINAL_WWW_PATH = __Path('__PUBLIC_PATH__')  # /var/www/$app
 assert FINAL_WWW_PATH.is_dir(), f'Directory not exists: {FINAL_WWW_PATH}'
 
 LOG_FILE = __Path('__LOG_FILE__')  # /var/log/$app/pyinventory.log
@@ -67,15 +67,15 @@ LOGOUT_REDIRECT_URL = '/yunohost/sso/'
 # -----------------------------------------------------------------------------
 
 
-ADMINS = (('__ADMIN__', '__ADMINMAIL__'),)
+ADMINS = (('__ADMIN__', '__ADMIN_MAIL__'),)
 
 MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': '__APP__',
-        'USER': '__APP__',
+        'NAME': '__DB_NAME__',
+        'USER': '__DB_USER__',
         'PASSWORD': '__DB_PWD__',
         'HOST': '127.0.0.1',
         'PORT': '5432',  # Default Postgres Port
@@ -98,7 +98,7 @@ SERVER_EMAIL = 'noreply@__DOMAIN__'
 
 # Default email address to use for various automated correspondence from
 # the site managers. Used for registration emails.
-DEFAULT_FROM_EMAIL = '__ADMINMAIL__'
+DEFAULT_FROM_EMAIL = '__ADMIN_MAIL__'
 
 # List of URLs your site is supposed to serve
 ALLOWED_HOSTS = ['__DOMAIN__']
