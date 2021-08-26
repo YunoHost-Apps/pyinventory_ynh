@@ -34,6 +34,7 @@ db_name=$(ynh_app_setting_get --app=$app --key=db_name)
 db_user=$db_name
 db_pwd=$(ynh_app_setting_get --app=$app --key=psqlpwd)
 public_path=$(ynh_app_setting_get --app=$app --key=public_path)
+log_file=$(ynh_app_setting_get --app=$app --key=log_file)
 
 #=================================================
 # CHECK IF THE APP CAN BE RESTORED
