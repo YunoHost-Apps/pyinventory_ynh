@@ -36,6 +36,7 @@ admin_mail=$(ynh_user_get_info "$admin" mail)
 db_name=$(ynh_app_setting_get --app=$app --key=db_name)
 db_user=$db_name
 db_pwd=$(ynh_app_setting_get --app=$app --key=db_pwd)
+port=$(ynh_app_setting_get --app=$app --key=port)
 redis_db=$(ynh_app_setting_get --app=$app --key=redis_db)
 
 #=================================================
