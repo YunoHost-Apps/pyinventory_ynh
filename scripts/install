@@ -199,17 +199,17 @@ pushd $final_path
     set -o nounset
 
     # Just for debugging:
-    ./manage.py diffsettings
+    ynh_exec_warn_less ./manage.py diffsettings
 
-    ./manage.py migrate --no-input
-    ./manage.py collectstatic --no-input
+    ynh_exec_warn_less ./manage.py migrate --no-input
+    ynh_exec_warn_less ./manage.py collectstatic --no-input
 
 	# Create/update Django superuser (set unusable password, because auth done via SSOwat):
-	./manage.py create_superuser --username="$admin" --email="$admin_mail"
+	ynh_exec_warn_less ./manage.py create_superuser --username="$admin" --email="$admin_mail"
 
     # Check the configuration
     # This may fail in some cases with errors, etc., but the app works and the user can fix issues later.
-    ./manage.py check --deploy || true
+    ynh_exec_warn_less ./manage.py check --deploy || true
 popd
 
 #=================================================
