@@ -118,6 +118,7 @@ fi
 ynh_script_progression --message="Updating a configuration file..."
 
 ynh_add_config --template="../conf/settings.py" --destination="$final_path/settings.py"
+chown -R "$app" "$final_path"
 
 #=================================================
 # GENERIC FINALISATION
