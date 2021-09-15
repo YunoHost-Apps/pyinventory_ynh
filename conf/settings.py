@@ -11,7 +11,8 @@
 
 from pathlib import Path as __Path
 
-from django_ynh.secret_key import get_or_create_secret as __get_or_create_secret
+from django_yunohost_integration.base_settings import *  # noqa
+from django_yunohost_integration.secret_key import get_or_create_secret as __get_or_create_secret
 from inventory_project.settings.base import *  # noqa
 
 
@@ -40,12 +41,12 @@ YNH_SETUP_USER = 'setup_user.setup_project_user'
 
 SECRET_KEY = __get_or_create_secret(FINAL_HOME_PATH / 'secret.txt')  # /opt/yunohost/$app/secret.txt
 
-INSTALLED_APPS.append('django_ynh')
+INSTALLED_APPS.append('django_yunohost_integration')
 
 MIDDLEWARE.insert(
     MIDDLEWARE.index('django.contrib.auth.middleware.AuthenticationMiddleware') + 1,
     # login a user via HTTP_REMOTE_USER header from SSOwat:
-    'django_ynh.sso_auth.auth_middleware.SSOwatRemoteUserMiddleware',
+    'django_yunohost_integration.sso_auth.auth_middleware.SSOwatRemoteUserMiddleware',
 )
 
 # Keep ModelBackend around for per-user permissions and superuser
@@ -53,7 +54,7 @@ AUTHENTICATION_BACKENDS = (
     'axes.backends.AxesBackend',  # AxesBackend should be the first backend!
     #
     # Authenticate via SSO and nginx 'HTTP_REMOTE_USER' header:
-    'django_ynh.sso_auth.auth_backend.SSOwatUserBackend',
+    'django_yunohost_integration.sso_auth.auth_backend.SSOwatUserBackend',
     #
     # Fallback to normal Django model backend:
     'django.contrib.auth.backends.ModelBackend',
