@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "pyinventory_ynh"
-version = "0.9.3.rc4~ynh1"
+version = "0.9.4~ynh1"
 description = "Test pyinventory_ynh via local_test.py"
 authors = ["JensDiemer <git@jensdiemer.de>"]
 license = "GPL"
 
 [tool.poetry.dependencies]
 python = ">=3.7,<4.0.0"
-pyinventory = ">=0.9.3.rc4"
+pyinventory = {version = "*", extras = ["psycopg2-binary"]}
 # Note: "ynh" extras will install gunicorn, psycopg2, django-redis and django-axes
 django_yunohost_integration = {version = ">=v0.2.0", extras = ["ynh"]}
 

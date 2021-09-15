@@ -666,7 +666,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
 name = "pyinventory"
-version = "0.9.3rc4"
+version = "0.9.4"
 description = "Web based management to catalog things including state and location etc. using Python/Django."
 category = "main"
 optional = false
@@ -693,8 +693,8 @@ requests = "*"
 
 [package.extras]
 docker = ["docker-compose"]
-postgres-binary = ["psycopg2-binary"]
-psycopg2-source = ["psycopg2"]
+psycopg2-source = ["psycopg2 (<2.9)"]
+postgres-binary = ["psycopg2-binary (<2.9)"]
 
 [[package]]
 name = "pyparsing"
@@ -1016,7 +1016,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4.0.0"
-content-hash = "4feb898a189e4259b73ba9f972baf5df7afab71c0297a09b5dcae37a7ee77bf0"
+content-hash = "3015b064dc26b271dbb6083b9b3d25aa5ccc59c522524dcf601229597ca71ae4"
 
 [metadata.files]
 astor = [
@@ -1363,8 +1363,8 @@ pyflakes = [
     {file = "pyflakes-2.3.1.tar.gz", hash = "sha256:f5bc8ecabc05bb9d291eb5203d6810b49040f6ff446a756326104746cc00c1db"},
 ]
 pyinventory = [
-    {file = "PyInventory-0.9.3rc4-py3-none-any.whl", hash = "sha256:8bd83e5a9bcaece09404bf703a59321e94bd1570852a08fb80e4d98475750c72"},
-    {file = "PyInventory-0.9.3rc4.tar.gz", hash = "sha256:887467937b596f9b9e545a4a1767e25b1bea80f13d2ee74f43b94e6bffc29453"},
+    {file = "PyInventory-0.9.4-py3-none-any.whl", hash = "sha256:fd1420f32b952b831321b134a96187232c1d8474564df1bac43f0c7a07dd62f3"},
+    {file = "PyInventory-0.9.4.tar.gz", hash = "sha256:e1b43540f77793811d4edfcdcc82db5f73697f96ce44861c0cfa07a0b91df7e6"},
 ]
 pyparsing = [
     {file = "pyparsing-2.4.7-py2.py3-none-any.whl", hash = "sha256:ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b"},
