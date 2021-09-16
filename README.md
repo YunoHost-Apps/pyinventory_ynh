@@ -21,6 +21,8 @@ Web based management to catalog things including state and location etc.
 
 
 
+This package for YunoHost used the Python packeage [django-yunohost-integration](https://github.com/jedie/django_yunohost_integration)
+
 ## Screenshots
 
 ![](./doc/screenshots/screenshot3.png)

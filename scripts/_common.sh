@@ -5,7 +5,7 @@
 #=================================================
 
 # dependencies used by the app
-pkg_dependencies="build-essential python3-dev python3-pip python3-venv git libpq-dev postgresql postgresql-contrib"
+pkg_dependencies="build-essential python3-dev python3-pip python3-venv git libpq-dev postgresql postgresql-contrib libjpeg-dev"
 
 #=================================================
 # Redis HELPERS

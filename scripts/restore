@@ -86,7 +86,24 @@ ynh_script_progression --message="Reinstalling dependencies..." --weight=40
 ynh_exec_warn_less ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
-# RESTORE THE POSTGRESQL DATABASE
+# REINSTALL PYTHON VIRTUALENV
+# Maybe the backup contains a other Python version
+#=================================================
+ynh_script_progression --message="Upgrade Python virtualenv..." --weight=10
+
+python3 -m venv --upgrade "${final_path}/venv"
+
+#run source in a 'sub shell'
+(
+	set +o nounset
+	source "${final_path}/venv/bin/activate"
+	set -o nounset
+	ynh_exec_as $app $final_path/venv/bin/pip install --upgrade pip
+	ynh_exec_as $app $final_path/venv/bin/pip install -r "$final_path/requirements.txt"
+)
+
+#=================================================
+# RESTORE THE PostgreSQL DATABASE
 #=================================================
 ynh_script_progression --message="Restoring the PostgreSQL database..." --weight=5
 
