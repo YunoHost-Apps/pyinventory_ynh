@@ -17,11 +17,9 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 
 Web based management to catalog things including state and location etc.
 
-**Shipped version:** 0.9.2~ynh1
+**Shipped version:** 0.9.4~ynh5
 
 
-
-This package for YunoHost used the Python packeage [django-yunohost-integration](https://github.com/jedie/django_yunohost_integration)
 
 ## Screenshots
 
