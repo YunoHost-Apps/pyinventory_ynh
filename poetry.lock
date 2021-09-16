@@ -697,6 +697,7 @@ django-tagulous = "*"
 django-tools = ">=0.48.2"
 gunicorn = "*"
 pillow = "*"
+psycopg2-binary = {version = "<2.9", optional = true, markers = "extra == \"postgres-binary\""}
 requests = "*"
 
 [package.extras]
@@ -1024,7 +1025,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4.0.0"
-content-hash = "b7113873cfea719410cc58407cba6295bd81ccb31faf5a70fdb072be4214bbb5"
+content-hash = "b22afc1e49bd11c7d602fddb4c628674c45040ac3017db73ed7662786d681fcd"
 
 [metadata.files]
 astor = [
