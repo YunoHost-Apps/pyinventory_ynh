@@ -5,12 +5,12 @@
 	"description": {
 		"en": "Web based management to catalog things including state and location etc."
 	},
-	"version": "0.9.2~ynh1",
+	"version": "0.9.4~ynh3",
 	"url": "https://github.com/jedie/PyInventory",
 	"license": "GPL-3.0",
 	"maintainer": {
 		"name": "Jens Diemer",
-		"email": "pyinventory_yng@jensdiemer.de"
+		"email": "pyinventory_ynh@jensdiemer.de"
 	},
 	"previous_maintainers": [],
 	"requirements": {
@@ -49,19 +49,6 @@
 				    "fr": "Choisissez l'administrateur pour PyInventory"
 				},
 				"example": "johndoe"
-			},
-			{
-				"name": "is_public",
-				"type": "boolean",
-				"ask": {
-					"en": "Should PyInventory be public accessible?",
-					"fr": "PyInventory doit-il être accessible au public ?"
-				},
-				"help": {
-					"en": "Any YunoHost user and anonymous people from the web will be able to access the application",
-					"fr": "Tout utilisateur YunoHost et les personnes anonymes pourront accéder à l'application"
-				},
-				"default": false
 			}
 		]
 	}
