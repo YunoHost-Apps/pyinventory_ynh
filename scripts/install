@@ -217,19 +217,6 @@ ynh_script_progression --message="Configuring a systemd service..."
 ynh_add_systemd_config --service="$app" --template="pyinventory.service"
 
 #=================================================
-# SETUP SSOWAT
-#=================================================
-ynh_script_progression --message="Configuring SSOwat..."
-
-# Make app public if necessary or protect it
-if [ $is_public -eq 1 ]
-then
-	# Everyone can access the app.
-	# The "main" permission is automatically created before the install script.
-	ynh_permission_update --permission "main" --add "visitors"
-fi
-
-#=================================================
 # Start pyinventory via systemd
 #=================================================
 ynh_script_progression --message="Starting PyInventory's services..." --weight=5

@@ -49,19 +49,6 @@
 				    "fr": "Choisissez l'administrateur pour PyInventory"
 				},
 				"example": "johndoe"
-			},
-			{
-				"name": "is_public",
-				"type": "boolean",
-				"ask": {
-					"en": "Should PyInventory be public accessible?",
-					"fr": "PyInventory doit-il être accessible au public ?"
-				},
-				"help": {
-					"en": "Any YunoHost user and anonymous people from the web will be able to access the application",
-					"fr": "Tout utilisateur YunoHost et les personnes anonymes pourront accéder à l'application"
-				},
-				"default": false
 			}
 		]
 	}
