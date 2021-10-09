@@ -169,9 +169,9 @@ psycopg2==2.8.6; (python_version >= "2.7" and python_full_version < "3.0.0") or 
     --hash=sha256:2c93d4d16933fea5bbacbe1aaf8fa8c1348740b2e50b3735d1b0bf8154cbf0f3 \
     --hash=sha256:d5062ae50b222da28253059880a871dc87e099c25cb68acf613d9d227413d6f7 \
     --hash=sha256:fb23f6c71107c37fd667cb4ea363ddeb936b348bbd6449278eb92c189699f543
-pyinventory==0.10.1; python_version >= "3.7" and python_full_version < "4.0.0" \
-    --hash=sha256:924cfded9153d261a5a326823694122b3601d5d2a5438f3945efb5f384d663ad \
-    --hash=sha256:92dca59d3b797de2e4412ce49e5cd7cb89c47100b54f4af3467d36820e6b2dee
+pyinventory==0.11.0; python_version >= "3.7" and python_full_version < "4.0.0" \
+    --hash=sha256:06652f5e493348ea1abae3253c0026fabde51585e2a23a3248357541ea945eb8 \
+    --hash=sha256:9575da8a2e5242b7a3bd7932e63450170ce5c8592f7dfaab611e786c65a786b4
 pyparsing==2.4.7; python_version >= "3.7" and python_full_version < "3.0.0" or python_version >= "3.7" and python_full_version < "4.0.0" and python_full_version >= "3.3.0" \
     --hash=sha256:ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b \
     --hash=sha256:c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1

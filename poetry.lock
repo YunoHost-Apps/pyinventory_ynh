@@ -688,7 +688,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
 name = "pyinventory"
-version = "0.10.1"
+version = "0.11.0"
 description = "Web based management to catalog things including state and location etc. using Python/Django."
 category = "main"
 optional = false
@@ -1395,8 +1395,8 @@ pyflakes = [
     {file = "pyflakes-2.3.1.tar.gz", hash = "sha256:f5bc8ecabc05bb9d291eb5203d6810b49040f6ff446a756326104746cc00c1db"},
 ]
 pyinventory = [
-    {file = "PyInventory-0.10.1-py3-none-any.whl", hash = "sha256:924cfded9153d261a5a326823694122b3601d5d2a5438f3945efb5f384d663ad"},
-    {file = "PyInventory-0.10.1.tar.gz", hash = "sha256:92dca59d3b797de2e4412ce49e5cd7cb89c47100b54f4af3467d36820e6b2dee"},
+    {file = "PyInventory-0.11.0-py3-none-any.whl", hash = "sha256:06652f5e493348ea1abae3253c0026fabde51585e2a23a3248357541ea945eb8"},
+    {file = "PyInventory-0.11.0.tar.gz", hash = "sha256:9575da8a2e5242b7a3bd7932e63450170ce5c8592f7dfaab611e786c65a786b4"},
 ]
 pyparsing = [
     {file = "pyparsing-2.4.7-py2.py3-none-any.whl", hash = "sha256:ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b"},
