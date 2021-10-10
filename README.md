@@ -1,6 +1,6 @@
 # PyInventory for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/pyinventory.svg)](https://dash.yunohost.org/appci/app/pyinventory) [![CI Pipeline](https://ci-apps.yunohost.org/ci/badges/pyinventory.status.svg)](https://dash.yunohost.org/appci/app/pyinventory) [![Maintain status](https://ci-apps.yunohost.org/ci/badges/pyinventory.maintain.svg)](https://dash.yunohost.org/appci/app/pyinventory) 
+[![Integration level](https://dash.yunohost.org/integration/pyinventory.svg)](https://dash.yunohost.org/appci/app/pyinventory) [![CI Pipeline](https://ci-apps.yunohost.org/ci/badges/pyinventory.status.svg)](https://ci-apps-dev.yunohost.org/ci/) [![Maintain status](https://ci-apps.yunohost.org/ci/badges/pyinventory.maintain.svg)](https://dash.yunohost.org/appci/app/pyinventory) 
 
 [![Install PyInventory with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=pyinventory)
 
