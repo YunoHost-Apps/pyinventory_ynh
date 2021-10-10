@@ -17,10 +17,27 @@ This package for YunoHost used [django-yunohost-integration](https://github.com/
 
 ## Screenshots
 
-![](https://raw.githubusercontent.com/jedie/jedie.github.io/master/screenshots/PyInventory/PyInventory%20v0.2.0%20screenshot%201.png)
-![](https://raw.githubusercontent.com/jedie/jedie.github.io/master/screenshots/PyInventory/PyInventory%20v0.1.0%20screenshot%202.png)
-![](https://raw.githubusercontent.com/jedie/jedie.github.io/master/screenshots/PyInventory/PyInventory%20v0.1.0%20screenshot%203.png)
+More screenshots are here: [jedie.github.io/tree/master/screenshots/PyInventory](https://github.com/jedie/jedie.github.io/blob/master/screenshots/PyInventory/README.creole)
 
+----
+
+![PyInventory v0.2.0](https://raw.githubusercontent.com/jedie/jedie.github.io/master/screenshots/PyInventory/PyInventory%20v0.2.0%20screenshot%201.png)
+
+----
+
+![PyInventory v0.1.0 screenshot 2](https://raw.githubusercontent.com/jedie/jedie.github.io/master/screenshots/PyInventory/PyInventory%20v0.1.0%20screenshot%202.png)
+
+----
+
+![PyInventory v0.11.0 screenshot memo](https://raw.githubusercontent.com/jedie/jedie.github.io/master/screenshots/PyInventory/PyInventory%20v0.11.0%20screenshot%20memo%201.png)
+
+----
+
+![PyInventory v0.1.0 screenshot 3](https://raw.githubusercontent.com/jedie/jedie.github.io/master/screenshots/PyInventory/PyInventory%20v0.1.0%20screenshot%203.png)
+
+----
+
+More screenshots are here: [jedie.github.io/tree/master/screenshots/PyInventory](https://github.com/jedie/jedie.github.io/blob/master/screenshots/PyInventory/README.creole)
 
 ## Settings and upgrades
 
