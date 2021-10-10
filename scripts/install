@@ -105,7 +105,7 @@ ynh_script_progression --message="Install project via pip..." --weight=80
 
 python3 -m venv "${final_path}/venv"
 cp ../conf/requirements.txt "$final_path/requirements.txt"
-chown -R "$app" "$final_path"
+chown -R "$app:" "$final_path"
 
 #run source in a 'sub shell'
 (
@@ -204,9 +204,9 @@ yunohost service add $app --description="Web based management to catalog things"
 #=================================================
 
 # Set permissions to app files
-chown -R "$app" "$log_path"
-chown -R "$app" "$public_path"
-chown -R "$app" "$final_path"
+chown -R "$app:" "$log_path"
+chown -R "$app:" "$public_path"
+chown -R "$app:" "$final_path"
 
 #=================================================
 # SETUP SYSTEMD
