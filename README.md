@@ -13,7 +13,7 @@ Pull requests welcome ;)
 
 [PyInventory](https://github.com/jedie/PyInventory) is a libre web-based management to catalog things including state and location etc. using [Python](https://www.python.org/)/[Django](https://www.djangoproject.com/).
 
-This package for YunoHost used [django-yunohost-integration](https://github.com/jedie/django_yunohost_integration)
+This package for YunoHost used [django-yunohost-integration](https://github.com/YunoHost-Apps/django_yunohost_integration)
 
 ## Screenshots
 
