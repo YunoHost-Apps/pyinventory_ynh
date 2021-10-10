@@ -2,6 +2,8 @@
 
 [![Integration level](https://dash.yunohost.org/integration/pyinventory.svg)](https://dash.yunohost.org/appci/app/pyinventory) [![CI Pipeline](https://ci-apps.yunohost.org/ci/badges/pyinventory.status.svg)](https://ci-apps-dev.yunohost.org/ci/) [![Maintain status](https://ci-apps.yunohost.org/ci/badges/pyinventory.maintain.svg)](https://dash.yunohost.org/appci/app/pyinventory) 
 
+[![pytest](https://github.com/YunoHost-Apps/pyinventory_ynh/actions/workflows/pytest.yml/badge.svg?branch=master)](https://github.com/YunoHost-Apps/pyinventory_ynh/actions/workflows/pytest.yml) [![Coverage Status on codecov.io](https://codecov.io/gh/YunoHost-Apps/pyinventory_ynh/branch/master/graph/badge.svg)](https://codecov.io/gh/YunoHost-Apps/pyinventory_ynh)
+
 [![Install PyInventory with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=pyinventory)
 
 > *This package allows you to install PyInventory quickly and simply on a YunoHost server.
