@@ -87,7 +87,7 @@ ynh_add_systemd_config --service="$app" --template="pyinventory.service"
 #=================================================
 ynh_script_progression --message="Upgrade project via pip..." --weight=80
 
-python3 -m venv --upgrade "${final_path}/venv"
+python3 -m venv "${final_path}/venv"
 cp ../conf/requirements.txt "$final_path/requirements.txt"
 chown -R "$app:" "$final_path"
 
@@ -96,8 +96,8 @@ chown -R "$app:" "$final_path"
 	set +o nounset
 	source "${final_path}/venv/bin/activate"
 	set -o nounset
-	ynh_exec_as $app $final_path/venv/bin/pip install --upgrade pip
-	ynh_exec_as $app $final_path/venv/bin/pip install -r "$final_path/requirements.txt"
+	ynh_exec_as $app $final_path/venv/bin/pip install --upgrade wheel pip
+	ynh_exec_as $app $final_path/venv/bin/pip install --no-deps -r "$final_path/requirements.txt"
 )
 
 #=================================================

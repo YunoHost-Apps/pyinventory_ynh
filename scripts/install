@@ -112,8 +112,8 @@ chown -R "$app:" "$final_path"
 	set +o nounset
 	source "${final_path}/venv/bin/activate"
 	set -o nounset
-	ynh_exec_as $app $final_path/venv/bin/pip install --upgrade pip
-	ynh_exec_as $app $final_path/venv/bin/pip install -r "$final_path/requirements.txt"
+	ynh_exec_as $app $final_path/venv/bin/pip install --upgrade wheel pip
+	ynh_exec_as $app $final_path/venv/bin/pip install --no-deps -r "$final_path/requirements.txt"
 )
 
 #=================================================
