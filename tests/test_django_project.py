@@ -1,6 +1,8 @@
+from pathlib import Path
+
 from axes.models import AccessLog
 from bx_django_utils.test_utils.html_assertion import HtmlAssertionMixin
-from django.conf import settings
+from django.conf import LazySettings, settings
 from django.contrib.auth.models import User
 from django.test import override_settings
 from django.test.testcases import TestCase
@@ -21,11 +23,19 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
         self.client = self.client_class()
 
     def test_settings(self):
+        assert isinstance(settings, LazySettings)
+        assert settings.configured is True
+
         assert settings.PATH_URL == 'app_path'
 
-        assert str(settings.FINAL_HOME_PATH).endswith('/local_test/opt_yunohost')
-        assert str(settings.FINAL_WWW_PATH).endswith('/local_test/var_www')
-        assert str(settings.LOG_FILE).endswith('/local_test/var_log_pyinventory_ynh.log')
+        def assert_path(path, end_text):
+            assert isinstance(path, Path)
+            path = str(path)
+            assert path.endswith(end_text)
+
+        assert_path(settings.FINAL_HOME_PATH, '/local_test/opt_yunohost')
+        assert_path(settings.FINAL_WWW_PATH, '/local_test/var_www')
+        assert_path(settings.LOG_FILE, '/local_test/var_log_pyinventory.log')
 
         assert settings.ROOT_URLCONF == 'urls'
 
