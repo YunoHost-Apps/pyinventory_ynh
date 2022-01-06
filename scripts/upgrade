@@ -200,6 +200,10 @@ chown -R "$app:" "$log_path"
 chown -R "$app:" "$public_path"
 chown -R "$app:" "$final_path"
 
+chmod o-rwx "$log_path"
+chmod o-rwx "$public_path"
+chmod o-rwx "$final_path"
+
 #=================================================
 # Start pyinventory via systemd
 #=================================================
