@@ -197,7 +197,7 @@ yunohost service add $app --description="Web based management to catalog things"
 
 # Set permissions to app files
 chown -R "$app:" "$log_path"
-chown -R "$app:" "$public_path"
+chown -R "$app:www-data" "$public_path"
 chown -R "$app:" "$final_path"
 
 chmod o-rwx "$log_path"
