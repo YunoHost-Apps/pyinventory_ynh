@@ -103,7 +103,7 @@ ynh_system_user_create --username="$app" --home_dir="$final_path" --use_shell
 #=================================================
 ynh_script_progression --message="Install project via pip..." --weight=80
 
-python3 -m venv "${final_path}/venv"
+python${python_version} -m venv "${final_path}/venv"
 cp ../conf/requirements.txt "$final_path/requirements.txt"
 chown -R "$app:" "$final_path"
 
