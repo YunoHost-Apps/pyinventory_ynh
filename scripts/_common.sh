@@ -25,9 +25,10 @@ log_file="${log_path}/pyinventory.log"
 #=================================================
 
 python_version="3.7"
+python_major_version=$(echo $python_version | cut -d. -f1)
 
 # dependencies used by the app
-pkg_dependencies="build-essential python${python_version}-dev python${python_version}-pip python${python_version}-venv git libpq-dev postgresql postgresql-contrib libjpeg-dev"
+pkg_dependencies="build-essential python${python_version}-dev python${python_major_version}-pip python${python_version}-venv git libpq-dev postgresql postgresql-contrib libjpeg-dev"
 
 #=================================================
 # Redis HELPERS
