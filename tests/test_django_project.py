@@ -60,15 +60,11 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
             response,
             status_code=301,  # permanent redirect
             expected_url='https://testserver/app_path/',
-            fetch_redirect_response=False
+            fetch_redirect_response=False,
         )
 
         response = self.client.get('/app_path/', secure=True)
-        self.assertRedirects(
-            response,
-            expected_url='/app_path/login/?next=/app_path/',
-            fetch_redirect_response=False
-        )
+        self.assertRedirects(response, expected_url='/app_path/login/?next=/app_path/', fetch_redirect_response=False)
 
     @override_settings(SECURE_SSL_REDIRECT=False)
     def test_create_unknown_user(self):

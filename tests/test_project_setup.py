@@ -57,8 +57,7 @@ def test_requirements_txt():
 
     diff = '\n'.join(
         difflib.unified_diff(
-            current_content.splitlines(), output.splitlines(),
-            fromfile=str(requirements_txt), tofile='FRESH EXPORT'
+            current_content.splitlines(), output.splitlines(), fromfile=str(requirements_txt), tofile='FRESH EXPORT'
         )
     )
     print(diff)
