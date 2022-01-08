@@ -1,6 +1,6 @@
 # PyInventory for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/pyinventory.svg)](https://dash.yunohost.org/appci/app/pyinventory) [![CI Pipeline](https://ci-apps.yunohost.org/ci/badges/pyinventory.status.svg)](https://ci-apps.yunohost.org/ci/apps/pyinventory/) [![Maintain status](https://ci-apps.yunohost.org/ci/badges/pyinventory.maintain.svg)](https://dash.yunohost.org/appci/app/pyinventory) 
+[![Integration level](https://dash.yunohost.org/integration/pyinventory.svg)](https://dash.yunohost.org/appci/app/pyinventory) [![CI Pipeline](https://ci-apps.yunohost.org/ci/badges/pyinventory.status.svg)](https://ci-apps.yunohost.org/ci/apps/pyinventory/) [![Maintain status](https://ci-apps.yunohost.org/ci/badges/pyinventory.maintain.svg)](https://dash.yunohost.org/appci/app/pyinventory)
 
 [![pytest](https://github.com/YunoHost-Apps/pyinventory_ynh/actions/workflows/pytest.yml/badge.svg?branch=master)](https://github.com/YunoHost-Apps/pyinventory_ynh/actions/workflows/pytest.yml) [![YunoHost apps package linter](https://github.com/YunoHost-Apps/pyinventory_ynh/actions/workflows/package_linter.yml/badge.svg)](https://github.com/YunoHost-Apps/pyinventory_ynh/actions/workflows/package_linter.yml) [![Coverage Status on codecov.io](https://codecov.io/gh/YunoHost-Apps/pyinventory_ynh/branch/master/graph/badge.svg)](https://codecov.io/gh/YunoHost-Apps/pyinventory_ynh)
 
@@ -79,7 +79,7 @@ To check the effective settings, run this:
 
 ## SSO authentication
 
-[SSOwat](https://github.com/YunoHost/SSOwat) is fully supported via [django_ynh](https://github.com/YunoHost-Apps/django_ynh):
+[SSOwat](https://github.com/YunoHost/SSOwat) is fully supported via [django-yunohost-integration](https://github.com/YunoHost-Apps/django_yunohost_integration):
 
 * First user (`$YNH_APP_ARG_ADMIN`) will be created as Django's super user
 * All new users will be created as normal users
