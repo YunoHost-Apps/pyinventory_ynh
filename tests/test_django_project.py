@@ -42,7 +42,7 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
     def test_urls(self):
         assert reverse('admin:index') == '/app_path/'
 
-        # The django_ynh debug view should not be avaiable:
+        # The django_yunohost_integration debug view should not be available:
         with self.assertRaises(NoReverseMatch):
             reverse(request_media_debug_view)
 
@@ -83,7 +83,7 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
         user = User.objects.first()
         assert user.username == 'test'
         assert user.is_active is True
-        assert user.is_staff is True  # Set by: conf.django_ynh_demo_urls.setup_user_handler
+        assert user.is_staff is True  # Set by: django_yunohost_integration
         assert user.is_superuser is False
 
         assert response.status_code == 200
@@ -113,7 +113,7 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
         user = User.objects.first()
         assert user.username == 'test'
         assert user.is_active is True
-        assert user.is_staff is True  # Set by: conf.django_ynh_demo_urls.setup_user_handler
+        assert user.is_staff is True  # Set by: django_yunohost_integration
         assert user.is_superuser is False
 
         assert AccessLog.objects.count() == 1
@@ -138,7 +138,7 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
         user = User.objects.first()
         assert user.username == 'test'
         assert user.is_active is True
-        assert user.is_staff is True  # Set by: conf.django_ynh_demo_urls.setup_user_handler
+        assert user.is_staff is True  # Set by: django_yunohost_integration
         assert user.is_superuser is False
 
         assert AccessLog.objects.count() == 1
@@ -162,7 +162,7 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
         user = User.objects.first()
         assert user.username == 'test'
         assert user.is_active is True
-        assert user.is_staff is True  # Set by: conf.django_ynh_demo_urls.setup_user_handler
+        assert user.is_staff is True  # Set by: django_yunohost_integration
         assert user.is_superuser is False
 
         assert AccessLog.objects.count() == 1

@@ -174,7 +174,7 @@ LOGGING = {
         'django': {'handlers': ['log_file', 'mail_admins'], 'level': 'INFO', 'propagate': False},
         'axes': {'handlers': ['log_file', 'mail_admins'], 'level': 'WARNING', 'propagate': False},
         'django_tools': {'handlers': ['log_file', 'mail_admins'], 'level': 'INFO', 'propagate': False},
-        'django_ynh': {'handlers': ['log_file', 'mail_admins'], 'level': 'INFO', 'propagate': False},
+        'django_yunohost_integration': {'handlers': ['log_file', 'mail_admins'], 'level': 'INFO', 'propagate': False},
         'inventory': {'handlers': ['log_file', 'mail_admins'], 'level': 'INFO', 'propagate': False},
     },
 }
