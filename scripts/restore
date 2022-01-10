@@ -88,7 +88,8 @@ ynh_exec_warn_less ynh_install_app_dependencies "$pkg_dependencies"
 #=================================================
 ynh_script_progression --message="Upgrade Python virtualenv..." --weight=10
 
-LC_ALL=C python${python_version} -m venv --upgrade "${final_path}/venv"
+export LC_ALL=C
+python${python_version} -m venv --upgrade "${final_path}/venv"
 
 #run source in a 'sub shell'
 (
