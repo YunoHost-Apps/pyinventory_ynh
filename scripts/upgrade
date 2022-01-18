@@ -63,7 +63,7 @@ ynh_add_nginx_config "public_path" "port"
 #=================================================
 # Update dependencies
 #=================================================
-ynh_script_progression --message="Upgrading dependencies..."
+ynh_script_progression --message="Upgrading dependencies..." --weight=20
 
 ynh_exec_warn_less ynh_install_app_dependencies "$pkg_dependencies"
 
@@ -85,9 +85,14 @@ ynh_add_systemd_config --service="$app" --template="pyinventory.service"
 #=================================================
 # UPGRADE VENV
 #=================================================
-ynh_script_progression --message="Upgrade project via pip..." --weight=80
+ynh_script_progression --message="Upgrade project via pip..." --weight=50
 
-python3 -m venv --upgrade "${final_path}/venv"
+# Always recreate everything fresh with current python version
+ynh_secure_remove "${final_path}/venv"
+
+# Skip pip because of: https://github.com/YunoHost/issues/issues/1960
+python3 -m venv --without-pip "${final_path}/venv"
+
 cp ../conf/requirements.txt "$final_path/requirements.txt"
 chown -R "$app:" "$final_path"
 
@@ -96,8 +101,9 @@ chown -R "$app:" "$final_path"
 	set +o nounset
 	source "${final_path}/venv/bin/activate"
 	set -o nounset
-	ynh_exec_as $app $final_path/venv/bin/pip install --upgrade wheel pip
-	ynh_exec_as $app $final_path/venv/bin/pip install --no-deps -r "$final_path/requirements.txt"
+	ynh_exec_as $app $final_path/venv/bin/python3 -m ensurepip
+	ynh_exec_as $app $final_path/venv/bin/pip3 install --upgrade wheel pip setuptools
+	ynh_exec_as $app $final_path/venv/bin/pip3 install --no-deps -r "$final_path/requirements.txt"
 )
 
 #=================================================
