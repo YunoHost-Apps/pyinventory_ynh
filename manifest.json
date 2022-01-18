@@ -25,29 +25,17 @@
 			{
 				"name": "domain",
 				"type": "domain",
-				"ask": {
-					"en": "Choose a domain for PyInventory",
-					"fr": "Choisissez un domaine pour PyInventory"
-				},
 				"example": "domain.org"
 			},
 			{
 				"name": "path",
 				"type": "path",
-				"ask": {
-				    "en": "Choose a path for PyInventory",
-				    "fr": "Choisissez un chemin pour PyInventory"
-				},
 				"example": "/pyinventory",
 				"default": "/pyinventory"
 			},
 			{
 				"name": "admin",
 				"type": "user",
-				"ask": {
-				    "en": "Choose an admin user for PyInventory",
-				    "fr": "Choisissez l'administrateur pour PyInventory"
-				},
 				"example": "johndoe"
 			}
 		]
