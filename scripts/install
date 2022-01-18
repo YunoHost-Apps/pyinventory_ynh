@@ -40,7 +40,6 @@ touch "${log_file}"
 ynh_script_progression --message="Storing installation settings..."
 
 ynh_app_setting_set --app="$app" --key=admin --value="$admin"
-ynh_app_setting_set --app="$app" --key=is_public --value="$is_public"
 ynh_app_setting_set --app="$app" --key=public_path --value="$public_path"
 ynh_app_setting_set --app="$app" --key=final_path --value="$final_path"
 ynh_app_setting_set --app="$app" --key=log_path --value="$log_file"
@@ -63,7 +62,7 @@ redis_db=$(ynh_redis_get_free_db)
 #=================================================
 # INSTALL DEPENDENCIES
 #=================================================
-ynh_script_progression --message="Installing dependencies..." --weight=10
+ynh_script_progression --message="Installing dependencies..." --weight=20
 
 ynh_exec_warn_less ynh_install_app_dependencies "$pkg_dependencies"
 
@@ -101,7 +100,26 @@ ynh_system_user_create --username="$app" --home_dir="$final_path" --use_shell
 #=================================================
 # PIP INSTALLATION
 #=================================================
-setup_venv  # function defined in _common.sh
+ynh_script_progression --message="Install project via pip..." --weight=50
+
+# Always recreate everything fresh with current python version
+ynh_secure_remove "${final_path}/venv"
+
+# Skip pip because of: https://github.com/YunoHost/issues/issues/1960
+python3 -m venv --without-pip "${final_path}/venv"
+
+cp ../conf/requirements.txt "$final_path/requirements.txt"
+chown -R "$app:" "$final_path"
+
+#run source in a 'sub shell'
+(
+	set +o nounset
+	source "${final_path}/venv/bin/activate"
+	set -o nounset
+	ynh_exec_as $app $final_path/venv/bin/python3 -m ensurepip
+	ynh_exec_as $app $final_path/venv/bin/pip3 install --upgrade wheel pip setuptools
+	ynh_exec_as $app $final_path/venv/bin/pip3 install --no-deps -r "$final_path/requirements.txt"
+)
 
 #=================================================
 # copy config files
