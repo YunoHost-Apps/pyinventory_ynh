@@ -40,7 +40,6 @@ touch "${log_file}"
 ynh_script_progression --message="Storing installation settings..."
 
 ynh_app_setting_set --app="$app" --key=admin --value="$admin"
-ynh_app_setting_set --app="$app" --key=is_public --value="$is_public"
 ynh_app_setting_set --app="$app" --key=public_path --value="$public_path"
 ynh_app_setting_set --app="$app" --key=final_path --value="$final_path"
 ynh_app_setting_set --app="$app" --key=log_path --value="$log_file"

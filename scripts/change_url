@@ -25,7 +25,6 @@ new_path=$YNH_APP_NEW_PATH
 ynh_script_progression --message="Loading installation settings..."
 
 admin=$(ynh_app_setting_get --app="$app" --key=admin)
-is_public=$(ynh_app_setting_get --app="$app" --key=is_public)
 public_path=$(ynh_app_setting_get --app="$app" --key=public_path)
 final_path=$(ynh_app_setting_get --app="$app" --key=final_path)
 log_path=$(ynh_app_setting_get --app="$app" --key=log_path)
