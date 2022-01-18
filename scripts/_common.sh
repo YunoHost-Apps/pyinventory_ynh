@@ -28,31 +28,6 @@ log_file="${log_path}/pyinventory.log"
 pkg_dependencies="build-essential python3-dev python3-pip python3-venv git libpq-dev postgresql postgresql-contrib libjpeg-dev"
 
 #=================================================
-# PyInventory shared functions
-#=================================================
-
-setup_venv() {
-    ynh_script_progression --message="Setup Python virtualenv..." --weight=15
-
-    # Always recreate everything fresh with current python version
-    ynh_secure_remove "${final_path}/venv"
-
-    python3 -m venv --without-pip "${final_path}/venv"
-
-    cp ../conf/requirements.txt "$final_path/requirements.txt"
-    chown -R "$app:" "$final_path"
-    (
-        # Activate venv in sub shell
-        set +o nounset
-        source "${final_path}/venv/bin/activate"
-        set -o nounset
-        ynh_exec_as $app $final_path/venv/bin/python3 -m ensurepip
-        ynh_exec_as $app $final_path/venv/bin/pip3 install --upgrade wheel pip
-        ynh_exec_as $app $final_path/venv/bin/pip3 install --no-deps -r "$final_path/requirements.txt"
-    )
-}
-
-#=================================================
 # Redis HELPERS
 #=================================================
 

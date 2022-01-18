@@ -63,7 +63,7 @@ redis_db=$(ynh_redis_get_free_db)
 #=================================================
 # INSTALL DEPENDENCIES
 #=================================================
-ynh_script_progression --message="Installing dependencies..." --weight=10
+ynh_script_progression --message="Installing dependencies..." --weight=40
 
 ynh_exec_warn_less ynh_install_app_dependencies "$pkg_dependencies"
 
@@ -101,7 +101,20 @@ ynh_system_user_create --username="$app" --home_dir="$final_path" --use_shell
 #=================================================
 # PIP INSTALLATION
 #=================================================
-setup_venv  # function defined in _common.sh
+ynh_script_progression --message="Install project via pip..." --weight=80
+
+python3 -m venv "${final_path}/venv"
+cp ../conf/requirements.txt "$final_path/requirements.txt"
+chown -R "$app:" "$final_path"
+
+#run source in a 'sub shell'
+(
+	set +o nounset
+	source "${final_path}/venv/bin/activate"
+	set -o nounset
+	ynh_exec_as $app $final_path/venv/bin/pip install --upgrade wheel pip
+	ynh_exec_as $app $final_path/venv/bin/pip install --no-deps -r "$final_path/requirements.txt"
+)
 
 #=================================================
 # copy config files
