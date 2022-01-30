@@ -3,7 +3,7 @@ name: pytest
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
   schedule:
     - cron: '0 8 * * *'
@@ -16,7 +16,12 @@ jobs:
       matrix:
         python-version: [3.9, 3.8, 3.7]
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: 'fetch master'
+      run: |
+        git fetch origin master
     - name: 'Set up Python ${{ matrix.python-version }}'
       uses: actions/setup-python@v1
       with:
