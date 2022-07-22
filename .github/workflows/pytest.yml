@@ -41,7 +41,10 @@ jobs:
         make pytest
 
     - name: 'Upload coverage report'
-      run: bash <(curl -s https://codecov.io/bash)
+            uses: codecov/codecov-action@v2
+      with:
+        fail_ci_if_error: false
+        verbose: true
 
     - name: 'Run linters'
       if: matrix.python-version == '3.8'
