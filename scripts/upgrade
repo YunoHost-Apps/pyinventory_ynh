@@ -118,8 +118,9 @@ ynh_replace_string --match_string="__LOG_FILE__" --replace_string="$log_file" --
 ynh_replace_string --match_string="__PORT__" --replace_string="$port" --target_file="$gunicorn_conf"
 ynh_store_file_checksum --file="$gunicorn_conf"
 
-ynh_backup_if_checksum_is_different --file="$final_path/manage.py"
 cp ../conf/manage.py "$final_path/manage.py"
+ynh_replace_string --match_string="__FINAL_HOME_PATH__" --replace_string="$final_path" --target_file="$final_path/manage.py"
+ynh_store_file_checksum --file="$final_path/manage.py"
 chmod +x "$final_path/manage.py"
 
 # save old settings file
@@ -159,25 +160,21 @@ touch "$final_path/local_settings.py"
 #=================================================
 ynh_script_progression --message="migrate/collectstatic/createadmin..." --weight=10
 
-(
-	set +o nounset
-	source "${final_path}/venv/bin/activate"
-	set -o nounset
-	cd "${final_path}"
+cd "$final_path" || exit
 
-  # Just for debugging:
-  ./manage.py diffsettings
+# Just for debugging:
+./manage.py diffsettings
 
-	./manage.py migrate --no-input
-	./manage.py collectstatic --no-input
+./manage.py migrate --no-input
+./manage.py collectstatic --no-input
 
-	# Create/update Django superuser (set unusable password, because auth done via SSOwat):
-	./manage.py create_superuser --username="$admin" --email="$admin_mail"
+# Create/update Django superuser (set unusable password, because auth done via SSOwat):
+./manage.py create_superuser --username="$admin" --email="$admin_mail"
 
-	# Check the configuration
-	# This may fail in some cases with errors, etc., but the app works and the user can fix issues later.
-	./manage.py check --deploy || true
-)
+# Check the configuration
+# This may fail in some cases with errors, etc., but the app works and the user can fix issues later.
+./manage.py check --deploy || true
+
 
 #=================================================
 # SETUP LOGROTATE
