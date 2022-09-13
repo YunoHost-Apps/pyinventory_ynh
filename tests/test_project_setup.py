@@ -24,12 +24,8 @@ def assert_file_contains_string(file_path, string):
 def test_version():
     version = inventory.__version__
 
-    assert_file_contains_string(
-        file_path=Path(PACKAGE_ROOT, 'pyproject.toml'), string=f'version = "{version}~ynh'
-    )
-    assert_file_contains_string(
-        file_path=Path(PACKAGE_ROOT, 'manifest.json'), string=f'"version": "{version}~ynh'
-    )
+    assert_file_contains_string(file_path=Path(PACKAGE_ROOT, 'pyproject.toml'), string=f'version = "{version}~ynh')
+    assert_file_contains_string(file_path=Path(PACKAGE_ROOT, 'manifest.json'), string=f'"version": "{version}~ynh')
 
 
 def poetry_check_output(*args):
@@ -52,7 +48,7 @@ def test_poetry_check():
 
 
 def test_requirements_txt():
-    requirements_txt = Path('conf', 'requirements.txt')
+    requirements_txt = PACKAGE_ROOT / 'conf' / 'requirements.txt'
     assert_is_file(requirements_txt)
 
     output = poetry_check_output('export', '-f', 'requirements.txt')
