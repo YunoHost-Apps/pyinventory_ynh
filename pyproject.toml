@@ -6,6 +6,7 @@ authors = ["JensDiemer <git@jensdiemer.de>"]
 license = "GPL"
 
 [tool.poetry.dependencies]
+# Keep Python 3.7 until Yunohost contains a newer Python Version ;)
 python = ">=3.7,<4.0.0"
 pyinventory = {version = ">=0.14.0", extras = ["psycopg2-source"]}
 
@@ -28,9 +29,10 @@ pytest-isort = "*"
 coveralls = "*"
 flynt = "*"
 pyupgrade = "*"
+EditorConfig = "*"  # https://github.com/editorconfig/editorconfig-core-py
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 
@@ -100,7 +102,7 @@ addopts = """
 legacy_tox_ini = """
 [tox]
 isolated_build = True
-envlist = py39,py38,py37
+envlist = px310,py39,py38,py37
 skip_missing_interpreters = True
 
 [testenv]
