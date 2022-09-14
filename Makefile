@@ -18,13 +18,12 @@ check-poetry:
 
 install-poetry:  ## install or update poetry
 	pip3 install -U pip
-	pip3 install -U poetry
+	pip3 install -U "poetry!=1.2.0"
 
 install: check-poetry  ## install project via poetry
 	poetry install
 
 update: install-poetry  ## update the sources and installation and generate "conf/requirements.txt"
-	poetry run pip install -U pip
 	poetry update
 	poetry export -f requirements.txt --output conf/requirements.txt
 
@@ -45,7 +44,7 @@ tox: check-poetry ## Run pytest via tox with all environments
 	poetry run tox
 
 pytest: install  ## Run pytest
-	poetry run python3 ./run_pytest.py
+	poetry run pytest
 
 local-test: install  ## Run local_test.py to run the project locally
 	poetry run python3 ./local_test.py

@@ -23,13 +23,18 @@ jobs:
       run: |
         git fetch origin master
     - name: 'Set up Python ${{ matrix.python-version }}'
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
         python-version: '${{ matrix.python-version }}'
 
+    - uses: actions/cache@v2
+      with:
+        path: ~/.cache/
+        key: dot-cache-files
+
     - name: 'Install package'
       run: |
-        pip3 install poetry
+        make install-poetry
         make install
 
     - name: 'List installed packages'
@@ -45,8 +50,3 @@ jobs:
       with:
         fail_ci_if_error: false
         verbose: true
-
-    - name: 'Run linters'
-      if: matrix.python-version == '3.8'
-      run: |
-        make lint

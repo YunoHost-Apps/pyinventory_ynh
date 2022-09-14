@@ -1,20 +1,19 @@
 [tool.poetry]
 name = "pyinventory_ynh"
-version = "0.14.0~ynh1"
+version = "0.16.0rc1~ynh1"
 description = "Test pyinventory_ynh via local_test.py"
 authors = ["JensDiemer <git@jensdiemer.de>"]
 license = "GPL"
 
 [tool.poetry.dependencies]
+# Keep Python 3.7 until Yunohost contains a newer Python Version ;)
 python = ">=3.7,<4.0.0"
-pyinventory = {version = ">=0.14.0", extras = ["psycopg2-source"]}
+pyinventory = {version = ">=0.16.0rc1", extras = ["psycopg2-source"]}
 
 # Note: "ynh" extras will install gunicorn, psycopg2, django-redis and django-axes
-django_yunohost_integration = {version = ">=v0.2.0", extras = ["ynh"]}
+django_yunohost_integration = {version = "*", extras = ["ynh"]}
 
-# TODO: Update psycopg2 after PyInventory updates Django >2.2 update
-# See: https://github.com/psycopg/psycopg2/issues/1293
-psycopg2 = "<2.9" # https://www.psycopg.org/docs/install.html#build-prerequisites
+psycopg2 = "*" # https://github.com/psycopg/psycopg2/
 
 [tool.poetry.dev-dependencies]
 bx_py_utils = "*"
@@ -23,14 +22,15 @@ pytest = "*"
 pytest-cov = "*"
 pytest-django = "*"
 pytest-darker = "*"  # https://github.com/akaihola/pytest-darker
-pytest-flake8 = "*"
-pytest-isort = "*"
+flake8 = "*"
+isort = "*"
 coveralls = "*"
 flynt = "*"
 pyupgrade = "*"
+EditorConfig = "*"  # https://github.com/editorconfig/editorconfig-core-py
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 
@@ -86,8 +86,6 @@ addopts = """
     --no-cov-on-fail
     --showlocals
     --darker
-    --flake8
-    --isort
     --doctest-modules
     --failed-first
     --last-failed-no-failures all
@@ -100,7 +98,7 @@ addopts = """
 legacy_tox_ini = """
 [tox]
 isolated_build = True
-envlist = py39,py38,py37
+envlist = px310,py39,py38,py37
 skip_missing_interpreters = True
 
 [testenv]
