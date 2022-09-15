@@ -52,6 +52,8 @@ local-test: install  ## Run local_test.py to run the project locally
 local-diff-settings:  ## Run "manage.py diffsettings" with local test
 	poetry run python3 local_test/opt_yunohost/manage.py diffsettings
 
+safety:  ## Run https://github.com/pyupio/safety
+	poetry run safety check --full-report
 
 ##############################################################################
 

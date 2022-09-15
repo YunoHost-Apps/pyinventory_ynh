@@ -17,4 +17,4 @@ accesslog = '__LOG_FILE__'
 errorlog = '__LOG_FILE__'
 
 # https://docs.gunicorn.org/en/latest/settings.html#pidfile
-pidfile = '__FINAL_HOME_PATH__/gunicorn.pid'
+pidfile = '__FINALPATH__/gunicorn.pid'

@@ -2,7 +2,7 @@
 ################################################################################
 
 # Please do not modify this file, it will be reset at the next update.
-# You can edit the file __FINAL_HOME_PATH__/local_settings.py and add/modify the settings you need.
+# You can edit the file __FINALPATH__/local_settings.py and add/modify the settings you need.
 # The parameters you add in local_settings.py will overwrite these,
 # but you can use the options and documentation in this file to find out what can be done.
 
@@ -11,20 +11,19 @@
 
 from pathlib import Path as __Path
 
-from django_yunohost_integration.base_settings import *  # noqa
+from django_yunohost_integration.base_settings import *  # noqa:F401,F403
 from django_yunohost_integration.secret_key import get_or_create_secret as __get_or_create_secret
-from inventory_project.settings.base import *  # noqa
+from inventory_project.settings.base import *  # noqa:F401,F403
 
 
-DEBUG = False  # Don't turn DEBUG on in production!
+from django_yunohost_integration.base_settings import LOGGING  # noqa:F401 isort:skip
 
-# -----------------------------------------------------------------------------
 
-FINAL_HOME_PATH = __Path('__FINAL_HOME_PATH__')  # /opt/yunohost/$app
-assert FINAL_HOME_PATH.is_dir(), f'Directory not exists: {FINAL_HOME_PATH}'
+FINALPATH = __Path('__FINALPATH__')  # /opt/yunohost/$app
+assert FINALPATH.is_dir(), f'Directory not exists: {FINALPATH}'
 
-FINAL_WWW_PATH = __Path('__FINAL_WWW_PATH__')  # /var/www/$app
-assert FINAL_WWW_PATH.is_dir(), f'Directory not exists: {FINAL_WWW_PATH}'
+PUBLIC_PATH = __Path('__PUBLIC_PATH__')  # /var/www/$app
+assert PUBLIC_PATH.is_dir(), f'Directory not exists: {PUBLIC_PATH}'
 
 LOG_FILE = __Path('__LOG_FILE__')  # /var/log/$app/pyinventory.log
 assert LOG_FILE.is_file(), f'File not exists: {LOG_FILE}'
@@ -33,13 +32,22 @@ PATH_URL = '__PATH_URL__'  # $YNH_APP_ARG_PATH
 PATH_URL = PATH_URL.strip('/')
 
 # -----------------------------------------------------------------------------
+# config_panel.toml settings:
 
-ROOT_URLCONF = 'urls'  # /opt/yunohost/pyinventory/ynh_urls.py
+DEBUG_ENABLED = '__DEBUG_ENABLED__'
+DEBUG = bool(int(DEBUG_ENABLED))
+
+LOG_LEVEL = '__LOG_LEVEL__'
+ADMIN_EMAIL = '__ADMIN_EMAIL__'
+DEFAULT_FROM_EMAIL = '__DEFAULT_FROM_EMAIL__'
+
+
+# -----------------------------------------------------------------------------
 
 # Function that will be called to finalize a user profile:
 YNH_SETUP_USER = 'setup_user.setup_project_user'
 
-SECRET_KEY = __get_or_create_secret(FINAL_HOME_PATH / 'secret.txt')  # /opt/yunohost/$app/secret.txt
+SECRET_KEY = __get_or_create_secret(FINALPATH / 'secret.txt')  # /opt/yunohost/$app/secret.txt
 
 INSTALLED_APPS.append('django_yunohost_integration')
 
@@ -65,10 +73,12 @@ LOGIN_URL = '/yunohost/sso/'
 LOGOUT_REDIRECT_URL = '/yunohost/sso/'
 # /yunohost/sso/?action=logout
 
+ROOT_URLCONF = 'urls'  # .../conf/urls.py
+
 # -----------------------------------------------------------------------------
 
 
-ADMINS = (('__ADMIN__', '__ADMINMAIL__'),)
+ADMINS = (('__ADMIN__', ADMIN_EMAIL),)
 
 MANAGERS = ADMINS
 
@@ -95,11 +105,10 @@ EMAIL_SUBJECT_PREFIX = f'[{SITE_TITLE}] '
 
 
 # E-mail address that error messages come from.
-SERVER_EMAIL = 'noreply@__DOMAIN__'
+SERVER_EMAIL = ADMIN_EMAIL
 
 # Default email address to use for various automated correspondence from
 # the site managers. Used for registration emails.
-DEFAULT_FROM_EMAIL = '__ADMINMAIL__'
 
 # List of URLs your site is supposed to serve
 ALLOWED_HOSTS = ['__DOMAIN__']
@@ -131,8 +140,8 @@ else:
     STATIC_URL = '/static/'
     MEDIA_URL = '/media/'
 
-STATIC_ROOT = str(FINAL_WWW_PATH / 'static')
-MEDIA_ROOT = str(FINAL_WWW_PATH / 'media')
+STATIC_ROOT = str(PUBLIC_PATH / 'static')
+MEDIA_ROOT = str(PUBLIC_PATH / 'media')
 
 # _____________________________________________________________________________
 # django-ckeditor
@@ -142,46 +151,22 @@ CKEDITOR_BASEPATH = STATIC_URL + 'ckeditor/ckeditor/'
 # _____________________________________________________________________________
 # Django-dbbackup
 
-DBBACKUP_STORAGE_OPTIONS['location'] = str(FINAL_HOME_PATH / 'backups')
+DBBACKUP_STORAGE_OPTIONS['location'] = str(FINALPATH / 'backups')
 
 # -----------------------------------------------------------------------------
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': True,
-    'formatters': {
-        'verbose': {
-            'format': '{asctime} {levelname} {name} {module}.{funcName} {message}',
-            'style': '{',
-        },
-    },
-    'handlers': {
-        'mail_admins': {
-            'level': 'ERROR',
-            'formatter': 'verbose',
-            'class': 'django.utils.log.AdminEmailHandler',
-            'include_html': True,
-        },
-        'log_file': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.WatchedFileHandler',
-            'formatter': 'verbose',
-            'filename': str(LOG_FILE),
-        },
-    },
-    'loggers': {
-        '': {'handlers': ['log_file', 'mail_admins'], 'level': 'INFO', 'propagate': False},
-        'django': {'handlers': ['log_file', 'mail_admins'], 'level': 'INFO', 'propagate': False},
-        'axes': {'handlers': ['log_file', 'mail_admins'], 'level': 'WARNING', 'propagate': False},
-        'django_tools': {'handlers': ['log_file', 'mail_admins'], 'level': 'INFO', 'propagate': False},
-        'django_yunohost_integration': {'handlers': ['log_file', 'mail_admins'], 'level': 'INFO', 'propagate': False},
-        'inventory': {'handlers': ['log_file', 'mail_admins'], 'level': 'INFO', 'propagate': False},
-    },
+# Set log file to e.g.: /var/log/$app/$app.log
+LOGGING['handlers']['log_file']['filename'] = str(LOG_FILE)
+
+LOGGING['loggers']['inventory'] = {
+    'handlers': ['syslog', 'log_file', 'mail_admins'],
+    'level': 'INFO',
+    'propagate': False,
 }
 
 # -----------------------------------------------------------------------------
 
 try:
-    from local_settings import *  # noqa
+    from local_settings import *  # noqa:F401,F403
 except ImportError:
     pass
