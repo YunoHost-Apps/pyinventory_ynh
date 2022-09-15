@@ -1,5 +1,5 @@
 [Unit]
-Description=PyInventory application server
+Description=__APP__ server
 After=redis.service postgresql.service
 
 [Service]

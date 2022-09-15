@@ -1,0 +1,35 @@
+version = "1.0"
+
+[main]
+name = "django_example_ynh configuration"
+services = ["__APP__"]
+
+    [main.config]
+    name = "Configuration Options"
+
+        [main.config.default_from_email]
+        ask = "from email"
+        type = "email"
+        help = "Default email address to use for various automated emails."
+        bind = "default_from_email:__FINALPATH__/settings.py"
+
+        [main.config.admin_email]
+        ask = "ADMIN email"
+        type = "email"
+        help = "EMail address for error emails."
+        bind = "admin_email:__FINALPATH__/settings.py"
+
+        [main.config.debug_enabled]
+        ask = "DEBUG mode"
+        type = "boolean"
+        yes = "1"
+        no = "0"
+        help = "Should be never enabled in production!"
+        bind = "debug_enabled:__FINALPATH__/settings.py"
+
+        [main.config.log_level]
+        type = "string"
+        ask = "Log Level"
+        choices = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+        default = "WARNING"
+        bind = "log_level:__FINALPATH__/settings.py"

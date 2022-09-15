@@ -22,6 +22,9 @@ def main():
         django_settings_path=BASE_PATH / 'conf' / 'settings.py',
         destination=BASE_PATH / 'local_test',
         runserver=True,
+        extra_replacements={
+            '__DEBUG_ENABLED__': '1',
+        },
     )
 
 

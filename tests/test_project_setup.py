@@ -6,6 +6,7 @@ from pathlib import Path
 
 from django_tools.serve_media_app.utils import clean_filename
 from django_tools.unittest_utils.assertments import assert_is_dir, assert_is_file
+from django_tools.unittest_utils.project_setup import check_editor_config
 
 import inventory
 
@@ -83,3 +84,7 @@ def test_screenshot_filenames():
             file_path.rename(new_path)
             renamed.append(f'{file_name!r} renamed to {cleaned_name!r}')
     assert not renamed, f'Bad screenshots file names found: {", ".join(renamed)}'
+
+
+def test_check_editor_config():
+    check_editor_config(package_root=PACKAGE_ROOT)
