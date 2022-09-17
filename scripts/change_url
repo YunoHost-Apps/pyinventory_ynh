@@ -6,6 +6,9 @@
 # IMPORT GENERIC HELPERS
 #=================================================
 
+YNH_APP_ARG_DOMAIN=$YNH_APP_NEW_DOMAIN
+YNH_APP_ARG_PATH=$YNH_APP_NEW_PATH
+
 source _common.sh
 source /usr/share/yunohost/helpers
 
@@ -124,6 +127,9 @@ fi
 # MODIFY SETTINGS
 #=================================================
 ynh_script_progression --message="Modify $app config file..."
+
+domain=$YNH_APP_NEW_DOMAIN
+path_url=$YNH_APP_NEW_PATH
 
 ynh_add_config --template="settings.py" --destination="$final_path/settings.py"
 
