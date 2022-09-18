@@ -18,7 +18,7 @@ check-poetry:
 
 install-poetry:  ## install or update poetry
 	pip3 install -U pip
-	pip3 install -U "poetry!=1.2.0"
+	pip3 install -U "poetry<1.2"  # https://forum.yunohost.org/t/invalid-pep-440-version-0-16-0-ynh1/21293
 
 install: check-poetry  ## install project via poetry
 	poetry install
