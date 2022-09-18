@@ -5,8 +5,13 @@
 	"description": {
 		"en": "Web based management to catalog things including state and location etc."
 	},
-	"version": "0.14.0~ynh1",
+	"version": "0.16.0~ynh1",
 	"url": "https://github.com/jedie/PyInventory",
+    "upstream": {
+        "license": "GPL-3.0",
+        "website": "https://github.com/jedie/PyInventory",
+        "code": "https://github.com/jedie/PyInventory"
+    },
 	"license": "GPL-3.0",
 	"maintainer": {
 		"name": "Jens Diemer",
@@ -14,18 +19,17 @@
 	},
 	"previous_maintainers": [],
 	"requirements": {
-		"yunohost": ">= 4.0"
+		"yunohost": ">= 4.4"
 	},
 	"multi_instance": true,
 	"services": [
-		"nginx"
+		"nginx", "postgresql", "redis"
 	],
 	"arguments": {
 		"install" : [
 			{
 				"name": "domain",
-				"type": "domain",
-				"example": "domain.org"
+				"type": "domain"
 			},
 			{
 				"name": "path",
@@ -35,9 +39,8 @@
 			},
 			{
 				"name": "admin",
-				"type": "user",
-				"example": "johndoe"
-			}
-		]
+				"type": "user"
+            }
+        ]
 	}
 }

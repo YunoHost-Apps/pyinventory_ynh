@@ -27,17 +27,24 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
         assert settings.configured is True
 
         assert settings.PATH_URL == 'app_path'
+        assert settings.ROOT_URLCONF == 'urls'
+        assert reverse('admin:index') == '/app_path/'
 
         def assert_path(path, end_text):
             assert isinstance(path, Path)
             path = str(path)
             assert path.endswith(end_text)
 
-        assert_path(settings.FINAL_HOME_PATH, '/local_test/opt_yunohost')
-        assert_path(settings.FINAL_WWW_PATH, '/local_test/var_www')
+        assert_path(settings.FINALPATH, '/local_test/opt_yunohost')
+        assert_path(settings.PUBLIC_PATH, '/local_test/var_www')
         assert_path(settings.LOG_FILE, '/local_test/var_log_pyinventory.log')
 
-        assert settings.ROOT_URLCONF == 'urls'
+    def test_config_panel_settings(self):
+        # config_panel.toml settings, set via tests.conftest.pytest_configure():
+        assert settings.DEBUG_ENABLED == '0' and settings.DEBUG is False
+        assert settings.LOG_LEVEL == 'INFO'
+        assert settings.ADMIN_EMAIL == 'foo-bar@test.tld'
+        assert settings.DEFAULT_FROM_EMAIL == 'django_app@test.tld'
 
     def test_urls(self):
         assert reverse('admin:index') == '/app_path/'
@@ -66,7 +73,6 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
         response = self.client.get('/app_path/', secure=True)
         self.assertRedirects(response, expected_url='/app_path/login/?next=/app_path/', fetch_redirect_response=False)
 
-    @override_settings(SECURE_SSL_REDIRECT=False)
     def test_create_unknown_user(self):
         assert User.objects.count() == 0
 
@@ -77,6 +83,7 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
             HTTP_REMOTE_USER='test',
             HTTP_AUTH_USER='test',
             HTTP_AUTHORIZATION='basic dGVzdDp0ZXN0MTIz',
+            secure=True,
         )
 
         assert User.objects.count() == 1
@@ -95,7 +102,6 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
             ),
         )
 
-    @override_settings(SECURE_SSL_REDIRECT=False)
     def test_wrong_auth_user(self):
         assert User.objects.count() == 0
         assert AccessLog.objects.count() == 0
@@ -107,6 +113,7 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
             HTTP_REMOTE_USER='test',
             HTTP_AUTH_USER='foobar',  # <<< wrong user name
             HTTP_AUTHORIZATION='basic dGVzdDp0ZXN0MTIz',
+            secure=True,
         )
 
         assert User.objects.count() == 1
@@ -120,7 +127,6 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
 
         assert response.status_code == 403  # Forbidden
 
-    @override_settings(SECURE_SSL_REDIRECT=False)
     def test_wrong_cookie(self):
         assert User.objects.count() == 0
         assert AccessLog.objects.count() == 0
@@ -132,6 +138,7 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
             HTTP_REMOTE_USER='test',
             HTTP_AUTH_USER='test',
             HTTP_AUTHORIZATION='basic dGVzdDp0ZXN0MTIz',
+            secure=True,
         )
 
         assert User.objects.count() == 1
@@ -145,7 +152,6 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
 
         assert response.status_code == 403  # Forbidden
 
-    @override_settings(SECURE_SSL_REDIRECT=False)
     def test_wrong_authorization_user(self):
         assert User.objects.count() == 0
 
@@ -155,7 +161,11 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
             path='/app_path/',
             HTTP_REMOTE_USER='test',
             HTTP_AUTH_USER='test',
-            HTTP_AUTHORIZATION=generate_basic_auth(username='foobar', password='test123'),  # <<< wrong user name
+            HTTP_AUTHORIZATION=generate_basic_auth(
+                username='foobar',  # <<< wrong user name
+                password='test123',
+            ),
+            secure=True,
         )
 
         assert User.objects.count() == 1

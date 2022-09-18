@@ -6,6 +6,9 @@
 # IMPORT GENERIC HELPERS
 #=================================================
 
+YNH_APP_ARG_DOMAIN=$YNH_APP_NEW_DOMAIN
+YNH_APP_ARG_PATH=$YNH_APP_NEW_PATH
+
 source _common.sh
 source /usr/share/yunohost/helpers
 
@@ -30,9 +33,20 @@ final_path=$(ynh_app_setting_get --app="$app" --key=final_path)
 log_path=$(ynh_app_setting_get --app="$app" --key=log_path)
 
 port=$(ynh_app_setting_get --app="$app" --key=port)
+
 db_pwd=$(ynh_app_setting_get --app="$app" --key=psqlpwd)
-admin_mail=$(ynh_user_get_info "$admin" mail)
+db_name=$(ynh_sanitize_dbid --db_name="$app")
+db_user=$db_name
+
 redis_db=$(ynh_app_setting_get --app="$app" --key=redis_db)
+
+#-------------------------------------------------
+# config_panel.toml settings:
+
+debug_enabled=$(ynh_app_setting_get --app="$app" --key=debug_enabled)
+log_level=$(ynh_app_setting_get --app="$app" --key=log_level)
+admin_email=$(ynh_app_setting_get --app="$app" --key=admin_email)
+default_from_email=$(ynh_app_setting_get --app="$app" --key=default_from_email)
 
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
@@ -72,7 +86,7 @@ fi
 #=================================================
 # STOP SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Stopping systemd services..."
+ynh_script_progression --message="Stopping systemd service '$app'..."
 
 ynh_systemd_action --service_name="$app" --action="stop"
 
@@ -112,36 +126,19 @@ fi
 #=================================================
 # MODIFY SETTINGS
 #=================================================
-ynh_script_progression --message="Modify PyInventory's config file..."
+ynh_script_progression --message="Modify $app config file..."
 
-# save old settings file
-settings="$final_path/settings.py"
-ynh_backup_if_checksum_is_different --file="$settings"
+domain=$YNH_APP_NEW_DOMAIN
+path_url=$YNH_APP_NEW_PATH
 
-cp "../conf/settings.py" "$settings"
-
-ynh_replace_string --match_string="__APP__" --replace_string="$app" --target_file="$settings"
-ynh_replace_string --match_string="__DB_PWD__" --replace_string="$db_pwd" --target_file="$settings"
-ynh_replace_string --match_string="__ADMIN__" --replace_string="$admin" --target_file="$settings"
-ynh_replace_string --match_string="__ADMINMAIL__" --replace_string="$admin_mail" --target_file="$settings"
-ynh_replace_string --match_string="__FINAL_HOME_PATH__" --replace_string="$final_path" --target_file="$settings"
-ynh_replace_string --match_string="__FINAL_WWW_PATH__" --replace_string="$public_path" --target_file="$settings"
-ynh_replace_string --match_string="__LOG_FILE__" --replace_string="$log_file" --target_file="$settings"
-ynh_replace_string --match_string="__REDIS_DB__" --replace_string="$redis_db" --target_file="$settings"
-
-# Difference to install/upgrade scripts: Use $new_domain and $new_path here:
-ynh_replace_string --match_string="__DOMAIN__" --replace_string="$new_domain" --target_file="$settings"
-ynh_replace_string --match_string="__PATH_URL__" --replace_string="$new_path" --target_file="$settings"
-
-# Recalculate and store the config file checksum into the app settings
-ynh_store_file_checksum --file="$settings"
+ynh_add_config --template="settings.py" --destination="$final_path/settings.py"
 
 #=================================================
 # GENERIC FINALISATION
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting systemd services..." --weight=5
+ynh_script_progression --message="Starting systemd service '$app'..." --weight=5
 
 ynh_systemd_action --service_name="$app" --action="start"
 
