@@ -17,14 +17,13 @@ check-poetry:
 	fi
 
 install-poetry:  ## install or update poetry
-	pip3 install -U pip
-	pip3 install -U "poetry<1.2"  # https://forum.yunohost.org/t/invalid-pep-440-version-0-16-0-ynh1/21293
+	curl -sSL https://install.python-poetry.org | python3 -
 
 install: check-poetry  ## install project via poetry
 	poetry install
 
-update: install-poetry  ## update the sources and installation and generate "conf/requirements.txt"
-	poetry update
+update: check-poetry  ## update the sources and installation and generate "conf/requirements.txt"
+	poetry update -v
 	poetry export -f requirements.txt --output conf/requirements.txt
 
 lint: ## Run code formatters and linter
