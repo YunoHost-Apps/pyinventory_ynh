@@ -4,10 +4,12 @@ import shutil
 import subprocess
 from pathlib import Path
 
+import requests
 import tomli
 from django_tools.serve_media_app.utils import clean_filename
 from django_tools.unittest_utils.assertments import assert_is_dir, assert_is_file
 from django_tools.unittest_utils.project_setup import check_editor_config
+from packaging.version import Version
 
 import inventory
 
@@ -23,8 +25,24 @@ def assert_file_contains_string(file_path, string):
     raise AssertionError(f'File {file_path} does not contain {string!r} !')
 
 
+def get_github_version_tag(github_project_url):
+    api_url = github_project_url.replace('github.com', 'api.github.com/repos')
+    tags = requests.get(f'{api_url}/tags').json()
+    for tag in tags:
+        version_str = tag['name']
+        ver_obj = Version(version_str)
+        if ver_obj.base_version and not ver_obj.is_prerelease:
+            return ver_obj
+
+
 def test_version():
     upstream_version = inventory.__version__
+    current_ver_obj = Version(upstream_version)
+
+    github_ver = get_github_version_tag(github_project_url='https://github.com/jedie/PyInventory')
+    assert (
+        github_ver == current_ver_obj
+    ), f'Current version from github is: {github_ver} but current package version is: {current_ver_obj}'
 
     pyproject_toml_path = Path(PACKAGE_ROOT, 'pyproject.toml')
     pyproject_toml = tomli.loads(pyproject_toml_path.read_text(encoding='UTF-8'))
