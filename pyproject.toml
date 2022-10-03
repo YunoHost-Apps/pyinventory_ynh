@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyinventory_ynh"
-version = "0.16.0+ynh2"
+version = "0.17.0+ynh1"
 description = "Test pyinventory_ynh via local_test.py"
 authors = ["JensDiemer <git@jensdiemer.de>"]
 license = "GPL"
@@ -8,7 +8,7 @@ license = "GPL"
 [tool.poetry.dependencies]
 # Keep Python 3.7 until Yunohost contains a newer Python Version ;)
 python = ">=3.7,<4.0.0"
-pyinventory = {version = ">=0.16.0", extras = ["psycopg2-source"]}
+pyinventory = {version = ">=0.17.0", extras = ["psycopg2-source"]}
 
 # Note: "ynh" extras will install gunicorn, psycopg2, django-redis and django-axes
 django_yunohost_integration = {version = "*", extras = ["ynh"]}
@@ -29,6 +29,9 @@ flynt = "*"
 pyupgrade = "*"
 EditorConfig = "*"  # https://github.com/editorconfig/editorconfig-core-py
 safety = "*"  # https://github.com/pyupio/safety
+requests = "*"  # https://github.com/psf/requests
+packaging = "*"  # https://github.com/pypa/packaging
+
 
 [build-system]
 requires = ["poetry-core"]

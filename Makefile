@@ -23,6 +23,7 @@ install: check-poetry  ## install project via poetry
 	poetry install
 
 update: check-poetry  ## update the sources and installation and generate "conf/requirements.txt"
+	poetry self update
 	poetry update -v
 	poetry export -f requirements.txt --output conf/requirements.txt
 
