@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-MAX_LINE_LENGTH := 119
+MAX_LINE_LENGTH := 100
 
 all: help
 
@@ -20,21 +20,23 @@ install-poetry:  ## install or update poetry
 	curl -sSL https://install.python-poetry.org | python3 -
 
 install: check-poetry  ## install project via poetry
+	python3 -m venv .venv
 	poetry install
 
 update: check-poetry  ## update the sources and installation and generate "conf/requirements.txt"
+	python3 -m venv .venv
 	poetry self update
 	poetry update -v
+	poetry install
 	poetry export -f requirements.txt --output conf/requirements.txt
 
 lint: ## Run code formatters and linter
-	poetry run flynt --fail-on-change --line-length=${MAX_LINE_LENGTH} .
+	poetry run darker --check
 	poetry run isort --check-only .
 	poetry run flake8 .
 
 fix-code-style: ## Fix code formatting
-	poetry run flynt --line-length=${MAX_LINE_LENGTH} .
-	poetry run black --verbose --safe --line-length=${MAX_LINE_LENGTH} --skip-string-normalization .
+	poetry run darker
 	poetry run isort .
 
 tox-listenvs: check-poetry ## List all tox test environments

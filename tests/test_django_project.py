@@ -1,7 +1,8 @@
-from pathlib import Path
-
 from axes.models import AccessLog
-from bx_django_utils.test_utils.html_assertion import HtmlAssertionMixin
+from bx_django_utils.test_utils.html_assertion import (
+    HtmlAssertionMixin,
+    assert_html_response_snapshot,
+)
 from django.conf import LazySettings, settings
 from django.contrib.auth.models import User
 from django.test import override_settings
@@ -27,17 +28,13 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
         assert settings.configured is True
 
         assert settings.PATH_URL == 'app_path'
+
+        assert str(settings.FINALPATH).endswith('/local_test/opt_yunohost')
+        assert str(settings.PUBLIC_PATH).endswith('/local_test/var_www')
+        assert str(settings.LOG_FILE).endswith('/local_test/var_log_pyinventory.log')
+
         assert settings.ROOT_URLCONF == 'urls'
         assert reverse('admin:index') == '/app_path/'
-
-        def assert_path(path, end_text):
-            assert isinstance(path, Path)
-            path = str(path)
-            assert path.endswith(end_text)
-
-        assert_path(settings.FINALPATH, '/local_test/opt_yunohost')
-        assert_path(settings.PUBLIC_PATH, '/local_test/var_www')
-        assert_path(settings.LOG_FILE, '/local_test/var_log_pyinventory.log')
 
     def test_config_panel_settings(self):
         # config_panel.toml settings, set via tests.conftest.pytest_configure():
@@ -55,11 +52,17 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
 
         # Serve user uploads via django_tools.serve_media_app:
         assert settings.MEDIA_URL == '/app_path/media/'
-        assert reverse('serve_media_app:serve-media', kwargs={'user_token': 'token', 'path': 'foo/bar/'}) == (
-            '/app_path/media/token/foo/bar/'
+
+        url = reverse(
+            'serve_media_app:serve-media',
+            kwargs={'user_token': 'token', 'path': 'foo/bar/'},
         )
+        assert url == '/app_path/media/token/foo/bar/'
 
     def test_auth(self):
+        assert settings.PATH_URL == 'app_path'
+        assert reverse('admin:index') == '/app_path/'
+
         # SecurityMiddleware should redirects all non-HTTPS requests to HTTPS:
         assert settings.SECURE_SSL_REDIRECT is True
         response = self.client.get('/app_path/', secure=False)
@@ -90,10 +93,9 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
         user = User.objects.first()
         assert user.username == 'test'
         assert user.is_active is True
-        assert user.is_staff is True  # Set by: django_yunohost_integration
+        assert user.is_staff is True  # Set by: conf.setup_user.setup_project_user
         assert user.is_superuser is False
 
-        assert response.status_code == 200
         self.assert_html_parts(
             response,
             parts=(
@@ -101,6 +103,7 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
                 '<strong>test</strong>',
             ),
         )
+        assert_html_response_snapshot(response, query_selector='#container', validate=False)
 
     def test_wrong_auth_user(self):
         assert User.objects.count() == 0
@@ -120,7 +123,7 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
         user = User.objects.first()
         assert user.username == 'test'
         assert user.is_active is True
-        assert user.is_staff is True  # Set by: django_yunohost_integration
+        assert user.is_staff is True  # Set by: conf.setup_user.setup_project_user
         assert user.is_superuser is False
 
         assert AccessLog.objects.count() == 1
@@ -145,7 +148,7 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
         user = User.objects.first()
         assert user.username == 'test'
         assert user.is_active is True
-        assert user.is_staff is True  # Set by: django_yunohost_integration
+        assert user.is_staff is True  # Set by: conf.setup_user.setup_project_user
         assert user.is_superuser is False
 
         assert AccessLog.objects.count() == 1
@@ -172,7 +175,7 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
         user = User.objects.first()
         assert user.username == 'test'
         assert user.is_active is True
-        assert user.is_staff is True  # Set by: django_yunohost_integration
+        assert user.is_staff is True  # Set by: conf.setup_user.setup_project_user
         assert user.is_superuser is False
 
         assert AccessLog.objects.count() == 1

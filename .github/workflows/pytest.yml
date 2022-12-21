@@ -1,3 +1,4 @@
+{# https://jinja.palletsprojects.com/en/latest/templates/#escaping #}
 name: pytest
 
 on:
@@ -14,7 +15,7 @@ jobs:
     strategy:
       max-parallel: 2
       matrix:
-        python-version: ["3.10", "3.9", "3.8", "3.7"]
+        python-version: ["3.11", "3.10", "3.9"]
     steps:
     - uses: actions/checkout@v2
       with:
@@ -34,7 +35,7 @@ jobs:
 
     - name: 'Install package'
       run: |
-        make install-poetry
+        pip3 install poetry
         make install
 
     - name: 'List installed packages'
@@ -54,3 +55,4 @@ jobs:
       with:
         fail_ci_if_error: false
         verbose: true
+

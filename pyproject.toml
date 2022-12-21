@@ -1,36 +1,45 @@
 [tool.poetry]
 name = "pyinventory_ynh"
 version = "0.17.0+ynh1"
-description = "Test pyinventory_ynh via local_test.py"
-authors = ["JensDiemer <git@jensdiemer.de>"]
-license = "GPL"
+description = "YunoHost app package for: https://github.com/jedie/PyInventory"
+authors = ["Jens Diemer <pyinventory_ynh@jensdiemer.de>"]
+homepage = "https://github.com/YunoHost-Apps/pyinventory_ynh"
+license = "GPL-3.0-or-later"
+readme = 'README.md'
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/jedie/PyInventory/issues"
 
 [tool.poetry.dependencies]
-# Keep Python 3.7 until Yunohost contains a newer Python Version ;)
-python = ">=3.7,<4.0.0"
-pyinventory = {version = ">=0.17.0", extras = ["psycopg2-source"]}
+python = ">=3.9,<4.0.0"  # Stay with 3.9 until YunoHost used >=Debian 11 (Bullseye)
+#
+pyinventory = ">=0.17.0"  # https://github.com/jedie/PyInventory
+#
+# extras "ynh" will install: gunicorn, psycopg2, django-redis and django-axes
+# see: https://github.com/YunoHost-Apps/django_yunohost_integration/blob/main/pyproject.toml
+django_yunohost_integration = {version = ">=0.5.0", extras = ["ynh"]}  # https://github.com/YunoHost-Apps/django_yunohost_integration
 
-# Note: "ynh" extras will install gunicorn, psycopg2, django-redis and django-axes
-django_yunohost_integration = {version = "*", extras = ["ynh"]}
-
-psycopg2 = "*" # https://github.com/psycopg/psycopg2/
 
 [tool.poetry.dev-dependencies]
-bx_py_utils = "*"
-tox = "*"
+bx_py_utils = "*"  # https://github.com/boxine/bx_py_utils
+bx_django_utils = "*"  # https://github.com/boxine/bx_django_utils
+tox = "*"  # https://github.com/tox-dev/tox
+coveralls = "*"  # http://github.com/TheKevJames/coveralls-python
+darker = "*"  # https://github.com/akaihola/pytest-darker
+isort = "*"  # https://github.com/pycqa/isort
+flake8 = "*"  # https://github.com/pycqa/flake8
+EditorConfig = "*"  # https://github.com/editorconfig/editorconfig-core-py
+safety = "*"  # https://github.com/pyupio/safety
+mypy = "*"  # https://github.com/python/mypy
+tomli = "*"  # https://github.com/hukkin/tomli
+twine = "*"  # https://github.com/pypa/twine
+poetry-publish = "*"  # https://github.com/jedie/poetry-publish
 pytest = "*"
 pytest-cov = "*"
 pytest-django = "*"
-pytest-darker = "*"  # https://github.com/akaihola/pytest-darker
-flake8 = "*"
-isort = "*"
-coveralls = "*"
-flynt = "*"
-pyupgrade = "*"
-EditorConfig = "*"  # https://github.com/editorconfig/editorconfig-core-py
-safety = "*"  # https://github.com/pyupio/safety
 requests = "*"  # https://github.com/psf/requests
-packaging = "*"  # https://github.com/pypa/packaging
+packaging = "*"  # https://github.com/pypa/packagi
+beautifulsoup4 = "*"  # https://pypi.org/project/beautifulsoup4/
 
 
 [build-system]
@@ -41,7 +50,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.darker]
 src = ['.']
 revision = "origin/master..."
-line_length = 120
+line_length = 100
 verbose = true
 skip_string_normalization = true
 diff = false
@@ -54,17 +63,13 @@ lint = [
 log_level = "INFO"
 
 
-[tool.flynt]
-line_length = 120
-
-
 [tool.isort]
 # https://pycqa.github.io/isort/docs/configuration/config_files/#pyprojecttoml-preferred-format
 atomic=true
 profile='black'
-line_length=120
-known_first_party=["inventory"]
-skip_glob=["*/htmlcov/*","*/migrations/*","*/local_test/*"]
+skip_glob=[".*", "*/htmlcov/*","*/migrations/*","*/local_test/*"]
+known_first_party=['inventory', 'inventory_project']
+line_length=100
 lines_after_imports=2
 
 
@@ -88,7 +93,6 @@ addopts = """
     --cov-report xml
     --no-cov-on-fail
     --showlocals
-    --darker
     --doctest-modules
     --failed-first
     --new-first
@@ -96,7 +100,7 @@ addopts = """
 
 
 [tool.coverage.run]
-omit = [".*"]
+omit = ['.*', '*/tests/*']
 
 
 [tool.tox]
@@ -104,7 +108,7 @@ omit = [".*"]
 legacy_tox_ini = """
 [tox]
 isolated_build = True
-envlist = py{37,38,39,310}
+envlist = py{311,310,39}
 skip_missing_interpreters = True
 
 [testenv]
@@ -113,3 +117,26 @@ whitelist_externals = make
 commands =
     make pytest
 """
+
+
+[manageprojects] # https://github.com/jedie/manageprojects
+initial_revision = "b204761"
+initial_date = 2022-12-21T20:25:20+01:00
+cookiecutter_template = "https://github.com/jedie/cookiecutter_templates/"
+cookiecutter_directory = "yunohost_django_package"
+
+[manageprojects.cookiecutter_context.cookiecutter]
+project_name = "PyInventory"
+full_name = "Jens Diemer"
+github_username = "jedie"
+author_email = "pyinventory_ynh@jensdiemer.de"
+upstream_pkg_name = "pyinventory"
+upstream_url = "https://github.com/jedie/PyInventory"
+ynh_app_pkg_name = "pyinventory_ynh"
+ynh_app_url = "https://github.com/YunoHost-Apps/pyinventory_ynh"
+bug_tracker_url = "https://github.com/jedie/PyInventory/issues"
+upstream_version = "0.17.0"
+ynh_version = "1"
+package_description = "Web based management to catalog things including state and location etc."
+license = "GPL-3.0-or-later"
+_template = "https://github.com/jedie/cookiecutter_templates/"

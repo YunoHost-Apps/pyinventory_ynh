@@ -4,14 +4,13 @@ import shutil
 import subprocess
 from pathlib import Path
 
-import requests
 import tomli
-from django_tools.serve_media_app.utils import clean_filename
-from django_tools.unittest_utils.assertments import assert_is_dir, assert_is_file
+from bx_django_utils.filename import clean_filename
+from bx_py_utils.path import assert_is_dir, assert_is_file
 from django_tools.unittest_utils.project_setup import check_editor_config
-from packaging.version import Version
+from django_yunohost_integration.test_utils import assert_project_version
 
-import inventory
+from inventory import __version__
 
 
 PACKAGE_ROOT = Path(__file__).parent.parent
@@ -25,29 +24,18 @@ def assert_file_contains_string(file_path, string):
     raise AssertionError(f'File {file_path} does not contain {string!r} !')
 
 
-def get_github_version_tag(github_project_url):
-    api_url = github_project_url.replace('github.com', 'api.github.com/repos')
-    tags = requests.get(f'{api_url}/tags').json()
-    for tag in tags:
-        version_str = tag['name']
-        ver_obj = Version(version_str)
-        if ver_obj.base_version and not ver_obj.is_prerelease:
-            return ver_obj
-
-
 def test_version():
-    upstream_version = inventory.__version__
-    current_ver_obj = Version(upstream_version)
-
-    github_ver = get_github_version_tag(github_project_url='https://github.com/jedie/PyInventory')
-    assert (
-        github_ver == current_ver_obj
-    ), f'Current version from github is: {github_ver} but current package version is: {current_ver_obj}'
+    assert_project_version(
+        current_version=__version__,
+        github_project_url='https://github.com/jedie/PyInventory',
+    )
 
     pyproject_toml_path = Path(PACKAGE_ROOT, 'pyproject.toml')
     pyproject_toml = tomli.loads(pyproject_toml_path.read_text(encoding='UTF-8'))
     pyproject_version = pyproject_toml['tool']['poetry']['version']
-    assert pyproject_version.startswith(f'{upstream_version}+ynh')
+    assert pyproject_version.startswith(
+        f'{__version__}+ynh'
+    ), f'{pyproject_version!r} does not start with "{__version__}+ynh"'
 
     # pyproject.toml needs a PEP 440 conform version and used "+ynh"
     # the YunoHost syntax is: "~ynh", just "convert this:
@@ -108,6 +96,8 @@ def test_screenshot_filenames():
     renamed = []
     for file_path in screenshot_path.iterdir():
         file_name = file_path.name
+        if file_name.startswith('.'):
+            continue
         cleaned_name = clean_filename(file_name)
         if cleaned_name != file_name:
             new_path = file_path.with_name(cleaned_name)
@@ -118,3 +108,28 @@ def test_screenshot_filenames():
 
 def test_check_editor_config():
     check_editor_config(package_root=PACKAGE_ROOT)
+
+
+def _call_make(*args):
+    make_bin = shutil.which('make')
+    assert make_bin
+    return subprocess.check_output(
+        (make_bin,) + args,
+        text=True,
+        env=dict(PATH=os.environ['PATH']),
+        stderr=subprocess.STDOUT,
+        cwd=str(PACKAGE_ROOT),
+    )
+
+
+def test_check_code_style():
+    # First try:
+    try:
+        _call_make('lint')
+    except subprocess.CalledProcessError:
+        # Fix and test again:
+        try:
+            _call_make('fix-code-style')
+            _call_make('lint')
+        except subprocess.CalledProcessError as err:
+            raise AssertionError(f'Linting error:\n{"-"*100}\n{err.stdout}\n{"-"*100}')
