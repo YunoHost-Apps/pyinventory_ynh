@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyinventory_ynh"
-version = "0.17.0+ynh1"
+version = "0.18.0rc1+ynh1"
 description = "YunoHost app package for: https://github.com/jedie/PyInventory"
 authors = ["Jens Diemer <pyinventory_ynh@jensdiemer.de>"]
 homepage = "https://github.com/YunoHost-Apps/pyinventory_ynh"
@@ -13,7 +13,7 @@ readme = 'README.md'
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0.0"  # Stay with 3.9 until YunoHost used >=Debian 11 (Bullseye)
 #
-pyinventory = ">=0.17.0"  # https://github.com/jedie/PyInventory
+pyinventory = ">=0.18.0rc1"  # https://github.com/jedie/PyInventory
 #
 # extras "ynh" will install: gunicorn, psycopg2, django-redis and django-axes
 # see: https://github.com/YunoHost-Apps/django_yunohost_integration/blob/main/pyproject.toml
