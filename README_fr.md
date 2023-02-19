@@ -5,15 +5,16 @@ It shall NOT be edited by hand.
 
 # PyInventory pour YunoHost
 
-[![Niveau d'intégration](https://dash.yunohost.org/integration/pyinventory.svg)](https://dash.yunohost.org/appci/app/pyinventory) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/pyinventory.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/pyinventory.maintain.svg)  
+[![Niveau d’intégration](https://dash.yunohost.org/integration/pyinventory.svg)](https://dash.yunohost.org/appci/app/pyinventory) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/pyinventory.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/pyinventory.maintain.svg)
+
 [![Installer PyInventory avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=pyinventory)
 
 *[Read this readme in english.](./README.md)*
 
-> *Ce package vous permet d'installer PyInventory rapidement et simplement sur un serveur YunoHost.
-Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l'installer et en profiter.*
+> *Ce package vous permet d’installer PyInventory rapidement et simplement sur un serveur YunoHost.
+Si vous n’avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l’installer et en profiter.*
 
-## Vue d'ensemble
+## Vue d’ensemble
 
 [PyInventory](https://github.com/jedie/PyInventory) is a libre web-based management to catalog things including state and location etc. using [Python](https://www.python.org/)/[Django](https://www.djangoproject.com/).
 
@@ -32,16 +33,14 @@ This package for YunoHost used [django-yunohost-integration](https://github.com/
 More screenshots are here: jedie.github.io/tree/master/screenshots/PyInventory
 
 
-**Version incluse :** 0.17.0~ynh1 *(:warning: Il s'agit de la branche `testing`. La [branche `master`](https://github.com/YunoHost-Apps/pyinventory_ynh/tree/master) utilisée dans le catalogue est actuellement en 0.16.0\~ynh2.)*
+**Version incluse :** 0.18.0rc1~ynh1
 
+## Captures d’écran
 
-## Captures d'écran
-
-![Capture d'écran de PyInventory](./doc/screenshots/pyinventory_v010_screenshot_2.png)
-![Capture d'écran de PyInventory](./doc/screenshots/pyinventory_v010_screenshot_3.png)
-![Capture d'écran de PyInventory](./doc/screenshots/pyinventory_v020_screenshot_1.png)
-![Capture d'écran de PyInventory](./doc/screenshots/pyinventory_v0110_screenshot_memo_1.png)
-![Capture d'écran de PyInventory](./doc/screenshots/gitkeep)
+![Capture d’écran de PyInventory](./doc/screenshots/pyinventory_v010_screenshot_2.png)
+![Capture d’écran de PyInventory](./doc/screenshots/pyinventory_v010_screenshot_3.png)
+![Capture d’écran de PyInventory](./doc/screenshots/pyinventory_v020_screenshot_1.png)
+![Capture d’écran de PyInventory](./doc/screenshots/pyinventory_v0110_screenshot_memo_1.png)
 
 ## Avertissements / informations importantes
 
@@ -200,8 +199,10 @@ Notes:
 
 ## Documentations et ressources
 
-* Site officiel de l'app : <https://github.com/jedie/PyInventory>
-* Dépôt de code officiel de l'app : <https://github.com/jedie/PyInventory>
+* Site officiel de l’app : <https://github.com/jedie/PyInventory>
+* Documentation officielle utilisateur : <https://github.com/jedie/PyInventory>
+* Documentation officielle de l’admin : <https://github.com/jedie/PyInventory>
+* Dépôt de code officiel de l’app : <https://github.com/jedie/PyInventory>
 * Documentation YunoHost pour cette app : <https://yunohost.org/app_pyinventory>
 * Signaler un bug : <https://github.com/YunoHost-Apps/pyinventory_ynh/issues>
 
@@ -217,4 +218,4 @@ ou
 sudo yunohost app upgrade pyinventory -u https://github.com/YunoHost-Apps/pyinventory_ynh/tree/testing --debug
 ```
 
-**Plus d'infos sur le packaging d'applications :** <https://yunohost.org/packaging_apps>
+**Plus d’infos sur le packaging d’applications :** <https://yunohost.org/packaging_apps>

@@ -8,10 +8,14 @@ domain=$YNH_APP_ARG_DOMAIN
 path_url=$YNH_APP_ARG_PATH
 
 admin=$YNH_APP_ARG_ADMIN
-app=$YNH_APP_INSTANCE_NAME
 
 # Currently not used: PyInventory has no public pages, yet!
 is_public=$YNH_APP_ARG_IS_PUBLIC
+app=$YNH_APP_INSTANCE_NAME
+
+# Transfer the main SSO domain to the App:
+ynh_current_host=$(cat /etc/yunohost/current_host)
+__YNH_CURRENT_HOST__=${ynh_current_host}
 
 #=================================================
 # ARGUMENTS FROM CONFIG PANEL
