@@ -25,10 +25,12 @@ def assert_file_contains_string(file_path, string):
 
 
 def test_version():
-    assert_project_version(
-        current_version=__version__,
-        github_project_url='https://github.com/jedie/PyInventory',
-    )
+    if 'GITHUB_ACTION' not in os.environ:
+        # Github has a rate-limiting... So don't fetch the API if we run as GitHub action
+        assert_project_version(
+            current_version=__version__,
+            github_project_url='https://github.com/jedie/PyInventory',
+        )
 
     pyproject_toml_path = Path(PACKAGE_ROOT, 'pyproject.toml')
     pyproject_toml = tomli.loads(pyproject_toml_path.read_text(encoding='UTF-8'))

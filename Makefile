@@ -16,6 +16,9 @@ check-poetry:
 		exit 1 ; \
 	fi
 
+install-base-req:  ## Install needed base packages via apt
+	sudo apt install python3-pip python3-venv
+
 install-poetry:  ## install or update poetry
 	curl -sSL https://install.python-poetry.org | python3 -
 

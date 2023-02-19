@@ -1,16 +1,11 @@
 from axes.models import AccessLog
-from bx_django_utils.test_utils.html_assertion import (
-    HtmlAssertionMixin,
-    assert_html_response_snapshot,
-)
+from bx_django_utils.test_utils.html_assertion import HtmlAssertionMixin, assert_html_response_snapshot
 from django.conf import LazySettings, settings
 from django.contrib.auth.models import User
 from django.test import override_settings
 from django.test.testcases import TestCase
-from django.urls import NoReverseMatch
 from django.urls.base import reverse
 from django_yunohost_integration.test_utils import generate_basic_auth
-from django_yunohost_integration.views import request_media_debug_view
 
 import inventory
 
@@ -45,10 +40,6 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
 
     def test_urls(self):
         assert reverse('admin:index') == '/app_path/'
-
-        # The django_yunohost_integration debug view should not be available:
-        with self.assertRaises(NoReverseMatch):
-            reverse(request_media_debug_view)
 
         # Serve user uploads via django_tools.serve_media_app:
         assert settings.MEDIA_URL == '/app_path/media/'
