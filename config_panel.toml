@@ -1,7 +1,10 @@
+# https://github.com/YunoHost/example_ynh/blob/master/config_panel.toml.example
+
 version = "1.0"
 
 [main]
-name = "django_example_ynh configuration"
+name.en = "Main configuration"
+name.fr = "Configuration principale"
 services = ["__APP__"]
 
     [main.config]
