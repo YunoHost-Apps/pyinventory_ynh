@@ -5,7 +5,7 @@
 	"description": {
         "en": "Web based management to catalog things including state and location etc."
     },
-	"version": "0.19.1~ynh1",
+	"version": "0.19.2~ynh1",
 	"url": "https://github.com/jedie/PyInventory",
     "upstream": {
         "license": "GPL-3.0-or-later",

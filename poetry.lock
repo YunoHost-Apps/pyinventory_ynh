@@ -1436,14 +1436,14 @@ files = [
 plugins = ["importlib-metadata"]
 
 [[package]]
-name = "pyinventory"
-version = "0.19.1"
+name = "PyInventory"
+version = "0.19.2"
 description = "Web based management to catalog things including state and location etc. using Python/Django."
 optional = false
 python-versions = "<4,>=3.9"
 files = [
-    {file = "PyInventory-0.19.1-py3-none-any.whl", hash = "sha256:0324a26f501c2705e39eaa1163485e0c3252c696b68efdd8277f43a3560b9b8d"},
-    {file = "PyInventory-0.19.1.tar.gz", hash = "sha256:bdf9ffc4449e2f5e9337224cd9cae33cd4e8e90bef73c21802f72e333d8f7caf"},
+    {file = "PyInventory-0.19.2-py3-none-any.whl", hash = "sha256:2d92a7f4b4a7b3191819f671e95070b3dd8844fdf2ceb8d971da1e61b094db24"},
+    {file = "PyInventory-0.19.2.tar.gz", hash = "sha256:06424c8ddf8521cf5806d834e3aede8254a4960f538a210bfd88508d88fb1d36"},
 ]
 
 [package.dependencies]
@@ -1461,6 +1461,7 @@ django-tagulous = "*"
 django-tools = "*"
 gunicorn = "*"
 pillow = "*"
+requests = "*"
 
 [package.extras]
 dev = ["EditorConfig", "autopep8", "beautifulsoup4", "cmd2-ext-test", "codespell", "coverage", "darker[color,flynt,isort]", "django-override-storage", "flake8", "manage-django-project (>=0.5.2)", "model-bakery", "mypy", "pip-tools", "playwright", "pyflakes", "pyupgrade", "requests-mock", "safety", "tblib", "tomli", "tox", "twine", "typing-extensions (>=3.10)"]
@@ -2118,4 +2119,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0.0"
-content-hash = "afe19a4954c7802ebda76ea49ad15580217e1f81ac4921fc9a81ebc123b431cb"
+content-hash = "43f613d6bcfd86b1152c1425f8f0a6f374a25d53fe692c37131ec419b17239d0"
