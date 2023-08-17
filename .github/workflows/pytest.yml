@@ -3,6 +3,8 @@
 name: pytest
 
 on:
+  # Allow to manually trigger the workflow
+  workflow_dispatch:
   push:
     branches:
       - master
@@ -14,24 +16,32 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 2
       matrix:
         python-version: ["3.11", "3.10", "3.9"]
+    env:
+      PYTHONUNBUFFERED: 1
+      PYTHONWARNINGS: always
     steps:
-    - name: Checkout
+    - uses: actions/checkout@v3
+      # https://github.com/marketplace/actions/checkout
+      with:
+        fetch-depth: 0
+
+    - name: 'fetch master and testing (for Darker/Black)'
       run: |
-        echo $GITHUB_REF $GITHUB_SHA
-        git clone --depth 1 https://github.com/$GITHUB_REPOSITORY.git .
-        git fetch origin $GITHUB_SHA:temporary-ci-branch
-        git checkout $GITHUB_SHA || (git fetch && git checkout $GITHUB_SHA)
+        git fetch origin master
+        git fetch origin testing
 
     - name: 'Set up Python ${{ matrix.python-version }}'
-      uses: actions/setup-python@v4
-      # https://github.com/marketplace/actions/setup-python
+      uses: actions/setup-python@v2
       with:
         python-version: '${{ matrix.python-version }}'
-        cache: 'pip' # caching pip dependencies
-        cache-dependency-path: '**/poetry.lock'
+
+    - uses: actions/cache@v3
+      # https://github.com/marketplace/actions/cache
+      with:
+        path: ~/.cache/
+        key: dot-cache-files
 
     - name: 'Install package'
       run: |

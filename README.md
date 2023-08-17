@@ -33,7 +33,7 @@ This package for YunoHost used [django-yunohost-integration](https://github.com/
 More screenshots are here: jedie.github.io/tree/master/screenshots/PyInventory
 
 
-**Shipped version:** 0.18.1~ynh1
+**Shipped version:** 0.19.1~ynh1
 
 ## Screenshots
 
@@ -199,9 +199,8 @@ Notes:
 
 ## Documentation and resources
 
-* Official app website: <https://github.com/jedie/PyInventory>
 * Official user documentation: <https://github.com/jedie/PyInventory>
-* Official admin documentation: <https://github.com/jedie/PyInventory>
+* Official admin documentation: <https://github.com/YunoHost-Apps/pyinventory_ynh>
 * Upstream app code repository: <https://github.com/jedie/PyInventory>
 * YunoHost documentation for this app: <https://yunohost.org/app_pyinventory>
 * Report a bug: <https://github.com/YunoHost-Apps/pyinventory_ynh/issues>
