@@ -33,7 +33,7 @@ This package for YunoHost used [django-yunohost-integration](https://github.com/
 More screenshots are here: jedie.github.io/tree/master/screenshots/PyInventory
 
 
-**Shipped version:** 0.19.1~ynh1
+**Shipped version:** 0.19.2~ynh1
 
 ## Screenshots
 
