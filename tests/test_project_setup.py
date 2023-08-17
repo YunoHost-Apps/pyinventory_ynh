@@ -3,8 +3,14 @@ import os
 import shutil
 import subprocess
 from pathlib import Path
+from unittest import TestCase
 
-import tomli
+
+try:
+    import tomllib  # New in Python 3.11
+except ImportError:
+    import tomli as tomllib
+
 from bx_django_utils.filename import clean_filename
 from bx_py_utils.path import assert_is_dir, assert_is_file
 from django_tools.unittest_utils.project_setup import check_editor_config
@@ -33,7 +39,7 @@ def test_version():
         )
 
     pyproject_toml_path = Path(PACKAGE_ROOT, 'pyproject.toml')
-    pyproject_toml = tomli.loads(pyproject_toml_path.read_text(encoding='UTF-8'))
+    pyproject_toml = tomllib.loads(pyproject_toml_path.read_text(encoding='UTF-8'))
     pyproject_version = pyproject_toml['tool']['poetry']['version']
     assert pyproject_version.startswith(
         f'{__version__}+ynh'
@@ -135,3 +141,17 @@ def test_check_code_style():
             _call_make('lint')
         except subprocess.CalledProcessError as err:
             raise AssertionError(f'Linting error:\n{"-"*100}\n{err.stdout}\n{"-"*100}')
+
+
+class ConfigPanelTestCase(TestCase):
+    def test_config_panel_toml(self):
+        config_panel_path = PACKAGE_ROOT / 'config_panel.toml'
+        assert_is_file(config_panel_path)
+
+        cfg = tomllib.loads(config_panel_path.read_text(encoding='UTF-8'))
+
+        self.assertEqual(cfg['version'], '1.0')
+        self.assertEqual(
+            set(cfg['main']['config'].keys()),
+            {'name', 'default_from_email', 'admin_email', 'debug_enabled', 'log_level'},
+        )

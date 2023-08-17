@@ -15,24 +15,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
-      - name: 'Set up Python'
-        uses: actions/setup-python@v4
-        # https://github.com/marketplace/actions/setup-python
+        # https://github.com/marketplace/actions/checkout
         with:
-          python-version: '3.9'
-          cache: 'pip' # caching pip dependencies
-          cache-dependency-path: '**/poetry.lock'
+          fetch-depth: 0
 
-      - name: Install dependencies
+      - uses: actions/cache@v3
+        # https://github.com/marketplace/actions/cache
+        with:
+          path: ~/.cache/
+          key: dot-cache-files
+
+      - name: 'Install dependencies'
         run: |
-          python -m pip install --upgrade pip
           pip install toml
 
-      - name: 'Clone github.com/YunoHost/package_linter'
+      - name: 'Clone YunoHost apps package linter'
         run: |
           git clone --depth=1 https://github.com/YunoHost/package_linter ~/package_linter
 
-      - name: 'Run YunoHost App Package Linter'
+      - name: 'Install requirements'
+        run: |
+          pip3 install toml
+
+      - name: 'Run linter'
         run: |
           ~/package_linter/package_linter.py .

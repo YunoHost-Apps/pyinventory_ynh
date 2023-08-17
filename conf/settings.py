@@ -16,7 +16,7 @@ from django_yunohost_integration.secret_key import get_or_create_secret as __get
 
 
 # https://github.com/jedie/PyInventory
-from inventory_project.settings.base import *  # noqa:F401,F403 isort:skip
+from inventory_project.settings.prod import *  # noqa:F401,F403 isort:skip
 
 
 from django_yunohost_integration.base_settings import LOGGING  # noqa:F401 isort:skip
@@ -54,15 +54,22 @@ YNH_SETUP_USER = 'setup_user.setup_project_user'
 
 SECRET_KEY = __get_or_create_secret(FINALPATH / 'secret.txt')  # /opt/yunohost/$app/secret.txt
 
+
+if 'axes' not in INSTALLED_APPS:
+    INSTALLED_APPS.append('axes')  # https://github.com/jazzband/django-axes
+
 INSTALLED_APPS.append('django_yunohost_integration.apps.YunohostIntegrationConfig')
+
 
 MIDDLEWARE.insert(
     MIDDLEWARE.index('django.contrib.auth.middleware.AuthenticationMiddleware') + 1,
     # login a user via HTTP_REMOTE_USER header from SSOwat:
     'django_yunohost_integration.sso_auth.auth_middleware.SSOwatRemoteUserMiddleware',
 )
-# AxesMiddleware should be the last middleware:
-MIDDLEWARE.append('axes.middleware.AxesMiddleware')
+if 'axes.middleware.AxesMiddleware' not in MIDDLEWARE:
+    # AxesMiddleware should be the last middleware:
+    MIDDLEWARE.append('axes.middleware.AxesMiddleware')
+
 
 # Keep ModelBackend around for per-user permissions and superuser
 AUTHENTICATION_BACKENDS = (
@@ -170,6 +177,8 @@ LOGGING['loggers']['inventory'] = {
     'level': 'INFO',
     'propagate': False,
 }
+for __logger_name in LOGGING['loggers'].keys():
+    LOGGING['loggers'][__logger_name]['level'] = 'DEBUG' if DEBUG else LOG_LEVEL
 
 # -----------------------------------------------------------------------------
 

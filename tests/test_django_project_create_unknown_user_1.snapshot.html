@@ -4,7 +4,7 @@
   <div id="branding">
    <h1 id="site-name">
     <a href="/app_path/">
-     PyInventory v0.18.1
+     PyInventory v0.19.1
     </a>
    </h1>
   </div>
@@ -22,9 +22,12 @@
     Change password
    </a>
    /
-   <a href="/app_path/logout/">
-    Log out
-   </a>
+   <form action="/app_path/logout/" id="logout-form" method="post">
+    MockedCsrfTokenNode
+    <button type="submit">
+     Log out
+    </button>
+   </form>
   </div>
  </div>
  <!-- END Header -->

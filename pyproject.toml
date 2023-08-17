@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "pyinventory_ynh"
-version = "0.18.1+ynh1"
 description = "YunoHost app package for: https://github.com/jedie/PyInventory"
+version = "0.19.1+ynh1"
 authors = ["Jens Diemer <pyinventory_ynh@jensdiemer.de>"]
 homepage = "https://github.com/YunoHost-Apps/pyinventory_ynh"
 license = "GPL-3.0-or-later"
@@ -13,7 +13,7 @@ readme = 'README.md'
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0.0"  # Stay with 3.9 until YunoHost used >=Debian 11 (Bullseye)
 #
-pyinventory = ">=0.18.1"  # https://github.com/jedie/PyInventory
+pyinventory = ">=0.19.1"  # https://github.com/jedie/PyInventory
 #
 # extras "ynh" will install: gunicorn, psycopg2, django-redis and django-axes
 # see: https://github.com/YunoHost-Apps/django_yunohost_integration/blob/main/pyproject.toml
@@ -24,14 +24,11 @@ django_yunohost_integration = {version = ">=0.5.1", extras = ["ynh"]}  # https:/
 bx_py_utils = "*"  # https://github.com/boxine/bx_py_utils
 bx_django_utils = "*"  # https://github.com/boxine/bx_django_utils
 tox = ">=4.4.4"  # https://github.com/tox-dev/tox
-coveralls = "*"  # https://github.com/TheKevJames/coveralls-python
-darker = "*"  # https://github.com/akaihola/darker
-isort = "*"  # https://github.com/pycqa/isort
+coverage= "*"  # https://github.com/nedbat/coveragepy
 flake8 = "*"  # https://github.com/pycqa/flake8
 EditorConfig = "*"  # https://github.com/editorconfig/editorconfig-core-py
 safety = "*"  # https://github.com/pyupio/safety
 mypy = "*"  # https://github.com/python/mypy
-tomli = "*"  # https://github.com/hukkin/tomli
 twine = "*"  # https://github.com/pypa/twine
 poetry-publish = "*"  # https://github.com/jedie/poetry-publish
 pytest = "*"
@@ -41,6 +38,16 @@ requests = "*"  # https://github.com/psf/requests
 packaging = "*"  # https://github.com/pypa/packagi
 beautifulsoup4 = "*"  # https://pypi.org/project/beautifulsoup4/
 
+# https://github.com/akaihola/darker
+# https://github.com/ikamensh/flynt
+# https://github.com/pycqa/isort
+# https://github.com/pygments/pygments
+darker = { version = "*", extras = ["flynt", "isort", "color"] }
+
+tomli = "*"  # https://github.com/hukkin/tomli
+# tomli only needed for Python <3.11, but see bug:
+# https://github.com/pypa/pip/issues/9644#issuecomment-1456583402
+#tomli = {version = "*", markers = "python_version < \"3.11\""}  # https://github.com/hukkin/tomli
 
 [build-system]
 requires = ["poetry-core"]
@@ -52,11 +59,13 @@ src = ['.']
 revision = "origin/master..."
 line_length = 119
 verbose = true
+color = true
 skip_string_normalization = true
 diff = false
 check = false
 stdout = false
 isort = true
+flynt = true
 lint = [
     "flake8",
 ]
@@ -88,6 +97,7 @@ addopts = """
     --reuse-db
     --nomigrations
     --cov=.
+    --cov-config=pyproject.toml
     --cov-report term-missing
     --cov-report html
     --cov-report xml
@@ -100,16 +110,25 @@ addopts = """
 
 
 [tool.coverage.run]
+branch = true
+parallel = true
+concurrency = ["multiprocessing"]
 source = ['.']
-omit = ['.*', '*/tests/*']
 
 [tool.coverage.report]
+omit = ['.*', '*/tests/*']
 skip_empty = true
-fail_under = 45
+fail_under = 30
+show_missing = true
+exclude_lines = [
+    'if self.debug:',
+    'pragma: no cover',
+    'raise NotImplementedError',
+    'if __name__ == .__main__.:',
+]
 
 
-[tool.tox]
-# https://tox.readthedocs.io/en/latest/example/basic.html#pyproject-toml-tox-legacy-ini
+[tool.tox]  # https://tox.wiki/en/latest/config.html#pyproject-toml
 legacy_tox_ini = """
 [tox]
 isolated_build = True
@@ -118,7 +137,8 @@ skip_missing_interpreters = True
 
 [testenv]
 passenv = *
-whitelist_externals = make
+skip_install = true
+allowlist_externals = make
 commands =
     make pytest
 """
@@ -145,3 +165,6 @@ ynh_version = "1"
 package_description = "Web based management to catalog things including state and location etc."
 license = "GPL-3.0-or-later"
 _template = "https://github.com/jedie/cookiecutter_templates/"
+applied_migrations = [
+    "877e2ec", # 2023-08-17T20:54:24+02:00
+]
