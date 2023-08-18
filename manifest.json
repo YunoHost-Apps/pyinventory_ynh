@@ -3,14 +3,13 @@
 	"id": "pyinventory",
 	"packaging_format": 1,
 	"description": {
-		"en": "Web based management to catalog things including state and location etc."
-	},
-	"version": "0.18.1~ynh1",
-	"url": "https://github.com/YunoHost-Apps/pyinventory_ynh",
+        "en": "Web based management to catalog things including state and location etc."
+    },
+	"version": "0.19.2~ynh1",
+	"url": "https://github.com/jedie/PyInventory",
     "upstream": {
-        "license": "GPL-3.0",
-        "website": "https://github.com/jedie/PyInventory",
-        "admindoc": "https://github.com/jedie/PyInventory",
+        "license": "GPL-3.0-or-later",
+        "admindoc": "https://github.com/YunoHost-Apps/pyinventory_ynh",
         "userdoc": "https://github.com/jedie/PyInventory",
         "code": "https://github.com/jedie/PyInventory"
     },
