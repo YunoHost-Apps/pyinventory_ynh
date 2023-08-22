@@ -2,7 +2,7 @@
 ################################################################################
 
 # Please do not modify this file, it will be reset at the next update.
-# You can edit the file __FINALPATH__/local_settings.py and add/modify the settings you need.
+# You can edit the file __DATA_DIR__/local_settings.py and add/modify the settings you need.
 # The parameters you add in local_settings.py will overwrite these,
 # but you can use the options and documentation in this file to find out what can be done.
 
@@ -22,16 +22,16 @@ from inventory_project.settings.prod import *  # noqa:F401,F403 isort:skip
 from django_yunohost_integration.base_settings import LOGGING  # noqa:F401 isort:skip
 
 
-FINALPATH = __Path('__FINALPATH__')  # /opt/yunohost/$app
-assert FINALPATH.is_dir(), f'Directory not exists: {FINALPATH}'
+DATA_DIR_PATH = __Path('__DATA_DIR__')  # /home/yunohost.app/$app/
+assert DATA_DIR_PATH.is_dir(), f'Directory not exists: {DATA_DIR_PATH}'
 
-PUBLIC_PATH = __Path('__PUBLIC_PATH__')  # /var/www/$app
-assert PUBLIC_PATH.is_dir(), f'Directory not exists: {PUBLIC_PATH}'
+INSTALL_DIR_PATH = __Path('__INSTALL_DIR__')  # /var/www/$app/
+assert INSTALL_DIR_PATH.is_dir(), f'Directory not exists: {INSTALL_DIR_PATH}'
 
-LOG_FILE = __Path('__LOG_FILE__')  # /var/log/$app/pyinventory_ynh.log
-assert LOG_FILE.is_file(), f'File not exists: {LOG_FILE}'
+LOG_FILE_PATH = __Path('__LOG_FILE__')  # /var/log/$app/pyinventory_ynh.log
+assert LOG_FILE_PATH.is_file(), f'File not exists: {LOG_FILE_PATH}'
 
-PATH_URL = '__PATH_URL__'  # $YNH_APP_ARG_PATH
+PATH_URL = '__PATH__'
 PATH_URL = PATH_URL.strip('/')
 
 YNH_CURRENT_HOST = '__YNH_CURRENT_HOST__'  # YunoHost main domain from: /etc/yunohost/current_host
@@ -40,7 +40,7 @@ YNH_CURRENT_HOST = '__YNH_CURRENT_HOST__'  # YunoHost main domain from: /etc/yun
 # config_panel.toml settings:
 
 DEBUG_ENABLED = '__DEBUG_ENABLED__'
-DEBUG = bool(int(DEBUG_ENABLED))
+DEBUG = DEBUG_ENABLED == 'YES'
 
 LOG_LEVEL = '__LOG_LEVEL__'
 ADMIN_EMAIL = '__ADMIN_EMAIL__'
@@ -52,13 +52,14 @@ DEFAULT_FROM_EMAIL = '__DEFAULT_FROM_EMAIL__'
 # Function that will be called to finalize a user profile:
 YNH_SETUP_USER = 'setup_user.setup_project_user'
 
-SECRET_KEY = __get_or_create_secret(FINALPATH / 'secret.txt')  # /opt/yunohost/$app/secret.txt
-
 
 if 'axes' not in INSTALLED_APPS:
     INSTALLED_APPS.append('axes')  # https://github.com/jazzband/django-axes
 
 INSTALLED_APPS.append('django_yunohost_integration.apps.YunohostIntegrationConfig')
+
+
+SECRET_KEY = __get_or_create_secret(DATA_DIR_PATH / 'secret.txt')  # /home/yunohost.app/$app/secret.txt
 
 
 MIDDLEWARE.insert(
@@ -154,8 +155,8 @@ else:
     STATIC_URL = '/static/'
     MEDIA_URL = '/media/'
 
-STATIC_ROOT = str(PUBLIC_PATH / 'static')
-MEDIA_ROOT = str(PUBLIC_PATH / 'media')
+STATIC_ROOT = str(INSTALL_DIR_PATH / 'static')
+MEDIA_ROOT = str(INSTALL_DIR_PATH / 'media')
 
 # _____________________________________________________________________________
 # django-ckeditor
@@ -165,16 +166,15 @@ CKEDITOR_BASEPATH = STATIC_URL + 'ckeditor/ckeditor/'
 # _____________________________________________________________________________
 # Django-dbbackup
 
-DBBACKUP_STORAGE_OPTIONS['location'] = str(FINALPATH / 'backups')
+DBBACKUP_STORAGE_OPTIONS['location'] = str(DATA_DIR_PATH / 'backups')
 
 # -----------------------------------------------------------------------------
 
 # Set log file to e.g.: /var/log/$app/$app.log
-LOGGING['handlers']['log_file']['filename'] = str(LOG_FILE)
+LOGGING['handlers']['log_file']['filename'] = str(LOG_FILE_PATH)
 
 LOGGING['loggers']['inventory'] = {
     'handlers': ['syslog', 'log_file', 'mail_admins'],
-    'level': 'INFO',
     'propagate': False,
 }
 for __logger_name in LOGGING['loggers'].keys():

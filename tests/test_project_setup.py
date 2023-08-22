@@ -50,8 +50,8 @@ def test_version():
     manifest_version = pyproject_version.replace('+', '~')
 
     assert_file_contains_string(
-        file_path=Path(PACKAGE_ROOT, 'manifest.json'),
-        string=f'"version": "{manifest_version}"',
+        file_path=Path(PACKAGE_ROOT, 'manifest.toml'),
+        string=f'version = "{manifest_version}"',
     )
 
 
@@ -143,15 +143,36 @@ def test_check_code_style():
             raise AssertionError(f'Linting error:\n{"-"*100}\n{err.stdout}\n{"-"*100}')
 
 
-class ConfigPanelTestCase(TestCase):
-    def test_config_panel_toml(self):
-        config_panel_path = PACKAGE_ROOT / 'config_panel.toml'
-        assert_is_file(config_panel_path)
+class ManifestTestCase(TestCase):
+    def test_manifest_toml(self):
+        manifest_path = PACKAGE_ROOT / 'manifest.toml'
+        assert_is_file(manifest_path)
 
-        cfg = tomllib.loads(config_panel_path.read_text(encoding='UTF-8'))
+        cfg = tomllib.loads(manifest_path.read_text(encoding='UTF-8'))
 
-        self.assertEqual(cfg['version'], '1.0')
+        self.assertEqual(cfg['packaging_format'], 2)
         self.assertEqual(
-            set(cfg['main']['config'].keys()),
-            {'name', 'default_from_email', 'admin_email', 'debug_enabled', 'log_level'},
+            set(cfg['install'].keys()),
+            {
+                'admin',
+                'admin_email',
+                'debug_enabled',
+                'default_from_email',
+                'domain',
+                'init_main_permission',
+                'log_level',
+                'path',
+            },
+        )
+        self.assertEqual(
+            set(cfg['resources'].keys()),
+            {
+                'apt',
+                'data_dir',
+                'database',
+                'install_dir',
+                'permissions',
+                'ports',
+                'system_user',
+            },
         )

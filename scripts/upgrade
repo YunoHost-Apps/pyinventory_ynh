@@ -7,67 +7,28 @@
 source _common.sh
 source /usr/share/yunohost/helpers
 
-#=================================================
-# LOAD SETTINGS
-#=================================================
-ynh_script_progression --message="Loading installation settings..."
-
-admin=$(ynh_app_setting_get --app="$app" --key=admin)
-public_path=$(ynh_app_setting_get --app="$app" --key=public_path)
-final_path=$(ynh_app_setting_get --app="$app" --key=final_path)
-log_path=$(ynh_app_setting_get --app="$app" --key=log_path)
-
-domain=$(ynh_app_setting_get --app="$app" --key=domain)
-path_url=$(ynh_app_setting_get --app="$app" --key=path)
-
-port=$(ynh_app_setting_get --app="$app" --key=port)
-
-db_pwd=$(ynh_app_setting_get --app="$app" --key=psqlpwd)
-db_name=$(ynh_sanitize_dbid --db_name="$app")
-db_user=$db_name
-
-redis_db=$(ynh_app_setting_get --app="$app" --key=redis_db)
-
 #-------------------------------------------------
 # config_panel.toml settings:
 
-debug_enabled=$(ynh_app_setting_get --app="$app" --key=debug_enabled)
 if [ -z "$debug_enabled" ]; then
 	debug_enabled="0"
-	ynh_app_setting_set --app="$app" --key=debug_enabled --value="$debug_enabled"
+	ynh_app_setting_set --app=$app --key=debug_enabled --value="$debug_enabled"
 fi
 
-log_level=$(ynh_app_setting_get --app="$app" --key=log_level)
 if [ -z "$log_level" ]; then
 	log_level="WARNING"
-	ynh_app_setting_set --app="$app" --key=log_level --value="$log_level"
+	ynh_app_setting_set --app=$app --key=log_level --value="$log_level"
 fi
 
-admin_email=$(ynh_app_setting_get --app="$app" --key=admin_email)
 if [ -z "$admin_email" ]; then
 	admin_email="${admin}@${domain}"
-	ynh_app_setting_set --app="$app" --key=admin_email --value="$admin_email"
+    ynh_app_setting_set --app=$app --key=admin_email --value="$admin_email"
 fi
 
-default_from_email=$(ynh_app_setting_get --app="$app" --key=default_from_email)
 if [ -z "$default_from_email" ]; then
 	default_from_email="${app}@${domain}"
-	ynh_app_setting_set --app="$app" --key=default_from_email --value="$default_from_email"
+	ynh_app_setting_set --app=$app --key=default_from_email --value="$default_from_email"
 fi
-
-#=================================================
-# BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
-#=================================================
-ynh_script_progression --message="Backing up $app before upgrading (may take a while)..." --weight=40
-
-# Backup the current version of the app
-ynh_backup_before_upgrade
-ynh_clean_setup () {
-	# restore it if the upgrade fails
-	ynh_restore_upgradebackup
-}
-# Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
 
 #=================================================
 # STANDARD UPGRADE STEPS
@@ -76,91 +37,44 @@ ynh_abort_if_errors
 #=================================================
 ynh_script_progression --message="Stopping systemd service '$app'..." --weight=5
 
-ynh_systemd_action --service_name="$app" --action="stop"
+ynh_systemd_action --service_name=$app --action="stop" --log_path="$log_file"
 
-#=================================================
-# NGINX CONFIGURATION
-#=================================================
-ynh_script_progression --message="Upgrading nginx web server configuration..."
-
-# Create a dedicated nginx config
-# https://yunohost.org/en/contribute/packaging_apps/helpers
-# https://github.com/YunoHost/yunohost/blob/dev/helpers/nginx
-ynh_add_nginx_config "public_path" "port"
-
-#=================================================
-# SPECIFIC UPGRADE
-#=================================================
-# Update dependencies
-#=================================================
-ynh_script_progression --message="Upgrading dependencies..." --weight=20
-
-ynh_exec_warn_less ynh_install_app_dependencies "$pkg_dependencies"
-
-#=================================================
-# CREATE DEDICATED USER
-#=================================================
-ynh_script_progression --message="Making sure dedicated system user exists..."
-
-# Create a system user
-ynh_system_user_create --username="$app" --home_dir="$final_path" --use_shell
 
 #=================================================
 # SETUP SYSTEMD
 #=================================================
 ynh_script_progression --message="Configuring systemd service '$app'..." --weight=5
 
-ynh_add_systemd_config --service="$app" --template="systemd.service"
+ynh_add_systemd_config --service=$app --template="systemd.service"
 
 #=================================================
 # PYTHON VIRTUALENV
 #=================================================
-ynh_script_progression --message="Recreate Python virtualenv..." --weight=5
-
-# Always recreate everything fresh with current python version
-ynh_secure_remove "${final_path}/venv"
-
-# Skip pip because of: https://github.com/YunoHost/issues/issues/1960
-python3 -m venv --without-pip "${final_path}/venv"
-
-cp ../conf/requirements.txt "$final_path/requirements.txt"
-chown -R "$app:" "$final_path"
-
-#=================================================
-# PIP INSTALLATION
-#=================================================
-ynh_script_progression --message="Install project via pip..." --weight=45
-#run source in a 'sub shell'
-(
-	set +o nounset
-	source "${final_path}/venv/bin/activate"
-	set -o nounset
-	ynh_exec_as $app $final_path/venv/bin/python3 -m ensurepip
-	ynh_exec_as $app $final_path/venv/bin/pip3 install --upgrade wheel pip setuptools
-	ynh_exec_as $app $final_path/venv/bin/pip3 install --no-deps -r "$final_path/requirements.txt"
-)
+ynh_script_progression --message="Create and setup Python virtualenv..." --weight=45
+cp ../conf/requirements.txt "$data_dir/requirements.txt"
+myynh_setup_python_venv
 
 #=================================================
 # copy config files
 # ================================================
 ynh_script_progression --message="Create project configuration files..."
 
-ynh_add_config --template="gunicorn.conf.py" --destination="$final_path/gunicorn.conf.py"
+ynh_add_config --template="gunicorn.conf.py" --destination="$data_dir/gunicorn.conf.py"
 
-ynh_add_config --template="manage.py" --destination="$final_path/manage.py"
-chmod +x "$final_path/manage.py"
+ynh_add_config --template="manage.py" --destination="$data_dir/manage.py"
+chmod -c +x "$data_dir/manage.py"
 
-ynh_add_config --template="settings.py" --destination="$final_path/settings.py"
-ynh_add_config --template="setup_user.py" --destination="$final_path/setup_user.py"
-ynh_add_config --template="urls.py" --destination="$final_path/urls.py"
-ynh_add_config --template="wsgi.py" --destination="$final_path/wsgi.py"
+ynh_add_config --template="settings.py" --destination="$data_dir/settings.py"
+ynh_add_config --template="setup_user.py" --destination="$data_dir/setup_user.py"
+ynh_add_config --template="urls.py" --destination="$data_dir/urls.py"
+ynh_add_config --template="wsgi.py" --destination="$data_dir/wsgi.py"
 
 #=================================================
 # MIGRATE PYINVENTORY
 #=================================================
 ynh_script_progression --message="migrate/collectstatic/createadmin..." --weight=10
 
-cd "$final_path" || exit
+cd "$data_dir" || exit
 
 # Just for debugging:
 ./manage.py diffsettings
@@ -182,43 +96,23 @@ cd "$final_path" || exit
 ynh_script_progression --message="Upgrading logrotate configuration..."
 
 # Use logrotate to manage app-specific logfile(s)
-ynh_use_logrotate --non-append
-
-#=================================================
-# INTEGRATE SERVICE IN YUNOHOST
-#=================================================
-ynh_script_progression --message="Integrating service in YunoHost..."
-
-yunohost service add $app --log="${log_file}"
+ynh_use_logrotate --logfile="$log_file" --specific_user=$app --non-append
 
 #=================================================
 # GENERIC FINALIZATION
 #=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
-
-# Set permissions to app files
-chown -R "$app:" "$log_path"
-chown -R "$app:www-data" "$public_path"
-chown -R "$app:" "$final_path"
-
-chmod o-rwx "$log_path"
-chmod o-rwx "$public_path"
-chmod o-rwx "$final_path"
+ynh_script_progression --message="Set file permissions..."
+myynh_fix_file_permissions
 
 #=================================================
 # Start the app server via systemd
 #=================================================
 ynh_script_progression --message="Starting systemd service '$app'..." --weight=5
 
-ynh_systemd_action --service_name="$app" --action="start"
-
-#=================================================
-# RELOAD NGINX
-#=================================================
-ynh_script_progression --message="Reloading nginx web server..."
-
-ynh_systemd_action --service_name=nginx --action=reload
+yunohost service add $app
+ynh_systemd_action --service_name=$app --action="start" --log_path="$log_file"
 
 #=================================================
 # END OF SCRIPT

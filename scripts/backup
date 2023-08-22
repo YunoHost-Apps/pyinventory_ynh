@@ -9,21 +9,6 @@
 source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
 
-ynh_abort_if_errors
-
-#=================================================
-# LOAD SETTINGS
-#=================================================
-ynh_print_info --message="Loading installation settings..."
-
-app=$YNH_APP_INSTANCE_NAME
-
-public_path=$(ynh_app_setting_get --app="$app" --key=public_path)
-final_path=$(ynh_app_setting_get --app="$app" --key=final_path)
-db_name=$(ynh_app_setting_get --app="$app" --key=db_name)
-
-domain=$(ynh_app_setting_get --app="$app" --key=domain)
-
 #=================================================
 # DECLARE DATA AND CONF FILES TO BACKUP
 #=================================================
@@ -33,8 +18,11 @@ ynh_print_info --message="Declaring files to be backed up..."
 # BACKUP THE APP MAIN DIR
 #=================================================
 
-ynh_backup --src_path="$final_path"
-ynh_backup --src_path="$public_path"
+# /var/www/$app/
+ynh_backup --src_path="$install_dir"
+
+# /home/yunohost.app/$app/
+ynh_backup --src_path="$data_dir"
 
 #=================================================
 # BACKUP THE NGINX CONFIGURATION

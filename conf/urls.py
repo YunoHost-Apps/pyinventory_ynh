@@ -5,7 +5,7 @@ from django.urls import path
 
 
 if settings.PATH_URL:
-    # settings.PATH_URL is the $YNH_APP_ARG_PATH
+    # settings.PATH_URL is __PATH__
     # Prefix all urls with "PATH_URL":
     urlpatterns = [
         # MEDIA_URL contains the "PATH_URL" already:
