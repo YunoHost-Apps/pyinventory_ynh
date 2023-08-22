@@ -5,9 +5,10 @@
 !.gitignore
 !.gitkeep
 !/doc/screenshots/.gitkeep
+
 __pycache__
 secret.txt
 /local_test/
-/coverage.json
-/coverage.xml
+
+/coverage.*
 /htmlcov/

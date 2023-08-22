@@ -17,10 +17,11 @@ pyinventory = ">=0.19.2"  # https://github.com/jedie/PyInventory
 #
 # extras "ynh" will install: gunicorn, psycopg2, django-redis and django-axes
 # see: https://github.com/YunoHost-Apps/django_yunohost_integration/blob/main/pyproject.toml
-django_yunohost_integration = {version = ">=0.5.1", extras = ["ynh"]}  # https://github.com/YunoHost-Apps/django_yunohost_integration
+django_yunohost_integration = {version = ">=0.6.0", extras = ["ynh"]}  # https://github.com/YunoHost-Apps/django_yunohost_integration
 
 
 [tool.poetry.dev-dependencies]
+cli-base-utilities = "*"  # https://github.com/jedie/cli-base-utilities
 bx_py_utils = "*"  # https://github.com/boxine/bx_py_utils
 bx_django_utils = "*"  # https://github.com/boxine/bx_django_utils
 tox = ">=4.4.4"  # https://github.com/tox-dev/tox
@@ -160,11 +161,12 @@ upstream_url = "https://github.com/jedie/PyInventory"
 ynh_app_pkg_name = "pyinventory_ynh"
 ynh_app_url = "https://github.com/YunoHost-Apps/pyinventory_ynh"
 bug_tracker_url = "https://github.com/jedie/PyInventory/issues"
-upstream_version = "0.17.0"
+upstream_version = "0.19.2"
 ynh_version = "1"
 package_description = "Web based management to catalog things including state and location etc."
 license = "GPL-3.0-or-later"
 _template = "https://github.com/jedie/cookiecutter_templates/"
 applied_migrations = [
     "877e2ec", # 2023-08-17T20:54:24+02:00
+    "be3f649", # 2023-08-22T19:36:57+02:00
 ]
