@@ -202,7 +202,7 @@ Notes:
 * Documentation officielle utilisateur : <https://github.com/jedie/PyInventory>
 * Documentation officielle de l’admin : <https://github.com/YunoHost-Apps/pyinventory_ynh>
 * Dépôt de code officiel de l’app : <https://github.com/jedie/PyInventory>
-* Documentation YunoHost pour cette app : <https://yunohost.org/app_pyinventory>
+* YunoHost Store: <https://apps.yunohost.org/app/pyinventory>
 * Signaler un bug : <https://github.com/YunoHost-Apps/pyinventory_ynh/issues>
 
 ## Informations pour les développeurs
