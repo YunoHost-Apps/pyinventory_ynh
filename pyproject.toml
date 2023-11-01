@@ -1,62 +1,87 @@
-[tool.poetry]
+[project]
 name = "pyinventory_ynh"
-description = "YunoHost app package for: https://github.com/jedie/PyInventory"
-version = "0.19.2+ynh1"
-authors = ["Jens Diemer <pyinventory_ynh@jensdiemer.de>"]
-homepage = "https://github.com/YunoHost-Apps/pyinventory_ynh"
-license = "GPL-3.0-or-later"
-readme = 'README.md'
+dynamic = ["version"]
+description = "Web based management to catalog things including state and location etc."
+license = {text = "GPL-3.0-or-later"}
+readme = "README.md"
+authors = [
+    {name = 'Jens Diemer', email = 'pyinventory_ynh@jensdiemer.de'}
+]
+requires-python = ">=3.9"  # Stay with 3.9 until YunoHost used >=Debian 11 (Bullseye)
+dependencies = [
+    "pyinventory",  # https://github.com/jedie/PyInventory
+    #
+    # extras "ynh" will install: gunicorn, psycopg2, django-redis and django-axes
+    # see: https://github.com/YunoHost-Apps/django_yunohost_integration/blob/main/pyproject.toml
+    "django_yunohost_integration[ynh]>=0.6.0",  # https://github.com/YunoHost-Apps/django_yunohost_integration
+    #
+    "cli-base-utilities>=0.4.4",  # https://github.com/jedie/cli-base-utilities
+    #
+    # indirect depencies, added because we didn't create the requirements.txt with Python <3.11
+    # See: https://github.com/jazzband/pip-tools/issues/1326
+    "async-timeout",  # needed by redis for python<=3.11.2
+]
+[project.optional-dependencies]
+dev = [
+    "bx_django_utils",  # https://github.com/boxine/bx_django_utils
+    "beautifulsoup4",  # https://pypi.org/project/beautifulsoup4/
+    #
+    # TODO: Remove "pytest" and use normal unittests ;)
+    "pytest",
+    "pytest-cov",
+    "pytest-django",
+    #
+    "manageprojects>=0.15.0",  # https://github.com/jedie/manageprojects
+    "pip-tools",  # https://github.com/jazzband/pip-tools/
+    "tox",  # https://github.com/tox-dev/tox
+    "coverage",  # https://github.com/nedbat/coveragepy
+    "autopep8",  # https://github.com/hhatto/autopep8
+    "pyupgrade",  # https://github.com/asottile/pyupgrade
+    "flake8",  # https://github.com/pycqa/flake8
+    "pyflakes",  # https://github.com/PyCQA/pyflakes
+    "codespell",  # https://github.com/codespell-project/codespell
+    "EditorConfig",  # https://github.com/editorconfig/editorconfig-core-py
+    "safety",  # https://github.com/pyupio/safety
+    "mypy",  # https://github.com/python/mypy
+    "twine",  # https://github.com/pypa/twine
 
-[tool.poetry.urls]
-"Bug Tracker" = "https://github.com/jedie/PyInventory/issues"
+    # https://github.com/akaihola/darker
+    # https://github.com/ikamensh/flynt
+    # https://github.com/pycqa/isort
+    # https://github.com/pygments/pygments
+    "darker[flynt, isort, color]",
 
-[tool.poetry.dependencies]
-python = ">=3.9,<4.0.0"  # Stay with 3.9 until YunoHost used >=Debian 11 (Bullseye)
-#
-pyinventory = ">=0.19.2"  # https://github.com/jedie/PyInventory
-#
-# extras "ynh" will install: gunicorn, psycopg2, django-redis and django-axes
-# see: https://github.com/YunoHost-Apps/django_yunohost_integration/blob/main/pyproject.toml
-django_yunohost_integration = {version = ">=0.6.0", extras = ["ynh"]}  # https://github.com/YunoHost-Apps/django_yunohost_integration
+    # indirect depencies added because of bug:
+    # https://github.com/pypa/pip/issues/9644 / https://github.com/jazzband/pip-tools/issues/1866
+    # to avoid errors like:
+    # In --require-hashes mode, all requirements must have their versions pinned with ==. These do not: ...
+    "tomli",  # Only needed for Python <3.11
+    "exceptiongroup", # needed by pytest
+]
 
+[project.urls]
+Documentation = "https://github.com/YunoHost-Apps/pyinventory_ynh"
+Source = "https://github.com/YunoHost-Apps/pyinventory_ynh"
 
-[tool.poetry.dev-dependencies]
-cli-base-utilities = "*"  # https://github.com/jedie/cli-base-utilities
-bx_py_utils = "*"  # https://github.com/boxine/bx_py_utils
-bx_django_utils = "*"  # https://github.com/boxine/bx_django_utils
-tox = ">=4.4.4"  # https://github.com/tox-dev/tox
-coverage= "*"  # https://github.com/nedbat/coveragepy
-flake8 = "*"  # https://github.com/pycqa/flake8
-EditorConfig = "*"  # https://github.com/editorconfig/editorconfig-core-py
-safety = "*"  # https://github.com/pyupio/safety
-mypy = "*"  # https://github.com/python/mypy
-twine = "*"  # https://github.com/pypa/twine
-poetry-publish = "*"  # https://github.com/jedie/poetry-publish
-pytest = "*"
-pytest-cov = "*"
-pytest-django = "*"
-requests = "*"  # https://github.com/psf/requests
-packaging = "*"  # https://github.com/pypa/packagi
-beautifulsoup4 = "*"  # https://pypi.org/project/beautifulsoup4/
-
-# https://github.com/akaihola/darker
-# https://github.com/ikamensh/flynt
-# https://github.com/pycqa/isort
-# https://github.com/pygments/pygments
-darker = { version = "*", extras = ["flynt", "isort", "color"] }
-
-tomli = "*"  # https://github.com/hukkin/tomli
-# tomli only needed for Python <3.11, but see bug:
-# https://github.com/pypa/pip/issues/9644#issuecomment-1456583402
-#tomli = {version = "*", markers = "python_version < \"3.11\""}  # https://github.com/hukkin/tomli
+[project.scripts]
+pyinventory_ynh_app = "pyinventory_ynh.__main__:main"
+pyinventory_ynh_dev = "pyinventory_ynh.cli.dev:main"
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools>=61.0", "setuptools_scm>=7.1"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pyinventory_ynh*"]
+
+[tool.setuptools.dynamic]
+version = {attr = "pyinventory_ynh.__version__"}
 
 
 [tool.darker]
 src = ['.']
+# YunoHost apps still use "master" istead of "main", isn't it?
 revision = "origin/master..."
 line_length = 119
 verbose = true
@@ -78,7 +103,7 @@ log_level = "INFO"
 atomic=true
 profile='black'
 skip_glob=[".*", "*/htmlcov/*","*/migrations/*","*/local_test/*"]
-known_first_party=['inventory', 'inventory_project']
+known_first_party=['inventory', 'inventory_project', 'pyinventory_ynh']
 line_length=119
 lines_after_imports=2
 
@@ -115,6 +140,10 @@ branch = true
 parallel = true
 concurrency = ["multiprocessing"]
 source = ['.']
+# TODO: pytest -> Django unitests:
+#command_line = '-m unittest --verbose --locals --buffer'
+command_line = '-m pytest'
+disable_warnings = ["couldnt-parse"]
 
 [tool.coverage.report]
 omit = ['.*', '*/tests/*']
@@ -133,16 +162,30 @@ exclude_lines = [
 legacy_tox_ini = """
 [tox]
 isolated_build = True
-envlist = py{311,310,39}
+envlist = py{312,311,310,39}
 skip_missing_interpreters = True
 
 [testenv]
 passenv = *
 skip_install = true
-allowlist_externals = make
+commands_pre =
+    pip install -U pip-tools
+    pip-sync requirements.dev.txt
 commands =
-    make pytest
+    {envpython} -m coverage run --context='{envname}'
+    {envpython} -m coverage combine --append
+    {envpython} -m coverage xml
+    {envpython} -m coverage report
 """
+
+
+[tool.mypy]
+warn_unused_configs = true
+ignore_missing_imports = true
+allow_redefinition = true  # https://github.com/python/mypy/issues/7165
+show_error_codes = true
+plugins = []
+exclude = ['.venv', 'tests']
 
 
 [manageprojects] # https://github.com/jedie/manageprojects
@@ -169,4 +212,5 @@ _template = "https://github.com/jedie/cookiecutter_templates/"
 applied_migrations = [
     "877e2ec", # 2023-08-17T20:54:24+02:00
     "be3f649", # 2023-08-22T19:36:57+02:00
+    "c1a9d97", # 2023-11-01T19:59:17+01:00
 ]
