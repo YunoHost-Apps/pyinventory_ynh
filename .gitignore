@@ -1,4 +1,11 @@
 .*
+*.egg-info
+__pycache__
+/dist/
+/coverage.*
+/htmlcov/
+*.orig
+
 !.github
 !.editorconfig
 !.flake8
@@ -6,9 +13,5 @@
 !.gitkeep
 !/doc/screenshots/.gitkeep
 
-__pycache__
 secret.txt
 /local_test/
-
-/coverage.*
-/htmlcov/
