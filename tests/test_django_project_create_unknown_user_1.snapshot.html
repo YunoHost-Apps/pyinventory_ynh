@@ -4,7 +4,7 @@
   <div id="branding">
    <h1 id="site-name">
     <a href="/app_path/">
-     PyInventory v0.19.2
+     PyInventory v0.19.3
     </a>
    </h1>
   </div>
@@ -28,11 +28,34 @@
      Log out
     </button>
    </form>
+   <button class="theme-toggle">
+    <div class="visually-hidden theme-label-when-auto">
+     Toggle theme (current theme: auto)
+    </div>
+    <div class="visually-hidden theme-label-when-light">
+     Toggle theme (current theme: light)
+    </div>
+    <div class="visually-hidden theme-label-when-dark">
+     Toggle theme (current theme: dark)
+    </div>
+    <svg aria-hidden="true" class="theme-icon-when-auto">
+     <use xlink:href="#icon-auto">
+     </use>
+    </svg>
+    <svg aria-hidden="true" class="theme-icon-when-dark">
+     <use xlink:href="#icon-moon">
+     </use>
+    </svg>
+    <svg aria-hidden="true" class="theme-icon-when-light">
+     <use xlink:href="#icon-sun">
+     </use>
+    </svg>
+   </button>
   </div>
  </div>
  <!-- END Header -->
  <div class="main" id="main">
-  <div class="content">
+  <div class="content" id="content-start" tabindex="-1">
    <!-- Content -->
    <div class="colMS" id="content">
     <h1>
