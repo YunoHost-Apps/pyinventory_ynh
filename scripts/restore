@@ -10,38 +10,11 @@ source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# MANAGE SCRIPT FAILURE
-#=================================================
-
-ynh_abort_if_errors
-
-#=================================================
-# LOAD SETTINGS
-#=================================================
-ynh_script_progression --message="Loading settings..."
-
-final_path=$(ynh_app_setting_get --app="$app" --key=final_path)
-public_path=$(ynh_app_setting_get --app="$app" --key=public_path)
-db_name=$(ynh_app_setting_get --app="$app" --key=db_name)
-db_user=$db_name
-db_pwd=$(ynh_app_setting_get --app="$app" --key=psqlpwd)
-
-domain=$(ynh_app_setting_get --app="$app" --key=domain)
-path_url=$(ynh_app_setting_get --app="$app" --key=path)
-
-#=================================================
-# CHECK IF THE APP CAN BE RESTORED
-#=================================================
-ynh_script_progression --message="Validating restoration parameters..."
-
-test ! -d $final_path \
-	|| ynh_die --message="There is already a directory: $final_path "
-
-#=================================================
 # STANDARD RESTORATION STEPS
 #=================================================
 # RESTORE THE NGINX CONFIGURATION
 #=================================================
+ynh_script_progression --message="Restoring the NGINX web server configuration..." --weight=1
 
 ynh_restore_file --origin_path="/etc/nginx/conf.d/$domain.d/$app.conf"
 
@@ -50,74 +23,31 @@ ynh_restore_file --origin_path="/etc/nginx/conf.d/$domain.d/$app.conf"
 #=================================================
 ynh_script_progression --message="Restoring $app  main directory..."
 
-ynh_restore_file --origin_path="$final_path"
-ynh_restore_file --origin_path="$public_path"
+ynh_restore_file --origin_path="$install_dir"
+ynh_restore_file --origin_path="$data_dir"
 
-#=================================================
-# RECREATE THE DEDICATED USER
-#=================================================
-ynh_script_progression --message="Recreating the dedicated system user..."
-
-# Create the dedicated user (if not existing)
-ynh_system_user_create --username=$app --home_dir="$final_path" --use_shell
-
-#=================================================
-# RESTORE USER RIGHTS
-#=================================================
-
-# Restore permissions on app files
-chown -R "$app:www-data" "$public_path"
-chown -R "$app:" "$final_path"
-
-#=================================================
-# SPECIFIC RESTORATION
-#=================================================
-# REINSTALL DEPENDENCIES
-#=================================================
-ynh_script_progression --message="Reinstalling dependencies..." --weight=20
-
-ynh_exec_warn_less ynh_install_app_dependencies "$pkg_dependencies"
+ynh_script_progression --message="Set file permissions..."
+myynh_fix_file_permissions
 
 #=================================================
 # PYTHON VIRTUALENV
 # Maybe the backup contains a other Python version
 #=================================================
-ynh_script_progression --message="Recreate Python virtualenv..." --weight=5
+ynh_script_progression --message="Create and setup Python virtualenv..." --weight=45
 
-# Always recreate everything fresh with current python version
-ynh_secure_remove "${final_path}/venv"
-
-# Skip pip because of: https://github.com/YunoHost/issues/issues/1960
-python3 -m venv --without-pip "${final_path}/venv"
-chown -R "$app:" "$final_path"
-
-#=================================================
-# PIP INSTALLATION
-#=================================================
-ynh_script_progression --message="Install project via pip..." --weight=45
-#run source in a 'sub shell'
-(
-	set +o nounset
-	source "${final_path}/venv/bin/activate"
-	set -o nounset
-	ynh_exec_as $app $final_path/venv/bin/python3 -m ensurepip
-	ynh_exec_as $app $final_path/venv/bin/pip3 install --upgrade wheel pip setuptools
-	ynh_exec_as $app $final_path/venv/bin/pip3 install --no-deps -r "$final_path/requirements.txt"
-)
+myynh_setup_python_venv
 
 #=================================================
 # RESTORE THE PostgreSQL DATABASE
 #=================================================
 ynh_script_progression --message="Restoring the PostgreSQL database..." --weight=5
 
-ynh_psql_test_if_first_run
-ynh_psql_setup_db --db_user="$db_user" --db_name="$db_name" --db_pwd="$db_pwd"
 ynh_psql_connect_as --user=$db_user --password=$db_pwd --database=$db_name < ./db.sql
 
 #=================================================
 # RESTORE SYSTEMD
 #=================================================
-ynh_script_progression --message="Restoring the systemd configuration..."
+ynh_script_progression --message="Restoring the systemd $app configuration..."
 
 ynh_restore_file --origin_path="/etc/systemd/system/$app.service"
 systemctl enable $app.service --quiet
@@ -127,15 +57,14 @@ systemctl enable $app.service --quiet
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..."
 
-yunohost service add $app --log="${log_file}"
+yunohost service add $app
 
 #=================================================
 # RESTORE THE LOGROTATE CONFIGURATION
 #=================================================
+ynh_script_progression --message="Setup logging..."
 
-mkdir -p "$log_path"
-touch "${log_file}"
-chown -R "$app:" "$log_path"
+myynh_setup_log_file
 ynh_restore_file --origin_path="/etc/logrotate.d/$app"
 
 #=================================================
@@ -143,15 +72,8 @@ ynh_restore_file --origin_path="/etc/logrotate.d/$app"
 #=================================================
 # SECURE FILES AND DIRECTORIES
 #=================================================
-
-# Set permissions to app files
-chown -R "$app:" "$log_path"
-chown -R "$app:www-data" "$public_path"
-chown -R "$app:" "$final_path"
-
-chmod o-rwx "$log_path"
-chmod o-rwx "$public_path"
-chmod o-rwx "$final_path"
+ynh_script_progression --message="Set file permissions..."
+myynh_fix_file_permissions
 
 #=================================================
 # GENERIC FINALIZATION
@@ -160,7 +82,7 @@ chmod o-rwx "$final_path"
 #=================================================
 ynh_script_progression --message="Starting systemd service '$app'..." --weight=5
 
-ynh_systemd_action --service_name="$app" --action="start"
+ynh_systemd_action --service_name=$app --action="start" --log_path="$log_file"
 
 #=================================================
 # RELOAD NGINX
