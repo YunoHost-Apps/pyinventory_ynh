@@ -64,7 +64,7 @@ ram.runtime = "50M" # **estimate** minimum ram requirement. e.g. 50M, 400M, 1G, 
     type = "email"
     example = "admin@example.com"
 
-    [install.debug_enabled] # __DEBUG_ENABLED__
+    [install.debug_enabled] # __DEBUG_ENABLED__ will be set to "0" or "1" string
     ask.en = "Should be never enabled in production!"
     type = "boolean"
 
