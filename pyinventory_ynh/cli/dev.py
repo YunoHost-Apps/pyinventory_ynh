@@ -336,7 +336,12 @@ def diffsettings():
         },
     )
     app_path = destination / 'opt_yunohost'
-    verbose_check_call(sys.executable, app_path / 'manage.py', 'diffsettings', cwd=app_path)
+    verbose_check_call(
+        sys.executable,
+        app_path / 'manage.py',
+        'diffsettings',
+        cwd=app_path,
+    )
 
 
 cli.add_command(diffsettings)
