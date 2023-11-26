@@ -13,7 +13,7 @@ __YNH_CURRENT_HOST__=${ynh_current_host}
 #=================================================
 
 # 'debug_enabled' -> '__DEBUG_ENABLED__' -> settings.DEBUG
-debug_enabled="NO" # "YES" or "NO" string
+debug_enabled="0" # "1" or "0" string
 
 # 'log_level' -> '__LOG_LEVEL__' -> settings.LOG_LEVEL
 log_level="WARNING"

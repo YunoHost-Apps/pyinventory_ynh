@@ -26,7 +26,7 @@ def pytest_configure():
         destination=BASE_PATH / 'local_test',
         runserver=False,
         extra_replacements={
-            '__DEBUG_ENABLED__': 'NO',  # "YES" or "NO" string
+            '__DEBUG_ENABLED__': '0',  # "1" or "0" string
             '__LOG_LEVEL__': 'INFO',
             '__ADMIN_EMAIL__': 'foo-bar@test.tld',
             '__DEFAULT_FROM_EMAIL__': 'django_app@test.tld',

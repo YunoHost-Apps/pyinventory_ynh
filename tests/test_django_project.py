@@ -36,7 +36,7 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
 
     def test_config_panel_settings(self):
         # config_panel.toml settings, set via tests.conftest.pytest_configure():
-        assert settings.DEBUG_ENABLED == 'NO' and settings.DEBUG is False
+        assert settings.DEBUG_ENABLED == '0' and settings.DEBUG is False
         assert settings.LOG_LEVEL == 'INFO'
         assert settings.ADMIN_EMAIL == 'foo-bar@test.tld'
         assert settings.DEFAULT_FROM_EMAIL == 'django_app@test.tld'
