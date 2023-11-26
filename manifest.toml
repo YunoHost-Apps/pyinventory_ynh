@@ -5,7 +5,7 @@ id = "pyinventory"
 name = "PyInventory"
 description.en = "Web based management to catalog things including state and location etc."
 
-version = "0.19.3~ynh1"
+version = "0.19.3~ynh2"
 
 maintainers = ["Jens Diemer"]
 

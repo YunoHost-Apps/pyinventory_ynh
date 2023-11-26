@@ -87,6 +87,11 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
             parts=(
                 f'<h1 id="site-name"><a href="/app_path/">PyInventory v{upstream_version}</a></h1>',
                 '<strong>test</strong>',
+                #
+                # Can create PyInventory model entries:
+                '<a class="addlink" href="/app_path/inventory/itemmodel/add/">Add</a>',
+                '<a class="addlink" href="/app_path/inventory/locationmodel/add/">Add</a>',
+                '<a class="addlink" href="/app_path/inventory/memomodel/add/">Add</a>',
             ),
         )
         assert_html_response_snapshot(response, query_selector='#main', validate=False)
