@@ -3,5 +3,5 @@
     Web based management to catalog things including state and location etc.
 """
 
-__version__ = '0.19.3+ynh1'
+__version__ = '0.19.3+ynh2'
 __author__ = 'Jens Diemer <pyinventory_ynh@jensdiemer.de>'
