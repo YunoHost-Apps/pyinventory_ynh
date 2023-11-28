@@ -5,7 +5,7 @@ id = "pyinventory"
 name = "PyInventory"
 description.en = "Web based management to catalog things including state and location etc."
 
-version = "0.19.3~ynh1"
+version = "0.19.3~ynh2"
 
 maintainers = ["Jens Diemer"]
 
@@ -13,10 +13,10 @@ maintainers = ["Jens Diemer"]
 [upstream]
 # https://yunohost.org/en/packaging_manifest#upstream-section
 license = "GPL-3.0-or-later"
-website = "https://github.com/YunoHost-Apps/pyinventory_ynh"
 admindoc = "https://github.com/YunoHost-Apps/pyinventory_ynh"
 userdoc = "https://github.com/jedie/PyInventory"
 code = "https://github.com/YunoHost-Apps/pyinventory_ynh"
+
 
 
 [integration]
@@ -31,7 +31,10 @@ ram.build = "50M" # **estimate** minimum ram requirement. e.g. 50M, 400M, 1G, ..
 ram.runtime = "50M" # **estimate** minimum ram requirement. e.g. 50M, 400M, 1G, ...
 
 
+
 [install]
+# https://yunohost.org/en/packaging_manifest#install-questions
+
     [install.domain]
     # this is a generic question - ask strings are automatically handled by Yunohost's core
     type = "domain"
@@ -61,11 +64,9 @@ ram.runtime = "50M" # **estimate** minimum ram requirement. e.g. 50M, 400M, 1G, 
     type = "email"
     example = "admin@example.com"
 
-    [install.debug_enabled] # __DEBUG_ENABLED__
+    [install.debug_enabled] # __DEBUG_ENABLED__ will be set to "0" or "1" string
     ask.en = "Should be never enabled in production!"
-    type = "select"
-    choices = ["YES", "NO"]
-    default = "NO"
+    type = "boolean"
 
     [install.log_level] # __LOG_LEVEL__
     ask.en = "Logging level"

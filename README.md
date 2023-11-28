@@ -24,10 +24,6 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 
 [PyInventory](https://github.com/jedie/PyInventory) is a libre web-based management to catalog things including state and location etc. using [Python](https://www.python.org/)/[Django](https://www.djangoproject.com/).
 
-[![Integration level](https://dash.yunohost.org/integration/pyinventory_ynh.svg)](https://dash.yunohost.org/appci/app/pyinventory_ynh) ![](https://ci-apps.yunohost.org/ci/badges/pyinventory_ynh.status.svg) ![](https://ci-apps.yunohost.org/ci/badges/pyinventory_ynh.maintain.svg)
-[![Install pyinventory_ynh with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=pyinventory_ynh)
-
-
 Pull requests welcome ;)
 
 This package for YunoHost used [django-yunohost-integration](https://github.com/YunoHost-Apps/django_yunohost_integration)
@@ -35,7 +31,7 @@ This package for YunoHost used [django-yunohost-integration](https://github.com/
 More screenshots are here: jedie.github.io/tree/master/screenshots/PyInventory
 
 
-**Shipped version:** 0.19.3~ynh1
+**Shipped version:** 0.19.3~ynh2
 
 ## Screenshots
 
@@ -44,27 +40,8 @@ More screenshots are here: jedie.github.io/tree/master/screenshots/PyInventory
 ![Screenshot of PyInventory](./doc/screenshots/pyinventory_v020_screenshot_1.png)
 ![Screenshot of PyInventory](./doc/screenshots/pyinventory_v0110_screenshot_memo_1.png)
 
-## Disclaimers / important information
-
-## Settings and upgrades
-
-Almost everything related to PyInventory's configuration is handled in a `"../conf/settings.py"` file.
-You can edit the file `/home/yunohost.app/django_example/local_settings.py` to enable or disable features.
-
-Test sending emails, e.g.:
-
-```bash
-ssh admin@yourdomain.tld
-root@yunohost:~# /home/yunohost.app/pyinventory/manage.py sendtestemail --admins
-```
-
-How to debug a django YunoHost app, take a look into:
-
-* https://github.com/YunoHost-Apps/django_example_ynh#developer-info
-
 ## Documentation and resources
 
-* Official app website: <https://github.com/YunoHost-Apps/pyinventory_ynh>
 * Official user documentation: <https://github.com/jedie/PyInventory>
 * Official admin documentation: <https://github.com/YunoHost-Apps/pyinventory_ynh>
 * Upstream app code repository: <https://github.com/YunoHost-Apps/pyinventory_ynh>

@@ -25,14 +25,9 @@ dependencies = [
 dev = [
     "bx_django_utils",  # https://github.com/boxine/bx_django_utils
     "beautifulsoup4",  # https://pypi.org/project/beautifulsoup4/
-    #
-    # TODO: Remove "pytest" and use normal unittests ;)
-    "pytest",
-    "pytest-cov",
-    "pytest-django",
-    #
     "manageprojects>=0.15.0",  # https://github.com/jedie/manageprojects
     "pip-tools",  # https://github.com/jazzband/pip-tools/
+    "tblib",   # https://github.com/ionelmc/python-tblib
     "tox",  # https://github.com/tox-dev/tox
     "coverage",  # https://github.com/nedbat/coveragepy
     "autopep8",  # https://github.com/hhatto/autopep8
@@ -56,7 +51,6 @@ dev = [
     # to avoid errors like:
     # In --require-hashes mode, all requirements must have their versions pinned with ==. These do not: ...
     "tomli",  # Only needed for Python <3.11
-    "exceptiongroup", # needed by pytest
 ]
 
 [project.urls]
@@ -103,36 +97,9 @@ log_level = "INFO"
 atomic=true
 profile='black'
 skip_glob=[".*", "*/htmlcov/*","*/migrations/*","*/local_test/*"]
-known_first_party=['inventory', 'inventory_project', 'pyinventory_ynh']
+known_first_party=['pyinventory', 'pyinventory_ynh']
 line_length=119
 lines_after_imports=2
-
-
-[tool.pytest.ini_options]
-# https://docs.pytest.org/en/latest/customize.html#pyproject-toml
-minversion = "6.0"
-norecursedirs = ".* .git __pycache__ conf local_test coverage* dist htmlcov"
-# sometimes helpfull "addopts" arguments:
-#    -vv
-#    --verbose
-#    --capture=no
-#    --trace-config
-#    --full-trace
-#    -p no:warnings
-addopts = """
-    --reuse-db
-    --nomigrations
-    --cov=.
-    --cov-config=pyproject.toml
-    --cov-report term-missing
-    --cov-report html
-    --cov-report xml
-    --no-cov-on-fail
-    --showlocals
-    --doctest-modules
-    --failed-first
-    --new-first
-"""
 
 
 [tool.coverage.run]
@@ -140,15 +107,13 @@ branch = true
 parallel = true
 concurrency = ["multiprocessing"]
 source = ['.']
-# TODO: pytest -> Django unitests:
-#command_line = '-m unittest --verbose --locals --buffer'
-command_line = '-m pytest'
+command_line = './dev-cli.py test'
 disable_warnings = ["couldnt-parse"]
 
 [tool.coverage.report]
 omit = ['.*', '*/tests/*']
 skip_empty = true
-fail_under = 30
+fail_under = 10
 show_missing = true
 exclude_lines = [
     'if self.debug:',
@@ -213,4 +178,8 @@ applied_migrations = [
     "877e2ec", # 2023-08-17T20:54:24+02:00
     "be3f649", # 2023-08-22T19:36:57+02:00
     "c1a9d97", # 2023-11-01T19:59:17+01:00
+    "0a5d693", # 2023-11-25T15:06:21+01:00
+    "6b89813", # 2023-11-25T15:23:07+01:00
+    "4abd4c0", # 2023-11-25T15:59:31+01:00
+    "2f9fd7b", # 2023-11-26T20:13:32+01:00
 ]

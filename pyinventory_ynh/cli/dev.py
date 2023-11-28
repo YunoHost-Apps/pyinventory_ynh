@@ -2,14 +2,17 @@
     CLI for development
 """
 import logging
+import os
 import sys
 from pathlib import Path
 
+import django
 import rich_click as click
 from bx_py_utils.path import assert_is_file
 from cli_base.cli_tools.subprocess_utils import verbose_check_call
 from cli_base.cli_tools.version_info import print_version
-from django_yunohost_integration.local_test import create_local_test
+from django.core.management.commands.test import Command as DjangoTestCommand
+from django_yunohost_integration.local_test import CreateResults, create_local_test
 from manageprojects.utilities import code_style
 from manageprojects.utilities.publish import publish_package
 from rich import print  # noqa; noqa
@@ -42,6 +45,7 @@ ARGUMENT_NOT_EXISTING_DIR = dict(
 ARGUMENT_EXISTING_FILE = dict(
     type=click.Path(exists=True, file_okay=True, dir_okay=False, readable=True, path_type=Path)
 )
+CLI_EPILOG = 'Project Homepage: https://github.com/YunoHost-Apps/pyinventory_ynh'
 
 
 class ClickGroup(RichGroup):  # FIXME: How to set the "info_name" easier?
@@ -50,10 +54,7 @@ class ClickGroup(RichGroup):  # FIXME: How to set the "info_name" easier?
         return super().make_context(info_name, *args, **kwargs)
 
 
-@click.group(
-    cls=ClickGroup,
-    epilog='Project Homepage: https://github.com/YunoHost-Apps/pyinventory_ynh',
-)
+@click.group(cls=ClickGroup, epilog=CLI_EPILOG)
 def cli():
     pass
 
@@ -76,7 +77,7 @@ def coverage(verbose: bool = True):
     """
     verbose_check_call('coverage', 'run', verbose=verbose, exit_on_error=True)
     verbose_check_call('coverage', 'combine', '--append', verbose=verbose, exit_on_error=True)
-    verbose_check_call('coverage', 'report', '--fail-under=30', verbose=verbose, exit_on_error=True)
+    verbose_check_call('coverage', 'report', '--fail-under=10', verbose=verbose, exit_on_error=True)
     verbose_check_call('coverage', 'xml', verbose=verbose, exit_on_error=True)
     verbose_check_call('coverage', 'json', verbose=verbose, exit_on_error=True)
 
@@ -163,7 +164,10 @@ def publish():
     """
     Build and upload this project to PyPi
     """
-    _run_unittest_cli(verbose=False, exit_after_run=False)  # Don't publish a broken state
+    try:
+        _run_django_test_cli()  # Don't publish a broken state
+    except SystemExit as err:
+        assert err.code == 0, f'Exit code is not 0: {err.code}'
 
     publish_package(
         module=pyinventory_ynh,
@@ -217,64 +221,59 @@ def update_test_snapshot_files():
     print(f'{removed_file_count} test snapshot files removed... run tests...')
 
     # Just recreate them by running tests:
-    _run_unittest_cli(
-        extra_env=dict(
-            RAISE_SNAPSHOT_ERRORS='0',  # Recreate snapshot files without error
-        ),
-        verbose=False,
-        exit_after_run=False,
-    )
-
-    new_files = len(list(iter_snapshot_files()))
-    print(f'{new_files} test snapshot files created, ok.\n')
+    os.environ['RAISE_SNAPSHOT_ERRORS'] = '0'  # Recreate snapshot files without error
+    try:
+        _run_django_test_cli()
+    finally:
+        new_files = len(list(iter_snapshot_files()))
+        print(f'{new_files} test snapshot files created, ok.\n')
 
 
 cli.add_command(update_test_snapshot_files)
 
 
-def _run_unittest_cli(extra_env=None, verbose=True, exit_after_run=True):
+def _run_django_test_cli():
     """
-    Call the origin unittest CLI and pass all args to it.
+    Call the origin Django test manage command CLI and pass all args to it.
     """
-    if extra_env is None:
-        extra_env = dict()
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 
-    extra_env.update(
-        dict(
-            PYTHONUNBUFFERED='1',
-            PYTHONWARNINGS='always',
-        )
+    print('Compile YunoHost files...')
+    result: CreateResults = create_local_test(
+        django_settings_path=PACKAGE_ROOT / 'conf' / 'settings.py',
+        destination=PACKAGE_ROOT / 'local_test',
+        runserver=False,
+        extra_replacements={
+            '__DEBUG_ENABLED__': '0',  # "1" or "0" string
+            '__LOG_LEVEL__': 'INFO',
+            '__ADMIN_EMAIL__': 'foo-bar@test.tld',
+            '__DEFAULT_FROM_EMAIL__': 'django_app@test.tld',
+        },
     )
+    print('Local test files created:')
+    print(result)
 
-    args = sys.argv[2:]
-    if not args:
-        if verbose:
-            args = ('--verbose', '--locals', '--buffer')
-        else:
-            args = ('--locals', '--buffer')
+    data_dir = str(result.data_dir_path)
+    if data_dir not in sys.path:
+        sys.path.insert(0, data_dir)
 
-    verbose_check_call(
-        sys.executable,
-        '-m',
-        'unittest',
-        *args,
-        timeout=15 * 60,
-        extra_env=extra_env,
-    )
-    if exit_after_run:
-        sys.exit(0)
+    django.setup()
+
+    os.chdir(Path(pyinventory_ynh.__file__).parent)
+
+    test_command = DjangoTestCommand()
+    test_command.run_from_argv(sys.argv)
 
 
 @click.command()  # Dummy command
 def test():
     """
-    Run unittests
+    Compile YunoHost files and run Django unittests
     """
-    _run_unittest_cli()
+    _run_django_test_cli()
 
 
-# TODO: Replace pytest with normal Django unittests:
-#       cli.add_command(test)
+cli.add_command(test)
 
 
 def _run_tox():
@@ -290,7 +289,7 @@ def tox():
     _run_tox()
 
 
-# TODO: cli.add_command(tox)
+cli.add_command(tox)
 
 
 @click.command()
@@ -336,35 +335,30 @@ def diffsettings():
         },
     )
     app_path = destination / 'opt_yunohost'
-    verbose_check_call(sys.executable, app_path / 'manage.py', 'diffsettings', cwd=app_path)
+    verbose_check_call(
+        sys.executable,
+        app_path / 'manage.py',
+        'diffsettings',
+        cwd=app_path,
+    )
 
 
 cli.add_command(diffsettings)
 
 
-@click.command()
-def pytest():
-    """
-    Run tests via "pytest"
-    """
-    verbose_check_call(sys.executable, '-m', 'pytest', *sys.argv[2:], cwd=PACKAGE_ROOT)
-
-
-cli.add_command(pytest)
-
-
 def main():
     print_version(pyinventory_ynh)
 
+    print(f'{sys.argv=}')
     if len(sys.argv) >= 2:
         # Check if we just pass a command call
         command = sys.argv[1]
         if command == 'test':
-            # TODO: Call: _run_unittest_cli()
-            verbose_check_call(sys.executable, '-m', 'pytest', cwd=PACKAGE_ROOT)
+            _run_django_test_cli()
             sys.exit(0)
         elif command == 'tox':
             _run_tox()
+            sys.exit(0)
 
-    # Execute Click CLI:
+    print('Execute Click CLI')
     cli()

@@ -40,7 +40,7 @@ YNH_CURRENT_HOST = '__YNH_CURRENT_HOST__'  # YunoHost main domain from: /etc/yun
 # config_panel.toml settings:
 
 DEBUG_ENABLED = '__DEBUG_ENABLED__'
-DEBUG = DEBUG_ENABLED == 'YES'
+DEBUG = DEBUG_ENABLED == '1'
 
 LOG_LEVEL = '__LOG_LEVEL__'
 ADMIN_EMAIL = '__ADMIN_EMAIL__'
