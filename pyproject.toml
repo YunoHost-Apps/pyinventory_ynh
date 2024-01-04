@@ -7,25 +7,25 @@ readme = "README.md"
 authors = [
     {name = 'Jens Diemer', email = 'pyinventory_ynh@jensdiemer.de'}
 ]
-requires-python = ">=3.9"  # Stay with 3.9 until YunoHost used >=Debian 11 (Bullseye)
+
+# YunoHost used Debian 11 (Bullseye) that only contains 3.9
+# But we will install a Python 3.11.x
+requires-python = ">=3.11"
+
 dependencies = [
     "pyinventory",  # https://github.com/jedie/PyInventory
     #
     # extras "ynh" will install: gunicorn, psycopg2, django-redis and django-axes
     # see: https://github.com/YunoHost-Apps/django_yunohost_integration/blob/main/pyproject.toml
-    "django_yunohost_integration[ynh]>=0.6.0",  # https://github.com/YunoHost-Apps/django_yunohost_integration
+    "django_yunohost_integration[ynh]>=0.7.1",  # https://github.com/YunoHost-Apps/django_yunohost_integration
     #
-    "cli-base-utilities>=0.4.4",  # https://github.com/jedie/cli-base-utilities
-    #
-    # indirect depencies, added because we didn't create the requirements.txt with Python <3.11
-    # See: https://github.com/jazzband/pip-tools/issues/1326
-    "async-timeout",  # needed by redis for python<=3.11.2
+    "cli-base-utilities",  # https://github.com/jedie/cli-base-utilities
 ]
 [project.optional-dependencies]
 dev = [
     "bx_django_utils",  # https://github.com/boxine/bx_django_utils
     "beautifulsoup4",  # https://pypi.org/project/beautifulsoup4/
-    "manageprojects>=0.15.0",  # https://github.com/jedie/manageprojects
+    "manageprojects",  # https://github.com/jedie/manageprojects
     "pip-tools",  # https://github.com/jazzband/pip-tools/
     "tblib",   # https://github.com/ionelmc/python-tblib
     "tox",  # https://github.com/tox-dev/tox
@@ -45,12 +45,6 @@ dev = [
     # https://github.com/pycqa/isort
     # https://github.com/pygments/pygments
     "darker[flynt, isort, color]",
-
-    # indirect depencies added because of bug:
-    # https://github.com/pypa/pip/issues/9644 / https://github.com/jazzband/pip-tools/issues/1866
-    # to avoid errors like:
-    # In --require-hashes mode, all requirements must have their versions pinned with ==. These do not: ...
-    "tomli",  # Only needed for Python <3.11
 ]
 
 [project.urls]
@@ -71,6 +65,9 @@ include = ["pyinventory_ynh*"]
 
 [tool.setuptools.dynamic]
 version = {attr = "pyinventory_ynh.__version__"}
+
+[ynh-integration]
+local_settings_source = "pyinventory_ynh/tests/local_settings_source.py"
 
 
 [tool.darker]
@@ -127,7 +124,7 @@ exclude_lines = [
 legacy_tox_ini = """
 [tox]
 isolated_build = True
-envlist = py{312,311,310,39}
+envlist = py{312,311}
 skip_missing_interpreters = True
 
 [testenv]
@@ -158,6 +155,9 @@ initial_revision = "b204761"
 initial_date = 2022-12-21T20:25:20+01:00
 cookiecutter_template = "https://github.com/jedie/cookiecutter_templates/"
 cookiecutter_directory = "yunohost_django_package"
+applied_migrations = [
+    "7271d4c", # 2023-12-29T21:57:47+01:00
+]
 
 [manageprojects.cookiecutter_context.cookiecutter]
 project_name = "PyInventory"
