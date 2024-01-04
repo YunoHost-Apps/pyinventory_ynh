@@ -16,10 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.12", "3.11", "3.10", "3.9"]
-    env:
-      PYTHONUNBUFFERED: 1
-      PYTHONWARNINGS: always
+        python-version: ["3.12", "3.11"]
     steps:
     - name: Checkout
       run: |
@@ -37,7 +34,7 @@ jobs:
       with:
         python-version: '${{ matrix.python-version }}'
         cache: 'pip' # caching pip dependencies
-        cache-dependency-path: '**/requirements.dev.txt'
+        cache-dependency-path: '**/requirements.*.txt'
 
     - name: 'Bootstrap dev venv'
       # The first CLI call will create the .venv
@@ -53,6 +50,9 @@ jobs:
         ./dev-cli.py safety
 
     - name: 'Run tests with Python v${{ matrix.python-version }}'
+      env:
+        PYTHONUNBUFFERED: 1
+        PYTHONWARNINGS: always
       run: |
         .venv/bin/coverage erase
         ./dev-cli.py coverage

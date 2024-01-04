@@ -34,16 +34,109 @@ XDG_CACHE_HOME="$data_dir/.cache/"
 log_path=/var/log/$app
 log_file="${log_path}/${app}.log"
 
+py_required_version=3.11.7
+
+#=================================================
+# PYTHON HELPER
+# Borrowed from:
+# https://github.com/YunoHost-Apps/homeassistant_ynh/blob/master/scripts/_common.sh
+#=================================================
+
+# Install specific python version
+# usage: myynh_install_python --python="3.8.6"
+# | arg: -p, --python=    - the python version to install
+myynh_install_python () {
+	# Declare an array to define the options of this helper.
+	local legacy_args=u
+	local -A args_array=( [p]=python= )
+	local python
+	# Manage arguments with getopts
+	ynh_handle_getopts_args "$@"
+
+	# Check python version from APT
+	local py_apt_version=$(python3 --version | cut -d ' ' -f 2)
+
+	# Usefull variables
+	local python_major=${python%.*}
+
+	# Check existing built version of python in /usr/local/bin
+	if [ -e "/usr/local/bin/python$python_major" ]
+	then
+		local py_built_version=$(/usr/local/bin/python$python_major --version \
+			| cut -d ' ' -f 2)
+	else
+		local py_built_version=0
+	fi
+
+	# Compare version
+	if $(dpkg --compare-versions $py_apt_version ge $python)
+	then
+		# APT >= Required
+		ynh_print_info --message="Using provided python3..."
+
+		py_app_version="python3"
+
+	else
+		# Either python already built or to build
+		if $(dpkg --compare-versions $py_built_version ge $python)
+		then
+			# Built >= Required
+			ynh_print_info --message="Using already used python3 built version..."
+
+			py_app_version="/usr/local/bin/python${py_built_version%.*}"
+
+		else
+			# APT < Minimal & Actual < Minimal => Build & install Python into /usr/local/bin
+			ynh_print_info --message="Building python (may take a while)..."
+
+			# Store current direcotry
+			local MY_DIR=$(pwd)
+
+			# Create a temp direcotry
+			tmpdir="$(mktemp --directory)"
+			cd "$tmpdir"
+
+			# Download
+			wget --output-document="Python-$python.tar.xz" \
+				"https://www.python.org/ftp/python/$python/Python-$python.tar.xz" 2>&1
+
+			# Extract
+			tar xf "Python-$python.tar.xz"
+
+			# Install
+			cd "Python-$python"
+			./configure --enable-optimizations
+			ynh_exec_warn_less make -j4
+			ynh_exec_warn_less make altinstall
+
+			# Go back to working directory
+			cd "$MY_DIR"
+
+			# Clean
+			ynh_secure_remove "$tmpdir"
+
+			# Set version
+			py_app_version="/usr/local/bin/python$python_major"
+		fi
+	fi
+	# Save python version in settings
+	ynh_app_setting_set --app=$app --key=python --value="$python"
+}
+
 #=================================================
 # HELPERS
 #=================================================
 
 myynh_setup_python_venv() {
+    # Check Python version & compile the required one if needed:
+    myynh_install_python --python="$py_required_version"
+
     # Always recreate everything fresh with current python version
     ynh_secure_remove "$data_dir/venv"
 
+    # Create the virtual environment:
     # Skip pip because of: https://github.com/YunoHost/issues/issues/1960
-    python3 -m venv --without-pip "$data_dir/venv"
+    ynh_exec_as $app $py_app_version -m venv --without-pip "$data_dir/venv"
 
     chown -c -R "$app:" "$data_dir"
 
