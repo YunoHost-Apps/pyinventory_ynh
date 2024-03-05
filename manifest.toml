@@ -13,9 +13,7 @@ maintainers = ["Jens Diemer"]
 [upstream]
 # https://yunohost.org/en/packaging_manifest#upstream-section
 license = "GPL-3.0-or-later"
-admindoc = "https://github.com/YunoHost-Apps/pyinventory_ynh"
-userdoc = "https://github.com/jedie/PyInventory"
-code = "https://github.com/YunoHost-Apps/pyinventory_ynh"
+code = "https://github.com/jedie/PyInventory/"
 
 
 
