@@ -36,8 +36,8 @@ More screenshots are here: jedie.github.io/tree/master/screenshots/PyInventory
 ## Screenshot
 
 ![Screenshot di PyInventory](./doc/screenshots/pyinventory_v010_screenshot_2.png)
-![Screenshot di PyInventory](./doc/screenshots/pyinventory_v020_screenshot_1.png)
 ![Screenshot di PyInventory](./doc/screenshots/pyinventory_v010_screenshot_3.png)
+![Screenshot di PyInventory](./doc/screenshots/pyinventory_v020_screenshot_1.png)
 ![Screenshot di PyInventory](./doc/screenshots/pyinventory_v0110_screenshot_memo_1.png)
 
 ## Documentazione e risorse
