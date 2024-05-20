@@ -42,9 +42,7 @@ More screenshots are here: jedie.github.io/tree/master/screenshots/PyInventory
 
 ## 文档与资源
 
-- 官方用户文档： <https://github.com/jedie/PyInventory>
-- 官方管理文档： <https://github.com/YunoHost-Apps/pyinventory_ynh>
-- 上游应用代码库： <https://github.com/YunoHost-Apps/pyinventory_ynh>
+- 上游应用代码库： <https://github.com/jedie/PyInventory/>
 - YunoHost 商店： <https://apps.yunohost.org/app/pyinventory>
 - 报告 bug： <https://github.com/YunoHost-Apps/pyinventory_ynh/issues>
 

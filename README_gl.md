@@ -42,9 +42,7 @@ More screenshots are here: jedie.github.io/tree/master/screenshots/PyInventory
 
 ## Documentación e recursos
 
-- Documentación oficial para usuarias: <https://github.com/jedie/PyInventory>
-- Documentación oficial para admin: <https://github.com/YunoHost-Apps/pyinventory_ynh>
-- Repositorio de orixe do código: <https://github.com/YunoHost-Apps/pyinventory_ynh>
+- Repositorio de orixe do código: <https://github.com/jedie/PyInventory/>
 - Tenda YunoHost: <https://apps.yunohost.org/app/pyinventory>
 - Informar dun problema: <https://github.com/YunoHost-Apps/pyinventory_ynh/issues>
 
