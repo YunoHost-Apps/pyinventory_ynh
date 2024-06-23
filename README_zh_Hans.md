@@ -37,8 +37,8 @@ More screenshots are here: jedie.github.io/tree/master/screenshots/PyInventory
 
 ![PyInventory 的截图](./doc/screenshots/pyinventory_v010_screenshot_2.png)
 ![PyInventory 的截图](./doc/screenshots/pyinventory_v010_screenshot_3.png)
-![PyInventory 的截图](./doc/screenshots/pyinventory_v020_screenshot_1.png)
 ![PyInventory 的截图](./doc/screenshots/pyinventory_v0110_screenshot_memo_1.png)
+![PyInventory 的截图](./doc/screenshots/pyinventory_v020_screenshot_1.png)
 
 ## 文档与资源
 
