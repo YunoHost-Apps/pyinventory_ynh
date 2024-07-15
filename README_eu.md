@@ -5,7 +5,7 @@ EZ editatu eskuz.
 
 # PyInventory YunoHost-erako
 
-[![Integrazio maila](https://dash.yunohost.org/integration/pyinventory.svg)](https://dash.yunohost.org/appci/app/pyinventory) ![Funtzionamendu egoera](https://ci-apps.yunohost.org/ci/badges/pyinventory.status.svg) ![Mantentze egoera](https://ci-apps.yunohost.org/ci/badges/pyinventory.maintain.svg)
+[![Integrazio maila](https://dash.yunohost.org/integration/pyinventory.svg)](https://ci-apps.yunohost.org/ci/apps/pyinventory/) ![Funtzionamendu egoera](https://ci-apps.yunohost.org/ci/badges/pyinventory.status.svg) ![Mantentze egoera](https://ci-apps.yunohost.org/ci/badges/pyinventory.maintain.svg)
 
 [![Instalatu PyInventory YunoHost-ekin](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=pyinventory)
 
