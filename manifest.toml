@@ -100,7 +100,7 @@ ram.runtime = "50M" # **estimate** minimum ram requirement. e.g. 50M, 400M, 1G, 
     [resources.apt]
     # https://yunohost.org/en/packaging_apps_resources#apt
     # This will automatically install/uninstall the following apt packages
-    packages = "build-essential, python3-dev, python3-pip, python3-venv, git, libpq-dev, postgresql, postgresql-contrib"
+    packages = "build-essential, python3-dev, python3-pip, python3-venv, git, libpq-dev, postgresql, postgresql-contrib, redis-server"
 
     [resources.database]
     # https://yunohost.org/en/packaging_apps_resources#database
