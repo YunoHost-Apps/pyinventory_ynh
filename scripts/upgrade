@@ -111,7 +111,7 @@ myynh_fix_file_permissions
 #=================================================
 ynh_script_progression --message="Starting systemd service '$app'..." --weight=5
 
-yunohost service add $app
+yunohost service add --description $app $app
 ynh_systemd_action --service_name=$app --action="start" --log_path="$log_file"
 
 #=================================================

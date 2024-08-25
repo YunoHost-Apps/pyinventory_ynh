@@ -113,7 +113,7 @@ cd "$data_dir" || exit
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..."
 
-yunohost service add $app
+yunohost service add --description $app $app
 
 #=================================================
 # GENERIC FINALIZATION

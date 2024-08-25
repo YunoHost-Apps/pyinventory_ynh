@@ -1,10 +1,12 @@
 from pathlib import Path
 
 from bx_py_utils.auto_doc import assert_readme_block
+from django_yunohost_integration.path_utils import get_project_root
 from manageprojects.test_utils.click_cli_utils import invoke_click
 from manageprojects.tests.base import BaseTestCase
 
-from pyinventory_ynh.cli.dev import CLI_EPILOG, PACKAGE_ROOT, cli
+from pyinventory_ynh.cli.dev import cli
+from pyinventory_ynh.constants import CLI_EPILOG
 
 
 def assert_cli_help_in_readme(text_block: str, marker: str, readme_path: Path):
@@ -32,5 +34,5 @@ class ReadmeTestCase(BaseTestCase):
         assert_cli_help_in_readme(
             text_block=stdout,
             marker='help',
-            readme_path=PACKAGE_ROOT / 'doc' / 'ADMIN.md',
+            readme_path=get_project_root() / 'doc' / 'ADMIN.md',
         )
