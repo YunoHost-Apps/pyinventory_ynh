@@ -9,7 +9,7 @@ authors = [
 ]
 requires-python = ">=3.11"
 dependencies = [
-    "pyinventory",  # https://github.com/jedie/PyInventory
+    "pyinventory>=0.20.0",  # https://github.com/jedie/PyInventory
     #
     # extras "ynh" will install: gunicorn, psycopg2, django-redis and django-axes
     # see: https://github.com/YunoHost-Apps/django_yunohost_integration/blob/main/pyproject.toml

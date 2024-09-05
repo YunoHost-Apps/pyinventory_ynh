@@ -11,7 +11,6 @@ if settings.PATH_URL:
         # MEDIA_URL contains the "PATH_URL" already:
         path(settings.MEDIA_URL.lstrip('/'), include('django_tools.serve_media_app.urls')),
         path(f'{settings.PATH_URL}/', admin.site.urls),
-        path(f'{settings.PATH_URL}/ckeditor/', include('ckeditor_uploader.urls')),
     ]
 else:
     # Installed to domain root, without a path prefix
