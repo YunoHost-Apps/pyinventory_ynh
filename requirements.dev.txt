@@ -460,12 +460,11 @@ django==5.1.1 \
     #   django-dbbackup
     #   django-debug-toolbar
     #   django-import-export
-    #   django-js-asset
-    #   django-prose-editor
     #   django-redis
     #   django-reversion
     #   django-reversion-compare
     #   django-tagulous
+    #   django-tinymce
     #   django-tools
     #   django-yunohost-integration
     #   pyinventory
@@ -489,14 +488,6 @@ django-import-export==4.1.1 \
     --hash=sha256:16ecc5a9f0df46bde6eb278a3e65ebda0ee1db55656f36440e9fb83f40ab85a3 \
     --hash=sha256:730ae2443a02b1ba27d8dba078a27ae9123adfcabb78161b4f130843607b3df9
     # via pyinventory
-django-js-asset==2.2.0 \
-    --hash=sha256:0c57a82cae2317e83951d956110ce847f58ff0cdc24e314dbc18b35033917e94 \
-    --hash=sha256:7ef3e858e13d06f10799b56eea62b1e76706f42cf4e709be4e13356bc0ae30d8
-    # via django-prose-editor
-django-prose-editor[sanitize]==0.8.0 \
-    --hash=sha256:b3924d489c7ae37f3ce856150afdbaf034ef11cee149af236c5204462577665c \
-    --hash=sha256:e0313a26be6bd9db313d5106c6c0dac78bb75736d7a987302215363c6eec596e
-    # via pyinventory
 django-redis==5.4.0 \
     --hash=sha256:6a02abaa34b0fea8bf9b707d2c363ab6adc7409950b2db93602e6cb292818c42 \
     --hash=sha256:ebc88df7da810732e2af9987f7f426c96204bf89319df4c6da6ca9a2942edd5b
@@ -512,6 +503,10 @@ django-reversion-compare==0.17.0 \
 django-tagulous==2.1.0 \
     --hash=sha256:5ebba5a51f049f6df5f9d2a30eef431c0bf7cd35758aa0a42fc3351be4d239cd \
     --hash=sha256:f629b54ad720052092785b0dce056dc6a68c7b63f8126075af9c25848b250bfd
+    # via pyinventory
+django-tinymce==4.1.0 \
+    --hash=sha256:02e3b70e940fd299f0fbef4315aee5c185664e1eb8cd396b176963954e4357c9 \
+    --hash=sha256:9804836e6d2b08de3b03a27c100f8c2e9633549913eff8b323678a10cd48b94e
     # via pyinventory
 django-tools==0.56.2 \
     --hash=sha256:29c25be814d74cd9f554d7d45bc205f5570e5feaa4232cbd09cc913c46b20c07 \
@@ -812,9 +807,7 @@ nh3==0.2.18 \
     --hash=sha256:c8b3a1cebcba9b3669ed1a84cc65bf005728d2f0bc1ed2a6594a992e817f3a50 \
     --hash=sha256:de3ceed6e661954871d6cd78b410213bdcb136f79aafe22aa7182e028b8c7307 \
     --hash=sha256:f0eca9ca8628dbb4e916ae2491d72957fdd35f7a5d326b7032a345f111ac07fe
-    # via
-    #   django-prose-editor
-    #   readme-renderer
+    # via readme-renderer
 packageurl-python==0.15.6 \
     --hash=sha256:a40210652c89022772a6c8340d6066f7d5dc67132141e5284a4db7a27d0a8ab0 \
     --hash=sha256:cbc89afd15d5f4d05db4f1b61297e5b97a43f61f28799f6d282aff467ed2ee96
@@ -1041,9 +1034,9 @@ pygments==2.18.0 \
     #   darker
     #   readme-renderer
     #   rich
-pyinventory==0.20.0 \
-    --hash=sha256:842a00f4e3621d7968cdf6e6ab29a16aa5769f6b45c9405437213b66884f4831 \
-    --hash=sha256:a78e6778d4deea07227d5698a1a795b6cfcd950e850c5a4f2dc04ba634e14219
+pyinventory==0.20.1 \
+    --hash=sha256:c55fc03ec7adbe728d6df1f20eb2735dbfdef42b6c6ee2a4789b6bc508620af7 \
+    --hash=sha256:e484f97fc9d95f1180e9cc7b52c1fc5eaf038918caba080e89f35a9ae8934f23
     # via pyinventory_ynh (pyproject.toml)
 pyparsing==3.1.4 \
     --hash=sha256:a6a7ee4235a3f944aa1fa2249307708f893fe5717dc603503c6c7969c070fb7c \
