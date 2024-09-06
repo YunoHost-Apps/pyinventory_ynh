@@ -82,6 +82,7 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
         assert user.is_staff is True  # Set by: conf.setup_user.setup_project_user
         assert user.is_superuser is False
 
+
         self.assert_html_parts(
             response,
             parts=(
@@ -89,9 +90,18 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
                 '<strong>test</strong>',
                 #
                 # Can create PyInventory model entries:
-                '<a class="addlink" href="/app_path/inventory/itemmodel/add/">Add</a>',
-                '<a class="addlink" href="/app_path/inventory/locationmodel/add/">Add</a>',
-                '<a class="addlink" href="/app_path/inventory/memomodel/add/">Add</a>',
+                (
+                    '<a href="/app_path/inventory/itemmodel/add/" class="addlink"'
+                    ' aria-describedby="inventory-itemmodel">Add</a>'
+                ),
+                (
+                    '<a href="/app_path/inventory/locationmodel/add/" class="addlink"'
+                    ' aria-describedby="inventory-locationmodel">Add</a>'
+                ),
+                (
+                    '<a href="/app_path/inventory/memomodel/add/" class="addlink"'
+                    ' aria-describedby="inventory-memomodel">Add</a>'
+                ),
             ),
         )
         assert_html_response_snapshot(response, query_selector='#main', validate=False)

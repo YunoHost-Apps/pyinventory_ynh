@@ -5,7 +5,7 @@ id = "pyinventory"
 name = "PyInventory"
 description.en = "Web based management to catalog things including state and location etc."
 
-version = "0.19.3~ynh2"
+version = "0.20.1~ynh1"
 
 maintainers = ["Jens Diemer"]
 
@@ -19,7 +19,7 @@ code = "https://github.com/jedie/PyInventory/"
 
 [integration]
 # https://yunohost.org/en/packaging_manifest#integration-section
-yunohost = ">=11.2.12"
+yunohost = ">=11.2"
 architectures = "all"
 multi_instance = true
 ldap = true
@@ -100,7 +100,7 @@ ram.runtime = "50M" # **estimate** minimum ram requirement. e.g. 50M, 400M, 1G, 
     [resources.apt]
     # https://yunohost.org/en/packaging_apps_resources#apt
     # This will automatically install/uninstall the following apt packages
-    packages = "build-essential, python3-dev, python3-pip, python3-venv, git, libpq-dev, postgresql, postgresql-contrib, redis-server"
+    packages = "build-essential, python3-dev, python3-pip, python3-venv, git, libffi-dev, libpq-dev, postgresql, postgresql-contrib, redis-server, checkinstall, pkg-config, libssl-dev, openssl"
 
     [resources.database]
     # https://yunohost.org/en/packaging_apps_resources#database

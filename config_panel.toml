@@ -31,7 +31,7 @@ services = ["__APP__"]
         type = "boolean"
         yes = "1"
         no = "0"
-        help = "Should be never enabled in production!"
+        help = "Enable DEBUG mode? (Should be never enabled in production!)"
         bind = "debug_enabled:/home/yunohost.app/__APP__/settings.py"
 
         [main.config.log_level]

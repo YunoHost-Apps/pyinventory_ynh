@@ -1,31 +1,36 @@
 """
     CLI for development
 """
+
 import logging
-import os
+import shlex
 import sys
 from pathlib import Path
 
-import django
 import rich_click as click
-from bx_py_utils.path import assert_is_file
+from cli_base.cli_tools import code_style
+from cli_base.cli_tools.dev_tools import run_coverage, run_tox
 from cli_base.cli_tools.subprocess_utils import verbose_check_call
+from cli_base.cli_tools.test_utils.snapshot import UpdateTestSnapshotFiles
+from cli_base.cli_tools.verbosity import OPTION_KWARGS_VERBOSE
 from cli_base.cli_tools.version_info import print_version
+from cli_base.run_pip_audit import run_pip_audit
 from django.core.management.commands.test import Command as DjangoTestCommand
-from django_yunohost_integration.local_test import CreateResults, create_local_test
-from manageprojects.utilities import code_style
+from django_yunohost_integration.local_test import create_local_test
+from django_yunohost_integration.path_utils import get_project_root
 from manageprojects.utilities.publish import publish_package
-from rich import print  # noqa; noqa
+from rich import print
+from rich.console import Console
+from rich.traceback import install as rich_traceback_install
 from rich_click import RichGroup
 
 import pyinventory_ynh
+from pyinventory_ynh import constants
+from pyinventory_ynh.tests import setup_ynh_tests
 
 
 logger = logging.getLogger(__name__)
 
-
-PACKAGE_ROOT = Path(pyinventory_ynh.__file__).parent.parent
-assert_is_file(PACKAGE_ROOT / 'pyproject.toml')
 
 OPTION_ARGS_DEFAULT_TRUE = dict(is_flag=True, show_default=True, default=True)
 OPTION_ARGS_DEFAULT_FALSE = dict(is_flag=True, show_default=True, default=False)
@@ -45,7 +50,6 @@ ARGUMENT_NOT_EXISTING_DIR = dict(
 ARGUMENT_EXISTING_FILE = dict(
     type=click.Path(exists=True, file_okay=True, dir_okay=False, readable=True, path_type=Path)
 )
-CLI_EPILOG = 'Project Homepage: https://github.com/YunoHost-Apps/pyinventory_ynh'
 
 
 class ClickGroup(RichGroup):  # FIXME: How to set the "info_name" easier?
@@ -54,61 +58,40 @@ class ClickGroup(RichGroup):  # FIXME: How to set the "info_name" easier?
         return super().make_context(info_name, *args, **kwargs)
 
 
-@click.group(cls=ClickGroup, epilog=CLI_EPILOG)
+@click.group(
+    cls=ClickGroup,
+    epilog=constants.CLI_EPILOG,
+)
 def cli():
     pass
 
 
-@click.command()
-@click.option('--verbose/--no-verbose', **OPTION_ARGS_DEFAULT_FALSE)
-def mypy(verbose: bool = True):
+@cli.command()
+@click.option('-v', '--verbosity', **OPTION_KWARGS_VERBOSE)
+def mypy(verbosity: int):
     """Run Mypy (configured in pyproject.toml)"""
-    verbose_check_call('mypy', '.', cwd=PACKAGE_ROOT, verbose=verbose, exit_on_error=True)
+    verbose_check_call('mypy', '.', cwd=get_project_root(), verbose=verbosity > 0, exit_on_error=True)
 
 
-cli.add_command(mypy)
-
-
-@click.command()
-@click.option('--verbose/--no-verbose', **OPTION_ARGS_DEFAULT_FALSE)
-def coverage(verbose: bool = True):
-    """
-    Run and show coverage.
-    """
-    verbose_check_call('coverage', 'run', verbose=verbose, exit_on_error=True)
-    verbose_check_call('coverage', 'combine', '--append', verbose=verbose, exit_on_error=True)
-    verbose_check_call('coverage', 'report', '--fail-under=10', verbose=verbose, exit_on_error=True)
-    verbose_check_call('coverage', 'xml', verbose=verbose, exit_on_error=True)
-    verbose_check_call('coverage', 'json', verbose=verbose, exit_on_error=True)
-
-
-cli.add_command(coverage)
-
-
-@click.command()
+@cli.command()
 def install():
     """
     Run pip-sync and install 'pyinventory_ynh' via pip as editable.
     """
-    verbose_check_call('pip-sync', PACKAGE_ROOT / 'requirements.dev.txt')
+    verbose_check_call('pip-sync', get_project_root() / 'requirements.dev.txt')
     verbose_check_call('pip', 'install', '--no-deps', '-e', '.')
 
 
-cli.add_command(install)
-
-
-@click.command()
-def safety():
+@cli.command()
+@click.option('-v', '--verbosity', **OPTION_KWARGS_VERBOSE)
+def pip_audit(verbosity: int):
     """
-    Run safety check against current requirements files
+    Run pip-audit check against current requirements files
     """
-    verbose_check_call('safety', 'check', '-r', 'requirements.dev.txt')
+    run_pip_audit(base_path=get_project_root(), verbosity=verbosity)
 
 
-cli.add_command(safety)
-
-
-@click.command()
+@cli.command()
 def update():
     """
     Update "requirements*.txt" dependencies files
@@ -150,166 +133,118 @@ def update():
         extra_env=extra_env,
     )
 
-    verbose_check_call(bin_path / 'safety', 'check', '-r', 'requirements.dev.txt')
+    run_pip_audit(base_path=get_project_root())
 
     # Install new dependencies in current .venv:
     verbose_check_call(bin_path / 'pip-sync', 'requirements.dev.txt')
 
 
-cli.add_command(update)
-
-
-@click.command()
+@cli.command()
 def publish():
     """
     Build and upload this project to PyPi
     """
     try:
-        _run_django_test_cli()  # Don't publish a broken state
+        _run_django_test_cli(argv=sys.argv, exit_after_run=True)  # Don't publish a broken state
     except SystemExit as err:
         assert err.code == 0, f'Exit code is not 0: {err.code}'
 
     publish_package(
         module=pyinventory_ynh,
-        package_path=PACKAGE_ROOT,
+        package_path=get_project_root(),
         distribution_name='pyinventory_ynh',
     )
 
 
-cli.add_command(publish)
-
-
-@click.command()
+@cli.command()
 @click.option('--color/--no-color', **OPTION_ARGS_DEFAULT_TRUE)
-@click.option('--verbose/--no-verbose', **OPTION_ARGS_DEFAULT_FALSE)
-def fix_code_style(color: bool = True, verbose: bool = False):
+@click.option('-v', '--verbosity', **OPTION_KWARGS_VERBOSE)
+def fix_code_style(color: bool, verbosity: int):
     """
     Fix code style of all pyinventory_ynh source code files via darker
     """
-    code_style.fix(package_root=PACKAGE_ROOT, color=color, verbose=verbose)
+    code_style.fix(package_root=get_project_root(), darker_color=color, darker_verbose=verbosity > 0)
 
 
-cli.add_command(fix_code_style)
-
-
-@click.command()
+@cli.command()
 @click.option('--color/--no-color', **OPTION_ARGS_DEFAULT_TRUE)
-@click.option('--verbose/--no-verbose', **OPTION_ARGS_DEFAULT_FALSE)
-def check_code_style(color: bool = True, verbose: bool = False):
+@click.option('-v', '--verbosity', **OPTION_KWARGS_VERBOSE)
+def check_code_style(color: bool, verbosity: int):
     """
     Check code style by calling darker + flake8
     """
-    code_style.check(package_root=PACKAGE_ROOT, color=color, verbose=verbose)
+    code_style.check(package_root=get_project_root(), darker_color=color, darker_verbose=verbosity > 0)
 
 
-cli.add_command(check_code_style)
-
-
-@click.command()
+@cli.command()
 def update_test_snapshot_files():
     """
     Update all test snapshot files (by remove and recreate all snapshot files)
     """
-
-    def iter_snapshot_files():
-        yield from PACKAGE_ROOT.rglob('*.snapshot.*')
-
-    removed_file_count = 0
-    for item in iter_snapshot_files():
-        item.unlink()
-        removed_file_count += 1
-    print(f'{removed_file_count} test snapshot files removed... run tests...')
-
-    # Just recreate them by running tests:
-    os.environ['RAISE_SNAPSHOT_ERRORS'] = '0'  # Recreate snapshot files without error
-    try:
-        _run_django_test_cli()
-    finally:
-        new_files = len(list(iter_snapshot_files()))
-        print(f'{new_files} test snapshot files created, ok.\n')
+    with UpdateTestSnapshotFiles(root_path=get_project_root(), verbose=True):
+        # Just recreate them by running tests:
+        _run_django_test_cli(argv=sys.argv, exit_after_run=False)
 
 
-cli.add_command(update_test_snapshot_files)
-
-
-def _run_django_test_cli():
+def _run_django_test_cli(argv, exit_after_run=True):
     """
     Call the origin Django test manage command CLI and pass all args to it.
     """
-    os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
+    setup_ynh_tests()
 
-    print('Compile YunoHost files...')
-    result: CreateResults = create_local_test(
-        django_settings_path=PACKAGE_ROOT / 'conf' / 'settings.py',
-        destination=PACKAGE_ROOT / 'local_test',
-        runserver=False,
-        extra_replacements={
-            '__DEBUG_ENABLED__': '0',  # "1" or "0" string
-            '__LOG_LEVEL__': 'INFO',
-            '__ADMIN_EMAIL__': 'foo-bar@test.tld',
-            '__DEFAULT_FROM_EMAIL__': 'django_app@test.tld',
-        },
-    )
-    print('Local test files created:')
-    print(result)
-
-    data_dir = str(result.data_dir_path)
-    if data_dir not in sys.path:
-        sys.path.insert(0, data_dir)
-
-    django.setup()
-
-    os.chdir(Path(pyinventory_ynh.__file__).parent)
+    print('\nStart Django unittests with:')
+    for default_arg in ('shuffle', 'buffer'):
+        if default_arg not in argv and f'--no-{default_arg}' not in argv:
+            argv.append(f'--{default_arg}')
+    print(shlex.join(argv))
+    print()
 
     test_command = DjangoTestCommand()
-    test_command.run_from_argv(sys.argv)
+
+    test_command.run_from_argv(argv)
+    if exit_after_run:
+        sys.exit(0)
 
 
-@click.command()  # Dummy command
+@cli.command()  # Dummy command
 def test():
     """
     Compile YunoHost files and run Django unittests
     """
-    _run_django_test_cli()
+    _run_django_test_cli(argv=sys.argv, exit_after_run=True)
 
 
-cli.add_command(test)
+@cli.command()  # Dummy command
+def coverage():
+    """
+    Run tests and show coverage report.
+    """
+    run_coverage()
 
 
-def _run_tox():
-    verbose_check_call(sys.executable, '-m', 'tox', *sys.argv[2:])
-    sys.exit(0)
-
-
-@click.command()  # Dummy "tox" command
+@cli.command()  # Dummy "tox" command
 def tox():
     """
     Run tox
     """
-    _run_tox()
+    run_tox()
 
 
-cli.add_command(tox)
-
-
-@click.command()
+@cli.command()
 def version():
     """Print version and exit"""
     # Pseudo command, because the version always printed on every CLI call ;)
     sys.exit(0)
 
 
-cli.add_command(version)
-
-
-@click.command()
+@cli.command()
 def local_test():
     """
     Build a "local_test" YunoHost installation and start the Django dev. server against it.
     """
     create_local_test(
-        django_settings_path=PACKAGE_ROOT / 'conf' / 'settings.py',
-        destination=PACKAGE_ROOT / 'local_test',
+        django_settings_path=get_project_root() / 'conf' / 'settings.py',
+        destination=get_project_root() / 'local_test',
         runserver=True,
         extra_replacements={
             '__DEBUG_ENABLED__': '1',
@@ -317,17 +252,14 @@ def local_test():
     )
 
 
-cli.add_command(local_test)
-
-
-@click.command()
+@cli.command()
 def diffsettings():
     """
     Run "diffsettings" manage command against a "local_test" YunoHost installation.
     """
-    destination = PACKAGE_ROOT / 'local_test'
+    destination = get_project_root() / 'local_test'
     create_local_test(
-        django_settings_path=PACKAGE_ROOT / 'conf' / 'settings.py',
+        django_settings_path=get_project_root() / 'conf' / 'settings.py',
         destination=destination,
         runserver=False,
         extra_replacements={
@@ -343,22 +275,27 @@ def diffsettings():
     )
 
 
-cli.add_command(diffsettings)
-
-
 def main():
     print_version(pyinventory_ynh)
 
-    print(f'{sys.argv=}')
     if len(sys.argv) >= 2:
-        # Check if we just pass a command call
+        # Check if we can just pass a command call to origin CLI:
         command = sys.argv[1]
-        if command == 'test':
-            _run_django_test_cli()
-            sys.exit(0)
-        elif command == 'tox':
-            _run_tox()
-            sys.exit(0)
+        command_map = {
+            'test': _run_django_test_cli,
+            'tox': run_tox,
+            'coverage': run_coverage,
+        }
+        if real_func := command_map.get(command):
+            real_func(argv=sys.argv, exit_after_run=True)
+
+    console = Console()
+    rich_traceback_install(
+        width=console.size.width,  # full terminal width
+        show_locals=True,
+        suppress=[click],
+        max_frames=2,
+    )
 
     print('Execute Click CLI')
     cli()
