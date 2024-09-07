@@ -1,4 +1,4 @@
-#!__DATA_DIR__/venv/bin/python
+#!__DATA_DIR__/.venv/bin/python3
 
 import os
 import sys

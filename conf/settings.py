@@ -160,10 +160,6 @@ else:
 STATIC_ROOT = str(INSTALL_DIR_PATH / 'static')
 MEDIA_ROOT = str(INSTALL_DIR_PATH / 'media')
 
-# _____________________________________________________________________________
-# django-ckeditor
-
-CKEDITOR_BASEPATH = STATIC_URL + 'ckeditor/ckeditor/'
 
 # _____________________________________________________________________________
 # Django-dbbackup
