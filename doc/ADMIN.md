@@ -1,3 +1,22 @@
+## Setup Python Interpreter
+
+To use a more recent Python version than the current debian stable release,
+we use two ways:
+
+* ["install_python.py" will compile and install Python from source, if needed](https://github.com/jedie/manageprojects/blob/main/docs/install_python.md)
+* ["setup_python.py" will download and setup redistributable Python from [1] if needed.](https://github.com/jedie/manageprojects/blob/main/docs/setup_python.md) (default)
+
+[1] https://github.com/indygreg/python-build-standalone/
+
+Both variants will use the OS version of Python, if it's already the requested major version.
+And both will install the needed Python version only one time.
+
+Compile from source will take significantly longer than the redistributable version.
+
+It's possible to switch between the two variants on installation.
+
+Discuss this here: https://forum.yunohost.org/t/use-newer-python-than-3-9/22568/17
+
 ## Settings and upgrades
 
 Almost everything related to PyInventory's configuration is handled in a `"../conf/settings.py"` file.
