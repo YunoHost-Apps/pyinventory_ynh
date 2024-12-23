@@ -16,6 +16,10 @@ dependencies = [
     "django_yunohost_integration[ynh]>=0.9",  # https://github.com/YunoHost-Apps/django_yunohost_integration
     #
     "cli-base-utilities",  # https://github.com/jedie/cli-base-utilities
+
+    # Work-a-round for: https://github.com/jazzband/pip-tools/issues/1866
+    # see also: https://github.com/jazzband/pip-tools/issues/994#issuecomment-1321226661
+    'async-timeout', # for Python 3.11 from redis
 ]
 [project.optional-dependencies]
 dev = [
