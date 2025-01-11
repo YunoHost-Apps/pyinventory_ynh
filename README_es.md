@@ -5,7 +5,9 @@ No se debe editar a mano.
 
 # PyInventory para Yunohost
 
-[![Nivel de integración](https://dash.yunohost.org/integration/pyinventory.svg)](https://ci-apps.yunohost.org/ci/apps/pyinventory/) ![Estado funcional](https://ci-apps.yunohost.org/ci/badges/pyinventory.status.svg) ![Estado En Mantención](https://ci-apps.yunohost.org/ci/badges/pyinventory.maintain.svg)
+[![Nivel de integración](https://apps.yunohost.org/badge/integration/pyinventory)](https://ci-apps.yunohost.org/ci/apps/pyinventory/)
+![Estado funcional](https://apps.yunohost.org/badge/state/pyinventory)
+![Estado En Mantención](https://apps.yunohost.org/badge/maintained/pyinventory)
 
 [![Instalar PyInventory con Yunhost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=pyinventory)
 
@@ -42,13 +44,13 @@ More screenshots are here: jedie.github.io/tree/master/screenshots/PyInventory
 
 ## Documentaciones y recursos
 
-- Repositorio del código fuente oficial de la aplicación : <https://github.com/jedie/PyInventory/>
+- Repositorio del código fuente oficial de la aplicación : <https://github.com/jedie/PyInventory>
 - Catálogo YunoHost: <https://apps.yunohost.org/app/pyinventory>
 - Reportar un error: <https://github.com/YunoHost-Apps/pyinventory_ynh/issues>
 
 ## Información para desarrolladores
 
-Por favor enviar sus correcciones a la [`branch testing`](https://github.com/YunoHost-Apps/pyinventory_ynh/tree/testing
+Por favor enviar sus correcciones a la [rama `testing`](https://github.com/YunoHost-Apps/pyinventory_ynh/tree/testing).
 
 Para probar la rama `testing`, sigue asÍ:
 

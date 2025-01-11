@@ -5,7 +5,9 @@ It shall NOT be edited by hand.
 
 # PyInventory for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/pyinventory.svg)](https://ci-apps.yunohost.org/ci/apps/pyinventory/) ![Working status](https://ci-apps.yunohost.org/ci/badges/pyinventory.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/pyinventory.maintain.svg)
+[![Integration level](https://apps.yunohost.org/badge/integration/pyinventory)](https://ci-apps.yunohost.org/ci/apps/pyinventory/)
+![Working status](https://apps.yunohost.org/badge/state/pyinventory)
+![Maintenance status](https://apps.yunohost.org/badge/maintained/pyinventory)
 
 [![Install PyInventory with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=pyinventory)
 
@@ -42,7 +44,7 @@ More screenshots are here: jedie.github.io/tree/master/screenshots/PyInventory
 
 ## Documentation and resources
 
-- Upstream app code repository: <https://github.com/jedie/PyInventory/>
+- Upstream app code repository: <https://github.com/jedie/PyInventory>
 - YunoHost Store: <https://apps.yunohost.org/app/pyinventory>
 - Report a bug: <https://github.com/YunoHost-Apps/pyinventory_ynh/issues>
 
