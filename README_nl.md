@@ -13,7 +13,7 @@ Hij mag NIET handmatig aangepast worden.
 
 *[Deze README in een andere taal lezen.](./ALL_README.md)*
 
-> *Met dit pakket kun je PyInventory snel en eenvoudig op een YunoHost-server installeren.*
+> *Met dit pakket kun je PyInventory snel en eenvoudig op een YunoHost-server installeren.*  
 > *Als je nog geen YunoHost hebt, lees dan [de installatiehandleiding](https://yunohost.org/install), om te zien hoe je 'm installeert.*
 
 ## Overzicht

@@ -13,7 +13,7 @@ Nie powinno być ono edytowane ręcznie.
 
 *[Przeczytaj plik README w innym języku.](./ALL_README.md)*
 
-> *Ta aplikacja pozwala na szybką i prostą instalację PyInventory na serwerze YunoHost.*
+> *Ta aplikacja pozwala na szybką i prostą instalację PyInventory na serwerze YunoHost.*  
 > *Jeżeli nie masz YunoHost zapoznaj się z [poradnikiem](https://yunohost.org/install) instalacji.*
 
 ## Przegląd
