@@ -17,5 +17,8 @@ loglevel = 'info'
 accesslog = '__LOG_FILE__'
 errorlog = '__LOG_FILE__'
 
+# Redirect stdout and stderr to the log file
+capture_output = True
+
 # https://docs.gunicorn.org/en/latest/settings.html#pidfile
 pidfile = '__DATA_DIR__/gunicorn.pid'  # /home/yunohost.app/$app/gunicorn.pid

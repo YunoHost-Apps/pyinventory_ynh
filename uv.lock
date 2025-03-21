@@ -4,11 +4,11 @@ requires-python = ">=3.11"
 
 [[package]]
 name = "argcomplete"
-version = "3.6.0"
+version = "3.6.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/ee/be/29abccb5d9f61a92886a2fba2ac22bf74326b5c4f55d36d0a56094630589/argcomplete-3.6.0.tar.gz", hash = "sha256:2e4e42ec0ba2fff54b0d244d0b1623e86057673e57bafe72dda59c64bd5dee8b", size = 73135 }
+sdist = { url = "https://files.pythonhosted.org/packages/0a/35/aacd2207c79d95e4ace44292feedff8fccfd8b48135f42d84893c24cc39b/argcomplete-3.6.1.tar.gz", hash = "sha256:927531c2fbaa004979f18c2316f6ffadcfc5cc2de15ae2624dfe65deaf60e14f", size = 73474 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/08/94/e786d91ccc3a1fc664c20332825b73da20928eb067cdc984b821948a1acc/argcomplete-3.6.0-py3-none-any.whl", hash = "sha256:4e3e4e10beb20e06444dbac0ac8dda650cb6349caeefe980208d3c548708bedd", size = 43769 },
+    { url = "https://files.pythonhosted.org/packages/f5/c8/9fa0e6fa97c328d44e089278399b0a1a08268b06a4a71f7448c6b6effb9f/argcomplete-3.6.1-py3-none-any.whl", hash = "sha256:cef54d7f752560570291214f0f1c48c3b8ef09aca63d65de7747612666725dbc", size = 43984 },
 ]
 
 [[package]]
@@ -725,19 +725,21 @@ wheels = [
 
 [[package]]
 name = "django-yunohost-integration"
-version = "0.10.0"
+version = "0.10.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
+    { name = "cli-base-utilities" },
     { name = "colorlog" },
     { name = "django" },
     { name = "django-tools" },
     { name = "packaging" },
     { name = "pyjwt" },
     { name = "pyyaml" },
+    { name = "tyro" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/39/ec/3415a29b9096d5781e89fcbe03ece0b162dcbf4f7c08ac12c27e501ae535/django_yunohost_integration-0.10.0.tar.gz", hash = "sha256:7ddf5a0ac4c7fd85f3d7e514415d1447aa1a89a60f1d4a844c05a39897f34b52", size = 109108 }
+sdist = { url = "https://files.pythonhosted.org/packages/40/82/0daa57163b6264c945d7f5e42a0a80393b4b329d07118fab25cbe05c2a87/django_yunohost_integration-0.10.1.tar.gz", hash = "sha256:b940694c92e20d6fb58e2cd0094c01f8ad8b008dbd38fea57f18bbe4d81ee847", size = 109627 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/2d/ff/a18e8fdbf9177f3f48bd326ed5e394b307cb51a8db46fa9a3fbd7082961f/django_yunohost_integration-0.10.0-py3-none-any.whl", hash = "sha256:b7a64b31201bcb151242d018a9b3bac1cf9bd73296f1343c057c157846326c4b", size = 51150 },
+    { url = "https://files.pythonhosted.org/packages/7e/84/8752338c85bfc9776d62668140c0c2369d5ef4b6b9e9036328bb4f547225/django_yunohost_integration-0.10.1-py3-none-any.whl", hash = "sha256:c6592d652be0299b33d6e2d13ebcf47fc08ba49c320ac62f824b96c01beaf9aa", size = 51131 },
 ]
 
 [[package]]
@@ -1477,7 +1479,7 @@ wheels = [
 
 [[package]]
 name = "pyinventory"
-version = "0.20.1"
+version = "0.21.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "bx-django-utils" },
@@ -1485,6 +1487,7 @@ dependencies = [
     { name = "colorlog" },
     { name = "django" },
     { name = "django-admin-sortable2" },
+    { name = "django-axes" },
     { name = "django-dbbackup" },
     { name = "django-debug-toolbar" },
     { name = "django-import-export" },
@@ -1496,9 +1499,9 @@ dependencies = [
     { name = "pillow" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5e/07/b004c8d28e8d38b7dd48a7528f1750f7554f5386595ec3810fc9ec374949/pyinventory-0.20.1.tar.gz", hash = "sha256:c55fc03ec7adbe728d6df1f20eb2735dbfdef42b6c6ee2a4789b6bc508620af7", size = 153461 }
+sdist = { url = "https://files.pythonhosted.org/packages/af/80/1c72364b79b1111ef3d2f156a22ebede643d85121aacef75dee81deb0435/pyinventory-0.21.0.tar.gz", hash = "sha256:8f6b622bbe84c5e45c59d7d28caf90932dddb0995e5973edebbfad9ddb3ebd36", size = 170521 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/72/a7/4c566e0e920fd3556b6d9491e508be5316eb2cbbb7b5692dfda6fe6501e5/PyInventory-0.20.1-py3-none-any.whl", hash = "sha256:e484f97fc9d95f1180e9cc7b52c1fc5eaf038918caba080e89f35a9ae8934f23", size = 121464 },
+    { url = "https://files.pythonhosted.org/packages/7d/bd/d70d3deb5e588613511e7efc0d8dc764ad5c647bdb218bc6e38c44c4340e/pyinventory-0.21.0-py3-none-any.whl", hash = "sha256:d485e36f529cd1af3be7c7d64bf56ed0474ca89c0e5f92df72ca888ecd8bc94e", size = 121429 },
 ]
 
 [[package]]
@@ -1545,7 +1548,7 @@ requires-dist = [
     { name = "django-yunohost-integration" },
     { name = "gunicorn" },
     { name = "psycopg", extras = ["binary"] },
-    { name = "pyinventory", specifier = ">=0.20.1" },
+    { name = "pyinventory", specifier = ">=0.21.0" },
 ]
 
 [package.metadata.requires-dev]
