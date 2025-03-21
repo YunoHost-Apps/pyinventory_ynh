@@ -13,7 +13,7 @@ Ini TIDAK boleh diedit dengan tangan.
 
 *[Baca README ini dengan bahasa yang lain.](./ALL_README.md)*
 
-> *Paket ini memperbolehkan Anda untuk memasang PyInventory secara cepat dan mudah pada server YunoHost.*  
+> *Paket ini memperbolehkan Anda untuk memasang PyInventory secara cepat dan mudah pada server YunoHost.*
 > *Bila Anda tidak mempunyai YunoHost, silakan berkonsultasi dengan [panduan](https://yunohost.org/install) untuk mempelajari bagaimana untuk memasangnya.*
 
 ## Ringkasan
@@ -33,7 +33,7 @@ This package for YunoHost used [django-yunohost-integration](https://github.com/
 More screenshots are here: jedie.github.io/tree/master/screenshots/PyInventory
 
 
-**Versi terkirim:** 0.20.1~ynh2
+**Versi terkirim:** 0.20.1~ynh3
 
 ## Tangkapan Layar
 

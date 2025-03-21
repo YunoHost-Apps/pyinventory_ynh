@@ -13,7 +13,7 @@ Nie powinno być ono edytowane ręcznie.
 
 *[Przeczytaj plik README w innym języku.](./ALL_README.md)*
 
-> *Ta aplikacja pozwala na szybką i prostą instalację PyInventory na serwerze YunoHost.*  
+> *Ta aplikacja pozwala na szybką i prostą instalację PyInventory na serwerze YunoHost.*
 > *Jeżeli nie masz YunoHost zapoznaj się z [poradnikiem](https://yunohost.org/install) instalacji.*
 
 ## Przegląd
@@ -33,7 +33,7 @@ This package for YunoHost used [django-yunohost-integration](https://github.com/
 More screenshots are here: jedie.github.io/tree/master/screenshots/PyInventory
 
 
-**Dostarczona wersja:** 0.20.1~ynh2
+**Dostarczona wersja:** 0.20.1~ynh3
 
 ## Zrzuty ekranu
 

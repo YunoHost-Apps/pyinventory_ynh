@@ -51,29 +51,33 @@ The output will looks like:
 
 [comment]: <> (✂✂✂ auto generated help start ✂✂✂)
 ```
-Usage: ./dev-cli.py [OPTIONS] COMMAND [ARGS]...
+usage: ./dev-cli.py [-h]
+                    {check-code-style,coverage,fix-code-style,install,mypy,nox,pip-audit,publish,test,update,update-te
+st-snapshot-files,version}
 
-╭─ Options ────────────────────────────────────────────────────────────────────────────────────────╮
-│ --help      Show this message and exit.                                                          │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
-╭─ Commands ───────────────────────────────────────────────────────────────────────────────────────╮
-│ check-code-style            Check code style by calling darker + flake8                          │
-│ coverage                    Run tests and show coverage report.                                  │
-│ diffsettings                Run "diffsettings" manage command against a "local_test" YunoHost    │
-│                             installation.                                                        │
-│ fix-code-style              Fix code style of all pyinventory_ynh source code files via darker   │
-│ install                     Run pip-sync and install 'pyinventory_ynh' via pip as editable.      │
-│ local-test                  Build a "local_test" YunoHost installation and start the Django dev. │
-│                             server against it.                                                   │
-│ mypy                        Run Mypy (configured in pyproject.toml)                              │
-│ pip-audit                   Run pip-audit check against current requirements files               │
-│ publish                     Build and upload this project to PyPi                                │
-│ test                        Compile YunoHost files and run Django unittests                      │
-│ tox                         Run tox                                                              │
-│ update                      Update "requirements*.txt" dependencies files                        │
-│ update-test-snapshot-files  Update all test snapshot files (by remove and recreate all snapshot  │
-│                             files)                                                               │
-│ version                     Print version and exit                                               │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+
+
+╭─ options ──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ -h, --help        show this help message and exit                                                                  │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ subcommands ──────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ {check-code-style,coverage,fix-code-style,install,mypy,nox,pip-audit,publish,test,update,update-test-snapshot-file │
+│ s,version}                                                                                                         │
+│     check-code-style                                                                                               │
+│                   Check code style by calling darker + flake8                                                      │
+│     coverage      Run tests and show coverage report.                                                              │
+│     fix-code-style                                                                                                 │
+│                   Fix code style of all pyinventory_ynh source code files via darker                               │
+│     install       Install requirements and 'pyinventory_ynh' via pip as editable.                                  │
+│     mypy          Run Mypy (configured in pyproject.toml)                                                          │
+│     nox           Run nox                                                                                          │
+│     pip-audit     Run pip-audit check against current requirements files                                           │
+│     publish       Build and upload this project to PyPi                                                            │
+│     test          Run unittests                                                                                    │
+│     update        Update "requirements*.txt" dependencies files                                                    │
+│     update-test-snapshot-files                                                                                     │
+│                   Update all test snapshot files (by remove and recreate all snapshot files)                       │
+│     version       Print version and exit                                                                           │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 [comment]: <> (✂✂✂ auto generated help end ✂✂✂)

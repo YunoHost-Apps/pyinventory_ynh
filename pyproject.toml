@@ -10,21 +10,21 @@ authors = [
 requires-python = ">=3.11"
 dependencies = [
     "pyinventory>=0.20.1",  # https://github.com/jedie/PyInventory
-    #
-    # extras "ynh" will install: gunicorn, psycopg2, django-redis and django-axes
-    # see: https://github.com/YunoHost-Apps/django_yunohost_integration/blob/main/pyproject.toml
-    "django_yunohost_integration[ynh]>=0.9",  # https://github.com/YunoHost-Apps/django_yunohost_integration
-    #
+    "django_yunohost_integration",  # https://github.com/YunoHost-Apps/django_yunohost_integration
+    "gunicorn",
+    "psycopg[binary]", # https://github.com/psycopg/psycopg
+    "django-redis",
+    "django-axes", # https://github.com/jazzband/django-axes
     "cli-base-utilities",  # https://github.com/jedie/cli-base-utilities
 ]
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
+    "manageprojects",  # https://github.com/jedie/manageprojects
     "bx_django_utils",  # https://github.com/boxine/bx_django_utils
     "beautifulsoup4",  # https://pypi.org/project/beautifulsoup4/
-    "manageprojects>=0.19.1",  # https://github.com/jedie/manageprojects
-    "pip-tools",  # https://github.com/jazzband/pip-tools/
+    "uv",  # https://github.com/astral-sh/uv
     "tblib",   # https://github.com/ionelmc/python-tblib
-    "tox",  # https://github.com/tox-dev/tox
+    "nox",  # https://github.com/wntrblm/nox
     "coverage",  # https://github.com/nedbat/coveragepy
     "autopep8",  # https://github.com/hhatto/autopep8
     "pyupgrade",  # https://github.com/asottile/pyupgrade
@@ -35,38 +35,22 @@ dev = [
     "EditorConfig",  # https://github.com/editorconfig/editorconfig-core-py
     "pip-audit",  # https://github.com/pypa/pip-audit
     "mypy",  # https://github.com/python/mypy
-    "typeguard",  # https://github.com/agronholm/typeguard/
     "twine",  # https://github.com/pypa/twine
+    "typeguard",  # https://github.com/agronholm/typeguard/
 
     # https://github.com/akaihola/darker
     # https://github.com/ikamensh/flynt
     # https://github.com/pycqa/isort
     # https://github.com/pygments/pygments
     "darker[flynt, isort, color]",
-
-    # Work-a-round for: https://github.com/jazzband/pip-tools/issues/1866
-    # see also: https://github.com/jazzband/pip-tools/issues/994#issuecomment-1321226661
-    # backports.tarfile is needed for python <3.12
-    'backports.tarfile', # via jaraco-context -> keyring -> twine
-    'importlib-metadata', # for Python 3.11
 ]
-
-[tool.pip-tools.compile]
-index-url="https://pypi.org/simple"
-extra-index-url=["https://www.piwheels.org/simple"] # Add hashes of piwheels packages, too!
-generate-hashes = true
-# https://pip-tools.readthedocs.io/en/stable/#deprecations
-allow-unsafe = true
-resolver="backtracking"
-strip-extras = true
 
 [project.urls]
 Documentation = "https://github.com/YunoHost-Apps/pyinventory_ynh"
 Source = "https://github.com/YunoHost-Apps/pyinventory_ynh"
 
 [project.scripts]
-pyinventory_ynh_app = "pyinventory_ynh.__main__:main"
-pyinventory_ynh_dev = "pyinventory_ynh.cli.dev:main"
+pyinventory_ynh_dev = "pyinventory_ynh.cli_dev:main"
 
 
 [ynh-integration]
