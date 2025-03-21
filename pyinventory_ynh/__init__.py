@@ -1,8 +1,8 @@
 """
-    pyinventory_ynh
-    Web based management to catalog things including state and location etc.
+pyinventory_ynh
+Web based management to catalog things including state and location etc.
 """
 
 # See https://packaging.python.org/en/latest/specifications/version-specifiers/
-__version__ = '0.20.1+ynh3'
+__version__ = '0.20.1+ynh4'
 __author__ = 'Jens Diemer <pyinventory_ynh@jensdiemer.de>'

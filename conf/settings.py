@@ -59,9 +59,7 @@ if 'axes' not in INSTALLED_APPS:
 INSTALLED_APPS.append('django_yunohost_integration.apps.YunohostIntegrationConfig')
 
 
-SECRET_KEY = __get_or_create_secret(
-    DATA_DIR_PATH / 'secret.txt'
-)  # /home/yunohost.app/$app/secret.txt
+SECRET_KEY = __get_or_create_secret(DATA_DIR_PATH / 'secret.txt')  # /home/yunohost.app/$app/secret.txt
 
 
 MIDDLEWARE.insert(
@@ -171,7 +169,7 @@ DBBACKUP_STORAGE_OPTIONS['location'] = str(DATA_DIR_PATH / 'backups')
 # Set log file to e.g.: /var/log/$app/$app.log
 LOGGING['handlers']['log_file']['filename'] = str(LOG_FILE_PATH)
 
-LOGGING['loggers']['django_yunohost_integration'] = { # TODO: Move to django_yunohost_integration base settings
+LOGGING['loggers']['django_yunohost_integration'] = {  # TODO: Move to django_yunohost_integration base settings
     'handlers': ['syslog', 'log_file', 'mail_admins'],
     'propagate': False,
 }

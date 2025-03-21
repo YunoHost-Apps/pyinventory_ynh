@@ -6,7 +6,6 @@ import importlib
 import logging
 import sys
 
-from bx_py_utils.path import assert_is_file
 from cli_base.autodiscover import import_all_files
 from cli_base.cli_tools.dev_tools import run_coverage, run_nox
 from cli_base.cli_tools.rich_utils import rich_traceback_install
@@ -18,6 +17,7 @@ import pyinventory_ynh
 from pyinventory_ynh import constants
 from pyinventory_ynh.tests import _run_django_test_cli
 
+
 # Check type annotations via typeguard in all tests.
 # Sadly we must activate this here and can't do this in ./tests/__init__.py
 install_import_hook(packages=('pyinventory_ynh',))
@@ -27,10 +27,6 @@ importlib.reload(pyinventory_ynh)
 
 
 logger = logging.getLogger(__name__)
-
-
-PACKAGE_ROOT = constants.BASE_PATH.parent
-assert_is_file(PACKAGE_ROOT / 'pyproject.toml')  # Exists only in cloned git repo
 
 
 app = SubcommandApp()
