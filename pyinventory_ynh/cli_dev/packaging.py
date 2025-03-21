@@ -5,10 +5,11 @@ from cli_base.cli_tools.subprocess_utils import ToolsExecutor
 from cli_base.cli_tools.verbosity import setup_logging
 from cli_base.run_pip_audit import run_pip_audit
 from cli_base.tyro_commands import TyroVerbosityArgType
+from django_yunohost_integration.path_utils import get_project_root
 from manageprojects.utilities.publish import publish_package
 
 import pyinventory_ynh
-from pyinventory_ynh.cli_dev import PACKAGE_ROOT, app
+from pyinventory_ynh.cli_dev import app
 
 
 logger = logging.getLogger(__name__)
@@ -19,7 +20,7 @@ def install():
     """
     Install requirements and 'pyinventory_ynh' via pip as editable.
     """
-    tools_executor = ToolsExecutor(cwd=PACKAGE_ROOT)
+    tools_executor = ToolsExecutor(cwd=get_project_root())
     tools_executor.verbose_check_call('uv', 'sync')
     tools_executor.verbose_check_call('pip', 'install', '--no-deps', '-e', '.')
 
@@ -30,7 +31,7 @@ def pip_audit(verbosity: TyroVerbosityArgType):
     Run pip-audit check against current requirements files
     """
     setup_logging(verbosity=verbosity)
-    run_pip_audit(base_path=PACKAGE_ROOT, verbosity=verbosity)
+    run_pip_audit(base_path=get_project_root(), verbosity=verbosity)
 
 
 @app.command
@@ -40,12 +41,12 @@ def update(verbosity: TyroVerbosityArgType):
     """
     setup_logging(verbosity=verbosity)
 
-    tools_executor = ToolsExecutor(cwd=PACKAGE_ROOT)
+    tools_executor = ToolsExecutor(cwd=get_project_root())
     tools_executor.verbose_check_call('pip', 'install', '-U', 'pip')
     tools_executor.verbose_check_call('pip', 'install', '-U', 'uv')
     tools_executor.verbose_check_call('uv', 'lock', '--upgrade')
 
-    run_pip_audit(base_path=PACKAGE_ROOT, verbosity=verbosity)
+    run_pip_audit(base_path=get_project_root(), verbosity=verbosity)
 
     # Install new dependencies in current .venv:
     tools_executor.verbose_check_call('uv', 'sync')
@@ -71,4 +72,4 @@ def publish():
     """
     run_unittest_cli(verbose=False, exit_after_run=False)  # Don't publish a broken state
 
-    publish_package(module=pyinventory_ynh, package_path=PACKAGE_ROOT)
+    publish_package(module=pyinventory_ynh, package_path=get_project_root())

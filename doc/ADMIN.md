@@ -20,7 +20,7 @@ Discuss this here: https://forum.yunohost.org/t/use-newer-python-than-3-9/22568/
 ## Settings and upgrades
 
 Almost everything related to PyInventory's configuration is handled in a `"../conf/settings.py"` file.
-You can edit the file `/home/yunohost.app/django_example/local_settings.py` to enable or disable features.
+You can edit the file `/home/yunohost.app/pyinventory/local_settings.py` to enable or disable features.
 
 Test sending emails, e.g.:
 
@@ -41,9 +41,9 @@ and urls made for YunoHost installation.
 
 e.g.:
 ```bash
-~$ git clone https://github.com/YunoHost-Apps/django_example.git
+~$ git clone https://github.com/YunoHost-Apps/pyinventory.git
 ~$ cd pyinventory_ynh/
-~/django_example$ ./dev-cli.py --help
+~/pyinventory$ ./dev-cli.py --help
 ```
 
 
