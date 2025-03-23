@@ -101,7 +101,7 @@ ynh_script_progression "Upgrading system configurations related to $app..."
 
 ynh_config_add_nginx
 ynh_config_add_systemd
-ynh_config_add_logrotate
+ynh_config_add_logrotate "$log_file"
 yunohost service add --description $app $app
 
 #=================================================
