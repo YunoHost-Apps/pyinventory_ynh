@@ -5,7 +5,9 @@
 
 # YunoHost 上的 PyInventory
 
-[![集成程度](https://dash.yunohost.org/integration/pyinventory.svg)](https://ci-apps.yunohost.org/ci/apps/pyinventory/) ![工作状态](https://ci-apps.yunohost.org/ci/badges/pyinventory.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/pyinventory.maintain.svg)
+[![集成程度](https://apps.yunohost.org/badge/integration/pyinventory)](https://ci-apps.yunohost.org/ci/apps/pyinventory/)
+![工作状态](https://apps.yunohost.org/badge/state/pyinventory)
+![维护状态](https://apps.yunohost.org/badge/maintained/pyinventory)
 
 [![使用 YunoHost 安装 PyInventory](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=pyinventory)
 
@@ -31,7 +33,7 @@ This package for YunoHost used [django-yunohost-integration](https://github.com/
 More screenshots are here: jedie.github.io/tree/master/screenshots/PyInventory
 
 
-**分发版本：** 0.20.1~ynh1
+**分发版本：** 0.21.0~ynh1
 
 ## 截图
 
@@ -42,7 +44,7 @@ More screenshots are here: jedie.github.io/tree/master/screenshots/PyInventory
 
 ## 文档与资源
 
-- 上游应用代码库： <https://github.com/jedie/PyInventory/>
+- 上游应用代码库： <https://github.com/jedie/PyInventory>
 - YunoHost 商店： <https://apps.yunohost.org/app/pyinventory>
 - 报告 bug： <https://github.com/YunoHost-Apps/pyinventory_ynh/issues>
 

@@ -2,12 +2,14 @@ from django.conf import settings
 from django.conf.urls import include
 from django.contrib import admin
 from django.urls import path
+from django.views.generic import RedirectView
 
 
 if settings.PATH_URL:
     # settings.PATH_URL is __PATH__
     # Prefix all urls with "PATH_URL":
     urlpatterns = [
+        path('', RedirectView.as_view(url=f'{settings.PATH_URL}/')),
         # MEDIA_URL contains the "PATH_URL" already:
         path(settings.MEDIA_URL.lstrip('/'), include('django_tools.serve_media_app.urls')),
         path(f'{settings.PATH_URL}/', admin.site.urls),

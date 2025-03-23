@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 """
-    bootstrap CLI
-    ~~~~~~~~~~~~~
+bootstrap CLI
+~~~~~~~~~~~~~
 
-    Just call this file, and the magic happens ;)
+Just call this file, and the magic happens ;)
 """
 
 import hashlib
@@ -41,7 +41,7 @@ if sys.platform == 'win32':  # wtf
     BIN_NAME = 'Scripts'
     FILE_EXT = '.exe'
 else:
-    # Files under Linux/Mac and all other than Windows, e.g.: .../.venv/bin/python
+    # Files under Linux/Mac and all other than Windows, e.g.: .../.venv/bin/python3
     BIN_NAME = 'bin'
     FILE_EXT = ''
 
@@ -50,9 +50,9 @@ VENV_PATH = BASE_PATH / '.venv'
 BIN_PATH = VENV_PATH / BIN_NAME
 PYTHON_PATH = BIN_PATH / f'python3{FILE_EXT}'
 PIP_PATH = BIN_PATH / f'pip{FILE_EXT}'
-PIP_SYNC_PATH = BIN_PATH / f'pip-sync{FILE_EXT}'
+UV_PATH = BIN_PATH / f'uv{FILE_EXT}'
 
-DEP_LOCK_PATH = BASE_PATH / 'requirements.dev.txt'
+DEP_LOCK_PATH = BASE_PATH / 'uv.lock'
 DEP_HASH_PATH = VENV_PATH / '.dep_hash'
 
 # script file defined in pyproject.toml as [console_scripts]
@@ -95,11 +95,11 @@ def main(argv):
         # Update pip
         verbose_check_call(PYTHON_PATH, '-m', 'pip', 'install', '-U', 'pip')
 
-        # Install pip-tools
-        verbose_check_call(PYTHON_PATH, '-m', 'pip', 'install', '-U', 'pip-tools')
+        # Install uv
+        verbose_check_call(PYTHON_PATH, '-m', 'pip', 'install', '-U', 'uv')
 
-        # install requirements via "pip-sync"
-        verbose_check_call(PIP_SYNC_PATH, str(DEP_LOCK_PATH))
+        # install requirements
+        verbose_check_call(UV_PATH, 'sync')
 
         # install project
         verbose_check_call(PIP_PATH, 'install', '--no-deps', '-e', '.')
@@ -110,6 +110,9 @@ def main(argv):
         verbose_check_call(PROJECT_SHELL_SCRIPT, *argv[1:])
     except subprocess.CalledProcessError as err:
         sys.exit(err.returncode)
+    except KeyboardInterrupt:
+        print('Bye!')
+        sys.exit(130)
 
 
 if __name__ == '__main__':

@@ -5,7 +5,9 @@ NON debe editarse manualmente.
 
 # PyInventory para YunoHost
 
-[![Nivel de integración](https://dash.yunohost.org/integration/pyinventory.svg)](https://ci-apps.yunohost.org/ci/apps/pyinventory/) ![Estado de funcionamento](https://ci-apps.yunohost.org/ci/badges/pyinventory.status.svg) ![Estado de mantemento](https://ci-apps.yunohost.org/ci/badges/pyinventory.maintain.svg)
+[![Nivel de integración](https://apps.yunohost.org/badge/integration/pyinventory)](https://ci-apps.yunohost.org/ci/apps/pyinventory/)
+![Estado de funcionamento](https://apps.yunohost.org/badge/state/pyinventory)
+![Estado de mantemento](https://apps.yunohost.org/badge/maintained/pyinventory)
 
 [![Instalar PyInventory con YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=pyinventory)
 
@@ -31,7 +33,7 @@ This package for YunoHost used [django-yunohost-integration](https://github.com/
 More screenshots are here: jedie.github.io/tree/master/screenshots/PyInventory
 
 
-**Versión proporcionada:** 0.20.1~ynh1
+**Versión proporcionada:** 0.21.0~ynh1
 
 ## Capturas de pantalla
 
@@ -42,7 +44,7 @@ More screenshots are here: jedie.github.io/tree/master/screenshots/PyInventory
 
 ## Documentación e recursos
 
-- Repositorio de orixe do código: <https://github.com/jedie/PyInventory/>
+- Repositorio de orixe do código: <https://github.com/jedie/PyInventory>
 - Tenda YunoHost: <https://apps.yunohost.org/app/pyinventory>
 - Informar dun problema: <https://github.com/YunoHost-Apps/pyinventory_ynh/issues>
 

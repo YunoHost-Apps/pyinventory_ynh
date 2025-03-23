@@ -9,26 +9,27 @@ authors = [
 ]
 requires-python = ">=3.11"
 dependencies = [
-    "pyinventory>=0.20.1",  # https://github.com/jedie/PyInventory
-    #
-    # extras "ynh" will install: gunicorn, psycopg2, django-redis and django-axes
-    # see: https://github.com/YunoHost-Apps/django_yunohost_integration/blob/main/pyproject.toml
-    "django_yunohost_integration[ynh]",  # https://github.com/YunoHost-Apps/django_yunohost_integration
-    #
+    "pyinventory>=0.21.0",  # https://github.com/jedie/PyInventory
+    "django_yunohost_integration",  # https://github.com/YunoHost-Apps/django_yunohost_integration
+    "gunicorn",
+    "psycopg[binary]", # https://github.com/psycopg/psycopg
+    "django-redis",
+    "django-axes", # https://github.com/jazzband/django-axes
     "cli-base-utilities",  # https://github.com/jedie/cli-base-utilities
 ]
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
+    "manageprojects",  # https://github.com/jedie/manageprojects
     "bx_django_utils",  # https://github.com/boxine/bx_django_utils
     "beautifulsoup4",  # https://pypi.org/project/beautifulsoup4/
-    "manageprojects",  # https://github.com/jedie/manageprojects
-    "pip-tools",  # https://github.com/jazzband/pip-tools/
+    "uv",  # https://github.com/astral-sh/uv
     "tblib",   # https://github.com/ionelmc/python-tblib
-    "tox",  # https://github.com/tox-dev/tox
+    "nox",  # https://github.com/wntrblm/nox
     "coverage",  # https://github.com/nedbat/coveragepy
     "autopep8",  # https://github.com/hhatto/autopep8
     "pyupgrade",  # https://github.com/asottile/pyupgrade
     "flake8",  # https://github.com/pycqa/flake8
+    "flake8-bugbear",  # https://github.com/PyCQA/flake8-bugbear
     "pyflakes",  # https://github.com/PyCQA/pyflakes
     "codespell",  # https://github.com/codespell-project/codespell
     "EditorConfig",  # https://github.com/editorconfig/editorconfig-core-py
@@ -42,10 +43,6 @@ dev = [
     # https://github.com/pycqa/isort
     # https://github.com/pygments/pygments
     "darker[flynt, isort, color]",
-
-    # indirect depencies for Python <=3.11
-    # Work-a-round for: https://github.com/jazzband/pip-tools/issues/1326
-    "backports.tarfile",
 ]
 
 [project.urls]
@@ -53,11 +50,12 @@ Documentation = "https://github.com/YunoHost-Apps/pyinventory_ynh"
 Source = "https://github.com/YunoHost-Apps/pyinventory_ynh"
 
 [project.scripts]
-pyinventory_ynh_app = "pyinventory_ynh.__main__:main"
-pyinventory_ynh_dev = "pyinventory_ynh.cli.dev:main"
+pyinventory_ynh_dev = "pyinventory_ynh.cli_dev:main"
+
 
 [ynh-integration]
 local_settings_source= "local_settings_source.py"
+
 
 [build-system]
 requires = ["setuptools>=61.0", "setuptools_scm>=7.1"]
@@ -84,14 +82,12 @@ src = ['.']
 # YunoHost apps still use "master" istead of "main", isn't it?
 revision = "origin/master..."
 line_length = 119
-verbose = true
 color = true
 skip_string_normalization = true
 diff = false
 check = false
 stdout = false
 isort = true
-flynt = true
 lint = [
     "flake8",
 ]
@@ -133,7 +129,7 @@ exclude_lines = [
 legacy_tox_ini = """
 [tox]
 isolated_build = True
-envlist = py{312,311}
+envlist = py{313,312,311}
 skip_missing_interpreters = True
 
 [testenv]
@@ -166,20 +162,27 @@ cookiecutter_template = "https://github.com/jedie/cookiecutter_templates/"
 cookiecutter_directory = "yunohost_django_package"
 applied_migrations = [
     "2cdc1d8", # 2024-08-25T19:00:41+02:00
+    "6fa011a", # 2024-09-07T11:11:40+02:00
+    "b3d9208", # 2024-12-23T17:04:43+01:00
+    "d1df540", # 2025-01-11T08:58:27+01:00
+    "c059f97", # 2025-03-21T19:19:56+01:00
 ]
 
 [manageprojects.cookiecutter_context.cookiecutter]
 project_name = "PyInventory"
+project_id = "pyinventory"
 full_name = "Jens Diemer"
 github_username = "jedie"
 author_email = "pyinventory_ynh@jensdiemer.de"
-upstream_pkg_name = "pyinventory"
+upstream_pkg_name = "inventory_project"
+upstream_pkg_app_name = "inventory"
+upstream_pkg_project_name = "pyinventory"
 upstream_url = "https://github.com/jedie/PyInventory"
 ynh_app_pkg_name = "pyinventory_ynh"
 ynh_app_url = "https://github.com/YunoHost-Apps/pyinventory_ynh"
 bug_tracker_url = "https://github.com/jedie/PyInventory/issues"
-upstream_version = "0.19.2"
-ynh_version = "1"
+upstream_version = "0.21.0"
+ynh_suffix_version = "ynh1"
 package_description = "Web based management to catalog things including state and location etc."
 license = "GPL-3.0-or-later"
 _template = "https://github.com/jedie/cookiecutter_templates/"

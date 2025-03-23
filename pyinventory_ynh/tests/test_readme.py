@@ -1,16 +1,15 @@
 from pathlib import Path
 
 from bx_py_utils.auto_doc import assert_readme_block
+from cli_base.cli_tools.test_utils.rich_test_utils import NoColorEnvRichClick, invoke
 from django_yunohost_integration.path_utils import get_project_root
-from manageprojects.test_utils.click_cli_utils import invoke_click
 from manageprojects.tests.base import BaseTestCase
 
-from pyinventory_ynh.cli.dev import cli
-from pyinventory_ynh.constants import CLI_EPILOG
+from pyinventory_ynh import constants
 
 
 def assert_cli_help_in_readme(text_block: str, marker: str, readme_path: Path):
-    text_block = text_block.replace(CLI_EPILOG, '')
+    text_block = text_block.replace(constants.CLI_EPILOG, '')
     text_block = f'```\n{text_block.strip()}\n```'
     assert_readme_block(
         readme_path=readme_path,
@@ -21,18 +20,21 @@ def assert_cli_help_in_readme(text_block: str, marker: str, readme_path: Path):
 
 
 class ReadmeTestCase(BaseTestCase):
-    def test_main_help(self):
-        stdout = invoke_click(cli, '--help')
+    def test_dev_help(self):
+        project_root = get_project_root()
+        with NoColorEnvRichClick():
+            stdout = invoke(cli_bin=project_root / 'dev-cli.py', args=['--help'], strip_line_prefix='usage: ')
         self.assert_in_content(
             got=stdout,
             parts=(
-                'Usage: ./dev-cli.py [OPTIONS] COMMAND [ARGS]...',
-                ' local-test ',
-                CLI_EPILOG,
+                'usage: ./dev-cli.py [-h]',
+                ' check-code-style ',
+                ' coverage ',
+                constants.CLI_EPILOG,
             ),
         )
         assert_cli_help_in_readme(
             text_block=stdout,
             marker='help',
-            readme_path=get_project_root() / 'doc' / 'ADMIN.md',
+            readme_path=project_root / 'doc' / 'ADMIN.md',
         )

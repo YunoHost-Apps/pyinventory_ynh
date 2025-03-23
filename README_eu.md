@@ -5,7 +5,9 @@ EZ editatu eskuz.
 
 # PyInventory YunoHost-erako
 
-[![Integrazio maila](https://dash.yunohost.org/integration/pyinventory.svg)](https://ci-apps.yunohost.org/ci/apps/pyinventory/) ![Funtzionamendu egoera](https://ci-apps.yunohost.org/ci/badges/pyinventory.status.svg) ![Mantentze egoera](https://ci-apps.yunohost.org/ci/badges/pyinventory.maintain.svg)
+[![Integrazio maila](https://apps.yunohost.org/badge/integration/pyinventory)](https://ci-apps.yunohost.org/ci/apps/pyinventory/)
+![Funtzionamendu egoera](https://apps.yunohost.org/badge/state/pyinventory)
+![Mantentze egoera](https://apps.yunohost.org/badge/maintained/pyinventory)
 
 [![Instalatu PyInventory YunoHost-ekin](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=pyinventory)
 
@@ -31,7 +33,7 @@ This package for YunoHost used [django-yunohost-integration](https://github.com/
 More screenshots are here: jedie.github.io/tree/master/screenshots/PyInventory
 
 
-**Paketatutako bertsioa:** 0.20.1~ynh1
+**Paketatutako bertsioa:** 0.21.0~ynh1
 
 ## Pantaila-argazkiak
 
@@ -42,7 +44,7 @@ More screenshots are here: jedie.github.io/tree/master/screenshots/PyInventory
 
 ## Dokumentazioa eta baliabideak
 
-- Jatorrizko aplikazioaren kode-gordailua: <https://github.com/jedie/PyInventory/>
+- Jatorrizko aplikazioaren kode-gordailua: <https://github.com/jedie/PyInventory>
 - YunoHost Denda: <https://apps.yunohost.org/app/pyinventory>
 - Eman errore baten berri: <https://github.com/YunoHost-Apps/pyinventory_ynh/issues>
 

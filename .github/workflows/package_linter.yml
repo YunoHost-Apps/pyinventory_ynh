@@ -1,3 +1,5 @@
+
+
 name: YunoHost apps package linter
 
 on:
@@ -21,18 +23,16 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install toml
-
       - name: 'Clone YunoHost apps package linter'
         run: |
           git clone --depth=1 https://github.com/YunoHost/package_linter ~/package_linter
 
       - name: 'Install requirements'
-        run: pip3 install toml
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install --upgrade toml jsonschema pyparsing six
 
       - name: 'Run linter'
         run: |
           ~/package_linter/package_linter.py .
+

@@ -1,4 +1,5 @@
 import os
+import shlex
 import sys
 import unittest.util
 from pathlib import Path
@@ -6,6 +7,7 @@ from pathlib import Path
 import django
 from bx_py_utils.test_utils.deny_requests import deny_any_real_request
 from cli_base.cli_tools.verbosity import MAX_LOG_LEVEL, setup_logging
+from django.core.management.commands.test import Command as DjangoTestCommand
 from django_yunohost_integration.local_test import CreateResults, create_local_test
 from django_yunohost_integration.path_utils import get_project_root
 from rich import print  # noqa
@@ -59,6 +61,26 @@ def setup_ynh_tests() -> None:
     django.setup()
 
     os.chdir(Path(pyinventory_ynh.__file__).parent)
+
+
+def _run_django_test_cli(argv, exit_after_run=True):
+    """
+    Call the origin Django test manage command CLI and pass all args to it.
+    """
+    setup_ynh_tests()
+
+    print('\nStart Django unittests with:')
+    for default_arg in ('shuffle', 'buffer'):
+        if default_arg not in argv and f'--no-{default_arg}' not in argv:
+            argv.append(f'--{default_arg}')
+    print(shlex.join(argv))
+    print()
+
+    test_command = DjangoTestCommand()
+
+    test_command.run_from_argv(argv)
+    if exit_after_run:
+        sys.exit(0)
 
 
 def load_tests(loader, tests, pattern):

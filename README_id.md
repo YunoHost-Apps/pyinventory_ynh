@@ -5,7 +5,9 @@ Ini TIDAK boleh diedit dengan tangan.
 
 # PyInventory untuk YunoHost
 
-[![Tingkat integrasi](https://dash.yunohost.org/integration/pyinventory.svg)](https://ci-apps.yunohost.org/ci/apps/pyinventory/) ![Status kerja](https://ci-apps.yunohost.org/ci/badges/pyinventory.status.svg) ![Status pemeliharaan](https://ci-apps.yunohost.org/ci/badges/pyinventory.maintain.svg)
+[![Tingkat integrasi](https://apps.yunohost.org/badge/integration/pyinventory)](https://ci-apps.yunohost.org/ci/apps/pyinventory/)
+![Status kerja](https://apps.yunohost.org/badge/state/pyinventory)
+![Status pemeliharaan](https://apps.yunohost.org/badge/maintained/pyinventory)
 
 [![Pasang PyInventory dengan YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=pyinventory)
 
@@ -31,7 +33,7 @@ This package for YunoHost used [django-yunohost-integration](https://github.com/
 More screenshots are here: jedie.github.io/tree/master/screenshots/PyInventory
 
 
-**Versi terkirim:** 0.20.1~ynh1
+**Versi terkirim:** 0.21.0~ynh1
 
 ## Tangkapan Layar
 
@@ -42,7 +44,7 @@ More screenshots are here: jedie.github.io/tree/master/screenshots/PyInventory
 
 ## Dokumentasi dan sumber daya
 
-- Depot kode aplikasi hulu: <https://github.com/jedie/PyInventory/>
+- Depot kode aplikasi hulu: <https://github.com/jedie/PyInventory>
 - Gudang YunoHost: <https://apps.yunohost.org/app/pyinventory>
 - Laporkan bug: <https://github.com/YunoHost-Apps/pyinventory_ynh/issues>
 

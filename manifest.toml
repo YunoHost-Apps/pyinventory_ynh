@@ -5,7 +5,7 @@ id = "pyinventory"
 name = "PyInventory"
 description.en = "Web based management to catalog things including state and location etc."
 
-version = "0.20.1~ynh1"
+version = "0.21.0~ynh1"
 
 maintainers = ["Jens Diemer"]
 
@@ -13,13 +13,14 @@ maintainers = ["Jens Diemer"]
 [upstream]
 # https://yunohost.org/en/packaging_manifest#upstream-section
 license = "GPL-3.0-or-later"
-code = "https://github.com/jedie/PyInventory/"
+code = "https://github.com/jedie/PyInventory"
 
 
 
 [integration]
 # https://yunohost.org/en/packaging_manifest#integration-section
-yunohost = ">=11.2"
+yunohost = ">=12"
+helpers_version = "2.1" # https://yunohost.org/en/packaging_apps_helpers_v2.1
 architectures = "all"
 multi_instance = true
 ldap = true
@@ -46,11 +47,16 @@ ram.runtime = "50M" # **estimate** minimum ram requirement. e.g. 50M, 400M, 1G, 
     [install.admin]
     # this is a generic question - ask strings are automatically handled by Yunohost's core
     type = "user"
-    default = "admin"
 
     [install.init_main_permission]
     type = "group"
     default = "admins"
+
+    [install.update_python] # __UPDATE_PYTHON__
+    ask.en = "How to update Python? 'setup' will use redistributable Python builts (fast), 'install' will compile Python from source (slow)."
+    type = "select"
+    choices = ["INSTALL", "SETUP"]
+    default = "SETUP"
 
     [install.default_from_email] # __DEFAULT_FROM_EMAIL__
     ask.en = "Default email address to use for various automated emails."
@@ -81,6 +87,7 @@ ram.runtime = "50M" # **estimate** minimum ram requirement. e.g. 50M, 400M, 1G, 
     # https://yunohost.org/en/packaging_apps_resources#install-dir
     # This will create/remove the install dir as /var/www/$app/
     # and store the corresponding setting $install_dir and template variable __INSTALL_DIR__
+    group = "www-data:r-x" # static files served by nginx
 
     [resources.data_dir]
     # https://yunohost.org/en/packaging_apps_resources#data-dir
