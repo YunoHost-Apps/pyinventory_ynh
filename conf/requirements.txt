@@ -109,9 +109,9 @@ django-tinymce==4.1.0 \
 django-tools==0.56.2 \
     --hash=sha256:29c25be814d74cd9f554d7d45bc205f5570e5feaa4232cbd09cc913c46b20c07 \
     --hash=sha256:88a192f2873f0411b99ee1aba04f2779133284cd18a5c78976e8e4605ba5d7f7
-django-yunohost-integration==0.10.0 \
-    --hash=sha256:7ddf5a0ac4c7fd85f3d7e514415d1447aa1a89a60f1d4a844c05a39897f34b52 \
-    --hash=sha256:b7a64b31201bcb151242d018a9b3bac1cf9bd73296f1343c057c157846326c4b
+django-yunohost-integration==0.10.1 \
+    --hash=sha256:b940694c92e20d6fb58e2cd0094c01f8ad8b008dbd38fea57f18bbe4d81ee847 \
+    --hash=sha256:c6592d652be0299b33d6e2d13ebcf47fc08ba49c320ac62f824b96c01beaf9aa
 docstring-parser==0.16 \
     --hash=sha256:538beabd0af1e2db0146b6bd3caa526c35a34d61af9fd2887f3a8a27a739aa6e \
     --hash=sha256:bf0a1387354d3691d102edef7ec124f219ef639982d096e26e3b60aeffa90637
@@ -219,9 +219,9 @@ psycopg-binary==3.2.6 ; implementation_name != 'pypy' \
 pygments==2.19.1 \
     --hash=sha256:61c16d2a8576dc0649d9f39e089b5f02bcd27fba10d8fb4dcc28173f7a45151f \
     --hash=sha256:9ea1544ad55cecf4b8242fab6dd35a93bbce657034b0611ee383099054ab6d8c
-pyinventory==0.20.1 \
-    --hash=sha256:c55fc03ec7adbe728d6df1f20eb2735dbfdef42b6c6ee2a4789b6bc508620af7 \
-    --hash=sha256:e484f97fc9d95f1180e9cc7b52c1fc5eaf038918caba080e89f35a9ae8934f23
+pyinventory==0.21.0 \
+    --hash=sha256:8f6b622bbe84c5e45c59d7d28caf90932dddb0995e5973edebbfad9ddb3ebd36 \
+    --hash=sha256:d485e36f529cd1af3be7c7d64bf56ed0474ca89c0e5f92df72ca888ecd8bc94e
 pyjwt==2.10.1 \
     --hash=sha256:3cc5772eb20009233caf06e9d8a0577824723b44e6648ee0a2aedb6cf9381953 \
     --hash=sha256:dcdd193e30abefd5debf142f9adfcdd2b58004e644f25406ffaebd50bd98dacb
