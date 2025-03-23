@@ -95,12 +95,14 @@ cd "$data_dir" || exit
 ./manage.py check --deploy || true
 
 #=================================================
-# SETUP LOGROTATE
+# REAPPLY SYSTEM CONFIGURATIONS
 #=================================================
-ynh_script_progression "Upgrading logrotate configuration..."
+ynh_script_progression "Upgrading system configurations related to $app..."
 
-# Use logrotate to manage app-specific logfile(s)
-ynh_config_add_logrotate "$log_file"
+ynh_config_add_nginx
+ynh_config_add_systemd
+ynh_config_add_logrotate
+yunohost service add --description $app $app
 
 #=================================================
 # SECURE FILES AND DIRECTORIES
@@ -113,8 +115,14 @@ myynh_fix_file_permissions
 #=================================================
 ynh_script_progression "Starting systemd service '$app'..."
 
-yunohost service add --description $app $app
-ynh_systemctl --service=$app --action="start" --log_path="$log_file"
+ynh_systemctl --service=$app --action=restart --log_path=systemd
+
+#=================================================
+# RELOAD NGINX
+#=================================================
+ynh_script_progression "Reloading nginx web server..."
+
+ynh_systemctl --service="nginx" --action="reload"
 
 #=================================================
 # END OF SCRIPT
