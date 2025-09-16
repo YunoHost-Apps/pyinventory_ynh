@@ -2,10 +2,11 @@ import tomllib
 
 from bx_django_utils.filename import clean_filename
 from bx_py_utils.path import assert_is_dir, assert_is_file
+from cli_base.cli_tools.code_style import assert_code_style
 from django.test.testcases import TestCase
+from pyinventory import __version__ as upstream_version
 from django_tools.unittest_utils.project_setup import check_editor_config
 from django_yunohost_integration.path_utils import get_project_root
-from inventory import __version__ as upstream_version
 
 from pyinventory_ynh import __version__ as ynh_pkg_version
 
@@ -38,6 +39,10 @@ class ProjectSetupTestCase(TestCase):
         # the YunoHost syntax is: "~ynh", just "convert this:
         manifest_version = ynh_pkg_version.replace('+', '~')
         self.assertEqual(self.manifest_cfg['version'], manifest_version)
+
+    def test_code_style(self):
+        return_code = assert_code_style(package_root=get_project_root())
+        self.assertEqual(return_code, 0, 'Code style error, see output above!')
 
     def test_screenshot_filenames(self):
         """

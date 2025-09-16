@@ -1,5 +1,8 @@
+# ruff: noqa: F405
+
 ################################################################################
 ################################################################################
+
 # Please do not modify this file, it will be reset at the next update.
 # You can edit the file __DATA_DIR__/local_settings.py and add/modify the settings you need.
 # The parameters you add in local_settings.py will overwrite these,
@@ -176,7 +179,7 @@ LOGGING = {
     },
     'handlers': {
         'log_file': {
-            'level': 'DEBUG',
+            'level': LOG_LEVEL,
             'class': 'logging.handlers.WatchedFileHandler',
             'formatter': 'verbose',
             'filename': str(LOG_FILE_PATH),
@@ -189,11 +192,15 @@ LOGGING = {
         },
     },
     'loggers': {
-        '': {'handlers': ['log_file', 'mail_admins'], 'level': 'DEBUG', 'propagate': False},
-        'django': {'handlers': ['log_file', 'mail_admins'], 'level': 'DEBUG', 'propagate': False},
-        'axes': {'handlers': ['log_file', 'mail_admins'], 'level': 'DEBUG', 'propagate': False},
-        'django_yunohost_integration': {'handlers': ['log_file', 'mail_admins'], 'level': 'DEBUG', 'propagate': False},
-        'inventory': {'handlers': ['log_file', 'mail_admins'], 'level': 'DEBUG', 'propagate': False},
+        '': {'handlers': ['log_file', 'mail_admins'], 'level': LOG_LEVEL, 'propagate': False},
+        'django': {'handlers': ['log_file', 'mail_admins'], 'level': LOG_LEVEL, 'propagate': False},
+        'axes': {'handlers': ['log_file', 'mail_admins'], 'level': LOG_LEVEL, 'propagate': False},
+        'django_yunohost_integration': {
+            'handlers': ['log_file', 'mail_admins'],
+            'level': LOG_LEVEL,
+            'propagate': False,
+        },
+        'inventory': {'handlers': ['log_file', 'mail_admins'], 'level': LOG_LEVEL, 'propagate': False},
     },
 }
 
