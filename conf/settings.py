@@ -16,12 +16,8 @@ from pathlib import Path as __Path
 from django_yunohost_integration.base_settings import *  # noqa:F401,F403
 from django_yunohost_integration.secret_key import get_or_create_secret as __get_or_create_secret
 
-
 # https://github.com/jedie/PyInventory
-from inventory_project.settings.prod import *  # noqa:F401,F403 isort:skip
-
-
-from django_yunohost_integration.base_settings import LOGGING  # noqa:F401 isort:skip
+from inventory_project.settings.prod import *  # noqa:F401,F403
 
 
 DATA_DIR_PATH = __Path('__DATA_DIR__')  # /home/yunohost.app/$app/
