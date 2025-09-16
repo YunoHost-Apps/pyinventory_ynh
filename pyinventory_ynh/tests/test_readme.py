@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from bx_py_utils.auto_doc import assert_readme_block
-from cli_base.cli_tools.test_utils.rich_test_utils import NoColorEnvRichClick, invoke
+from cli_base.cli_tools.test_utils.rich_test_utils import NoColorEnvRich, invoke
 from django_yunohost_integration.path_utils import get_project_root
 from manageprojects.tests.base import BaseTestCase
 
@@ -22,14 +22,15 @@ def assert_cli_help_in_readme(text_block: str, marker: str, readme_path: Path):
 class ReadmeTestCase(BaseTestCase):
     def test_dev_help(self):
         project_root = get_project_root()
-        with NoColorEnvRichClick():
+        with NoColorEnvRich():
             stdout = invoke(cli_bin=project_root / 'dev-cli.py', args=['--help'], strip_line_prefix='usage: ')
         self.assert_in_content(
             got=stdout,
             parts=(
                 'usage: ./dev-cli.py [-h]',
-                ' check-code-style ',
+                ' lint ',
                 ' coverage ',
+                ' publish ',
                 constants.CLI_EPILOG,
             ),
         )
