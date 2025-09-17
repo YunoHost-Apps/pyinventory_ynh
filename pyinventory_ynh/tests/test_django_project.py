@@ -66,7 +66,7 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
             settings.LOGGING['loggers']['django_yunohost_integration'],
             {
                 'handlers': ['log_file', 'mail_admins'],
-                'level': 'DEBUG',
+                'level': 'INFO',
                 'propagate': False,
             },
         )

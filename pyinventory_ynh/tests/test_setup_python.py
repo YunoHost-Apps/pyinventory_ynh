@@ -1,5 +1,5 @@
 """
-    https://github.com/jedie/manageprojects/blob/main/docs/setup_python.md#include-in-own-projects
+https://github.com/jedie/manageprojects/blob/main/docs/setup_python.md#include-in-own-projects
 """
 
 from django_yunohost_integration.path_utils import get_project_root
