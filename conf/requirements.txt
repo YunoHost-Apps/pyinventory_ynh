@@ -78,9 +78,9 @@ charset-normalizer==3.4.3 \
     --hash=sha256:fd10de089bcdcd1be95a2f73dbe6254798ec1bda9f450d5828c96f93e2536b9c \
     --hash=sha256:fdabf8315679312cfa71302f9bd509ded4f2f263fb5b765cf1433b39106c3cc9
     # via requests
-cli-base-utilities==0.23.0 \
-    --hash=sha256:631838b4b1689b9bb9cfc3728addfb2b0645e578a347ff76db17e1e0cd54f9b0 \
-    --hash=sha256:b464f08374f598cd44b0ffc9e0a059585b155540960f26e0e1894e906d6b59f8
+cli-base-utilities==0.23.3 \
+    --hash=sha256:1045c1f1b3990a3cda0ad9f0da8edc6e9ae2b0cf02861c11f104fda4a3b660e3 \
+    --hash=sha256:d0cc4d5475869c781f3afded4ad64de25fa080ee0c2a88cf66f216f0e4290c55
     # via
     #   django-yunohost-integration
     #   pyinventory-ynh
@@ -138,7 +138,9 @@ django-dbbackup==5.0.0 \
 django-debug-toolbar==6.0.0 \
     --hash=sha256:0cf2cac5c307b77d6e143c914e5c6592df53ffe34642d93929e5ef095ae56841 \
     --hash=sha256:6eb9fa6f4a5884bf04004700ffb5a44043f1fff38784447fc52c1633448c8c14
-    # via pyinventory
+    # via
+    #   django-tools
+    #   pyinventory
 django-import-export==4.3.9 \
     --hash=sha256:3d83b1c28f30935240ef9d914a1d4845c6fcaf5c7e5454889dda800eb5d374fb \
     --hash=sha256:966e01c2cbd6acda710a0a0097cd99b28d4f9883abbfbbf712f34a2e8eea8809
@@ -147,9 +149,9 @@ django-redis==6.0.0 \
     --hash=sha256:20bf0063a8abee567eb5f77f375143c32810c8700c0674ced34737f8de4e36c0 \
     --hash=sha256:2d9cb12a20424a4c4dde082c6122f486628bae2d9c2bee4c0126a4de7fda00dd
     # via pyinventory-ynh
-django-reversion==5.1.0 \
-    --hash=sha256:084d4f117d9e2b4e8dfdfaad83ebb34410a03eed6071c96089e6811fdea82ad3 \
-    --hash=sha256:3309821e5b6fceedcce6b6975f1a9c7fab6ae7c7d0e1276a90e345946fa0dcb8
+django-reversion==6.0.0 \
+    --hash=sha256:0755b4b3e615254b305d01012e426e09006455d375254e5adc29572fc9edf2ab \
+    --hash=sha256:cab0fd90640b2ceb37d7a897823ca72a21b960ad1d6a3b9cb4e351fabbd27d9c
     # via django-reversion-compare
 django-reversion-compare==0.18.1 \
     --hash=sha256:41ec69e703e5191a6722cad885e0360dbb27c1e33160fe5ecfb8c386dcf69c6f \
@@ -163,9 +165,9 @@ django-tinymce==4.1.0 \
     --hash=sha256:02e3b70e940fd299f0fbef4315aee5c185664e1eb8cd396b176963954e4357c9 \
     --hash=sha256:9804836e6d2b08de3b03a27c100f8c2e9633549913eff8b323678a10cd48b94e
     # via pyinventory
-django-tools==0.56.2 \
-    --hash=sha256:29c25be814d74cd9f554d7d45bc205f5570e5feaa4232cbd09cc913c46b20c07 \
-    --hash=sha256:88a192f2873f0411b99ee1aba04f2779133284cd18a5c78976e8e4605ba5d7f7
+django-tools==0.57.0 \
+    --hash=sha256:663870a9edce4252217e504c3de8b5886bba594f4e03acf71fe27374435ea880 \
+    --hash=sha256:a22bf403d1ca2946b9e76d343d8ed0435be449fa244ea3bc34ac71d95dbb81f8
     # via
     #   django-yunohost-integration
     #   pyinventory
@@ -336,9 +338,9 @@ pygments==2.19.2 \
     --hash=sha256:636cb2477cec7f8952536970bc533bc43743542f70392ae026374600add5b887 \
     --hash=sha256:86540386c03d588bb81d44bc3928634ff26449851e99741617ecb9037ee5ec0b
     # via rich
-pyinventory==0.21.2 \
-    --hash=sha256:3ce3a2efe0fc6094903f37bd5087ef34dd6de6b0f46104b60072c05c692f084e \
-    --hash=sha256:931d9e6adcb81f0920f64e5d615f00cfc40f4878fba76bdbad4dc2bde0d8a8b9
+pyinventory==0.21.4 \
+    --hash=sha256:9c71e01729fa0d774a0c4809f03793fdde1daa29e652129e6860e58cde102819 \
+    --hash=sha256:e24dcb764d0d7bf63f71f74662d508f43376c9791114b6923fa96e656f24083e
     # via pyinventory-ynh
 pyjwt==2.10.1 \
     --hash=sha256:3cc5772eb20009233caf06e9d8a0577824723b44e6648ee0a2aedb6cf9381953 \
@@ -430,9 +432,9 @@ typing-extensions==4.15.0 \
     #   psycopg
     #   typeguard
     #   tyro
-tyro==0.9.31 \
-    --hash=sha256:565305246fbfe7c288b7c44d5af58782a582b885c662ff223e9933779c1c10a3 \
-    --hash=sha256:e858b21f4d179db9fb52b292d3a544aca0bb439399bd59f1943cf96382f15a68
+tyro==0.9.32 \
+    --hash=sha256:9ede84b77303fed1cc6f9aecf6a2a7499015ea546b398a2082c2e75b2b6c7a00 \
+    --hash=sha256:edb1c3aa59173471f25105b33dc1ec7e74a14ff590676d0878f656a1f7ba7fe1
     # via
     #   cli-base-utilities
     #   django-yunohost-integration
