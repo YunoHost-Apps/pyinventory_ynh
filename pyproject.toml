@@ -156,6 +156,7 @@ applied_migrations = [
     "d1df540", # 2025-01-11T08:58:27+01:00
     "c059f97", # 2025-03-21T19:19:56+01:00
     "279f2d0", # 2025-09-15T16:30:52+02:00
+    "ae399b9", # 2025-09-21T09:34:36+02:00
 ]
 
 [manageprojects.cookiecutter_context.cookiecutter]
