@@ -9,7 +9,7 @@ authors = [
 ]
 requires-python = ">=3.11"
 dependencies = [
-    "pyinventory>=0.22.0",  # https://github.com/jedie/PyInventory
+    "pyinventory>=0.22.1",  # https://github.com/jedie/PyInventory
     "django_yunohost_integration",  # https://github.com/YunoHost-Apps/django_yunohost_integration
     "gunicorn",
     "psycopg[binary]", # https://github.com/psycopg/psycopg
@@ -175,7 +175,7 @@ upstream_url = "https://github.com/jedie/PyInventory"
 ynh_app_pkg_name = "pyinventory_ynh"
 ynh_app_url = "https://github.com/YunoHost-Apps/pyinventory_ynh"
 bug_tracker_url = "https://github.com/jedie/PyInventory/issues"
-upstream_version = "0.22.0"
+upstream_version = "0.22.1"
 ynh_suffix_version = "ynh1"
 package_description = "Web based management to catalog things including state and location etc."
 license = "GPL-3.0-or-later"

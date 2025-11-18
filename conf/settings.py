@@ -160,7 +160,7 @@ MEDIA_ROOT = str(INSTALL_DIR_PATH / 'media')
 # _____________________________________________________________________________
 # Django-dbbackup
 
-DBBACKUP_STORAGE_OPTIONS['location'] = str(DATA_DIR_PATH / 'backups')
+STORAGES['dbbackup']['OPTIONS']['location'] = str(DATA_DIR_PATH / 'backups')
 
 # -----------------------------------------------------------------------------
 
