@@ -20,6 +20,9 @@ ynh_script_progression "Restoring $app main directory..."
 ynh_restore "$install_dir"
 ynh_restore "$data_dir"
 
+# See conf/gunicorn.conf.py
+if [ -f "$data_dir/gunicorn.pid" ]; then ynh_safe_rm "$data_dir/gunicorn.pid"; fi
+
 ynh_script_progression "Set $app file permissions..."
 myynh_fix_file_permissions
 
