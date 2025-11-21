@@ -1,3 +1,5 @@
+#:schema https://raw.githubusercontent.com/YunoHost/apps/master/schemas/tests.v1.schema.json
+
 test_format = 1.0
 
 [default]
@@ -29,3 +31,16 @@ test_format = 1.0
     args.default_from_email = "default_from_email@example.tld"
     args.admin_email = "admin_email@example.tld"
 
+    # -------------------------------
+    # Curl tests to validate that the app works
+    # -------------------------------
+    [default.curl_tests]
+
+    # Sadly the SSO redirection can't be tested, today.
+    # See: https://forum.yunohost.org/t/package-ci-problems/40649/4
+
+    root_page2.path = "/"
+    root_page2.logged_on_sso = true
+    # root_page2.expect_title can't be used, because of dynamic version number in title
+    root_page2.expect_content = "Site administration" # <<< only visible when logged in
+    root_page2.auto_test_assets = true

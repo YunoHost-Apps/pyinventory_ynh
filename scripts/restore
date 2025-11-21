@@ -31,7 +31,7 @@ myynh_fix_file_permissions
 # Maybe the backup contains a other Python version
 #=================================================
 
-# Create a new virtualenv:
+ynh_script_progression "Setup Python virtualenv for $app ..."
 myynh_setup_python_venv
 
 #=================================================

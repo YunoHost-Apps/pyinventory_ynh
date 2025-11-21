@@ -80,6 +80,7 @@ myynh_setup_python() {
 #==================================================================================
 
 myynh_create_venv() {
+    ynh_print_info "Setup Python virtualenv for $app ..."
     local venv_flag=$1
 
     # Create a virtualenv with python installed by myynh_install_python():
@@ -90,11 +91,15 @@ myynh_create_venv() {
     ynh_print_info "venv Pip version: $($data_dir/.venv/bin/python3 -m pip -V)"
 
     ynh_print_info "Install $app dependencies in virtualenv..."
-    ynh_exec_as_app $data_dir/.venv/bin/pip3 install --upgrade pip pip-tools wheel setuptools
-    ynh_exec_as_app $data_dir/.venv/bin/pip-sync --no-config "$data_dir/requirements.txt"
+    ynh_exec_as_app $data_dir/.venv/bin/pip3 install --upgrade pip wheel setuptools
+
+    ynh_print_info "Install $app requirements into Python virtualenv..."
+
+    ynh_exec_as_app $data_dir/.venv/bin/pip3 install -r "$data_dir/requirements.txt"
 }
 
 myynh_setup_python_venv() {
+    ynh_print_info "Setup Python interpreter for $app..."
     #
     # Install/Setup newer Python Interpreter, if needed.
     # Discuss here:
@@ -105,8 +110,6 @@ myynh_setup_python_venv() {
     elif  [ "$update_python" = "INSTALL" ]; then
         myynh_install_python
     fi
-
-    ynh_print_info "Create Python virtualenv for $app..."
 
     # Try to reuse existing venv (call without --clear flag)
     if ! myynh_create_venv ""; then

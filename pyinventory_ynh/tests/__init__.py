@@ -49,6 +49,7 @@ def setup_ynh_tests() -> None:
             '__LOG_LEVEL__': 'INFO',
             '__ADMIN_EMAIL__': 'foo-bar@test.tld',
             '__DEFAULT_FROM_EMAIL__': 'django_app@test.tld',
+            '__PATH__': 'app_path',  # Simulate installation into "/app_path/" !
         },
     )
     print('Local test files created:')
