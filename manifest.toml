@@ -75,8 +75,12 @@ ram.runtime = "50M" # **estimate** minimum ram requirement. e.g. 50M, 400M, 1G, 
     [install.log_level] # __LOG_LEVEL__
     ask.en = "Logging level"
     type = "select"
-    choices = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
-    default = "WARNING"
+    choices.debug = "DEBUG"
+    choices.info = "INFO"
+    choices.warning = "WARNING"
+    choices.error = "ERROR"
+    choices.critical = "CRITICAL"
+    default = "warning"
 
 
 [resources]
