@@ -5,6 +5,7 @@ CLI for development
 import importlib
 import logging
 import sys
+from collections.abc import Sequence
 
 from cli_base.autodiscover import import_all_files
 from cli_base.cli_tools.dev_tools import run_coverage, run_nox
@@ -42,7 +43,7 @@ def version():
     sys.exit(0)
 
 
-def main():
+def main(args: Sequence[str] | None = None):
     print_version(pyinventory_ynh)
 
     if len(sys.argv) >= 2:
@@ -61,4 +62,5 @@ def main():
         description=constants.CLI_EPILOG,
         use_underscores=False,  # use hyphens instead of underscores
         sort_subcommands=True,
+        args=args,
     )
