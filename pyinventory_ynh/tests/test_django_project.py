@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.test import override_settings
 from django.test.testcases import TestCase
 from django.urls.base import reverse
+from django.views.generic import RedirectView
 from django_yunohost_integration.test_utils import generate_basic_auth
 from django_yunohost_integration.yunohost.tests.test_ynh_jwt import create_jwt
 from inventory import __version__ as upstream_version
@@ -74,13 +75,22 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
     def test_urls(self):
         self.assertEqual(settings.PATH_URL, 'app_path')
         self.assertEqual(settings.ROOT_URLCONF, 'urls')
-        self.assertEqual(reverse('admin:index'), '/app_path/')
+        self.assertEqual(settings.LOGIN_URL, 'ssowat-login')
+        self.assertEqual(reverse('admin:index'), '/app_path/')  # Location of PyInventory ;)
+        self.assertEqual(reverse('ssowat-login'), '/app_path/sso-login/')
 
+        # After login redirected to app root path:
+        self.assertEqual(settings.LOGIN_REDIRECT_URL, '/app_path/')
+
+        #########################################################################################
+        # non-HTTPS request should be redirected to HTTPS:
+        self.assertIs(settings.SECURE_SSL_REDIRECT, True)
         response = self.client.get('/', secure=True)
+        self.assertEqual(response.resolver_match.func.view_class, RedirectView)
         self.assertRedirects(response, expected_url='/app_path/', fetch_redirect_response=False)
 
     def test_auth(self):
-        # SecurityMiddleware should redirect all non-HTTPS requests to HTTPS:
+        # SecurityMiddleware should redirects all non-HTTPS requests to HTTPS:
         self.assertIs(settings.SECURE_SSL_REDIRECT, True)
         response = self.client.get('/app_path/', secure=False)
         self.assertRedirects(
@@ -127,6 +137,7 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
         self.assert_html_parts(
             response,
             parts=(
+                f'<title>Site administration | PyInventory v{upstream_version}</title>',
                 '<h1>Site administration</h1>',
                 f'<a href="/app_path/">PyInventory v{upstream_version}</a>',
                 '<strong>Mr. Test User</strong>',

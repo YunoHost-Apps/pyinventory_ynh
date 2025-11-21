@@ -7,18 +7,27 @@ readme = "README.md"
 authors = [
     {name = 'Jens Diemer', email = 'pyinventory_ynh@jensdiemer.de'}
 ]
-requires-python = ">=3.11"
+
+# Until we can update to Django 5.2, we need to stay with Python <3.14
+requires-python = ">=3.11,<3.14"
 dependencies = [
     "pyinventory>=0.22.1",  # https://github.com/jedie/PyInventory
     "django_yunohost_integration",  # https://github.com/YunoHost-Apps/django_yunohost_integration
-    "gunicorn",
-    "psycopg[binary]", # https://github.com/psycopg/psycopg
-    "django-redis",
-    "django-axes", # https://github.com/jazzband/django-axes
-    "cli-base-utilities",  # https://github.com/jedie/cli-base-utilities
+    #
+    # Stay with Django <= 5.1, because >=5.2 requires postgresql >= 14
+    # See: https://docs.djangoproject.com/en/dev/ref/databases/#postgresql-notes
+    # But current YunoHost v12.x postgresql version is 13.x
+    "Django<5.2",
+    #
+    'gunicorn',
+    'psycopg[binary]', # https://github.com/psycopg/psycopg
+    'django-redis',
+    'django-axes', # https://github.com/jazzband/django-axes
 ]
 [dependency-groups]
 dev = [
+    "django-debug-toolbar",  # http://django-debug-toolbar.readthedocs.io/en/stable/changes.html
+    "manage_django_project",  # https://github.com/jedie/manage_django_project
     "manageprojects",  # https://github.com/jedie/manageprojects
     "bx_django_utils",  # https://github.com/boxine/bx_django_utils
     "beautifulsoup4",  # https://pypi.org/project/beautifulsoup4/
@@ -64,9 +73,7 @@ version = {attr = "pyinventory_ynh.__version__"}
 requirements=["requirements.dev.txt"]
 strict=true
 require_hashes=true
-ignore-vuln=[
-    "GHSA-4xh5-x5gv-qwph",  # https://github.com/advisories/GHSA-4xh5-x5gv-qwph
-]
+ignore-vuln=[]
 
 
 [tool.ruff]
@@ -116,27 +123,6 @@ exclude_lines = [
 ]
 
 
-[tool.tox]  # https://tox.wiki/en/latest/config.html#pyproject-toml
-legacy_tox_ini = """
-[tox]
-isolated_build = True
-envlist = py{313,312,311}
-skip_missing_interpreters = True
-
-[testenv]
-passenv = *
-skip_install = true
-commands_pre =
-    pip install -U pip-tools
-    pip-sync requirements.dev.txt
-commands =
-    {envpython} -m coverage run --context='{envname}'
-    {envpython} -m coverage combine --append
-    {envpython} -m coverage xml
-    {envpython} -m coverage report
-"""
-
-
 [tool.mypy]
 warn_unused_configs = true
 ignore_missing_imports = true
@@ -160,6 +146,7 @@ applied_migrations = [
     "279f2d0", # 2025-09-15T16:30:52+02:00
     "ae399b9", # 2025-09-21T09:34:36+02:00
     "38082ef", # 2025-10-16T10:28:32+02:00
+    "c425447", # 2025-11-02T17:01:35+01:00
 ]
 
 [manageprojects.cookiecutter_context.cookiecutter]
