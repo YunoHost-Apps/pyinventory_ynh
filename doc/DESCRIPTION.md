@@ -10,4 +10,4 @@ Pull requests welcome ;)
 
 This package for YunoHost used [django-yunohost-integration](https://github.com/YunoHost-Apps/django_yunohost_integration)
 
-More screenshots are here: jedie.github.io/tree/master/screenshots/PyInventory
+More screenshots are here: [jedie.github.io/tree/master/screenshots/PyInventory](https://github.com/jedie/jedie.github.io/tree/master/screenshots/PyInventory)
