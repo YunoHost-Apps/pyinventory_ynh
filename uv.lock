@@ -1377,7 +1377,7 @@ wheels = [
 
 [[package]]
 name = "pyinventory"
-version = "0.22.1"
+version = "0.23.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "bx-django-utils" },
@@ -1397,9 +1397,9 @@ dependencies = [
     { name = "pillow" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/3d/d0/7b72f99c7ef1580705bfc547341a094f9f5f2651129d481cc11f877764a7/pyinventory-0.22.1.tar.gz", hash = "sha256:b350df045c96f285bb3142b1b7d3129d7ea42fb70876f47920d10b3f0e41233f", size = 193646, upload-time = "2025-11-18T19:23:58.464Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/b8/01/06456ab1c242d0b0f933eb2a596657c12dfe556e6f09e10c173774872f64/pyinventory-0.23.0.tar.gz", hash = "sha256:c07119257d338302c191b7524295968b468e3fed5151e78fd6fd93abb0bc91f0", size = 195881, upload-time = "2025-11-25T17:18:30.701Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/2e/03/077566def0d59e9444148b8f92d621cc9bf5aa5421a2c20fd44830b0eedd/pyinventory-0.22.1-py3-none-any.whl", hash = "sha256:01defbadcae8484032db990ff81e51724b006224886056c848821e6dfc30f3ce", size = 124229, upload-time = "2025-11-18T19:23:55.6Z" },
+    { url = "https://files.pythonhosted.org/packages/15/13/56c8454cea5cf231db61b17d5765d15751ecd069798637aed47706a747ff/pyinventory-0.23.0-py3-none-any.whl", hash = "sha256:16956cadec04c2f5130b90d686fb024b36befb98e66dffd6f67b70f74f77b64c", size = 127410, upload-time = "2025-11-25T17:18:28.813Z" },
 ]
 
 [[package]]
@@ -1443,7 +1443,7 @@ requires-dist = [
     { name = "django-yunohost-integration" },
     { name = "gunicorn" },
     { name = "psycopg", extras = ["binary"] },
-    { name = "pyinventory", specifier = ">=0.22.1" },
+    { name = "pyinventory", specifier = ">=0.23.0" },
 ]
 
 [package.metadata.requires-dev]
