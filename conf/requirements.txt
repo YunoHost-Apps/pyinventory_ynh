@@ -18,9 +18,9 @@ bx-django-utils==91 \
     # via
     #   django-tools
     #   pyinventory
-bx-py-utils==113 \
-    --hash=sha256:0c7f639441395486c6252dd1f5cd7814ab9d7da2eec4c716ab61266067051cd0 \
-    --hash=sha256:826580d3ba5b6d6526ceb8de0734c0d7f92686e64e4485b655cf212efbd16b5d
+bx-py-utils==114 \
+    --hash=sha256:0b77849a106ff72d47f793fdb436f2c569a8946ef3e32ce57f02e24625e0b059 \
+    --hash=sha256:193c19781c5e9c3decaf26b80b0fa67e8419cb0640848b12b791c3e4a1a4c9a2
     # via
     #   bx-django-utils
     #   cli-base-utilities
@@ -168,9 +168,9 @@ django-tinymce==5.0.0 \
     --hash=sha256:6257669ed596accf5fa967ff3061276b2c5352baac1bbc658fcd8252b12ca38a \
     --hash=sha256:c2e9c5efd2cc6c036f4c57e602b133180433e2bd1513b897089d3c4fb4e20579
     # via pyinventory
-django-tools==0.57.0 \
-    --hash=sha256:663870a9edce4252217e504c3de8b5886bba594f4e03acf71fe27374435ea880 \
-    --hash=sha256:a22bf403d1ca2946b9e76d343d8ed0435be449fa244ea3bc34ac71d95dbb81f8
+django-tools==0.58.0 \
+    --hash=sha256:1b57c2acabcca8e2c61f30bd77dfa39586f87a2a1a068f8b6bcee5fab8a1eb4e \
+    --hash=sha256:b5f227eac6de6dea053e6f043dbf6dfe9d3d1d0d912dc5dabad0b2bd7c520ba4
     # via
     #   django-yunohost-integration
     #   pyinventory
@@ -310,9 +310,9 @@ pygments==2.19.2 \
     --hash=sha256:636cb2477cec7f8952536970bc533bc43743542f70392ae026374600add5b887 \
     --hash=sha256:86540386c03d588bb81d44bc3928634ff26449851e99741617ecb9037ee5ec0b
     # via rich
-pyinventory==0.23.0 \
-    --hash=sha256:16956cadec04c2f5130b90d686fb024b36befb98e66dffd6f67b70f74f77b64c \
-    --hash=sha256:c07119257d338302c191b7524295968b468e3fed5151e78fd6fd93abb0bc91f0
+pyinventory==0.23.2 \
+    --hash=sha256:b72bbffda137ad7e66a756810c3ac702979ecdd49000bf0c99ae9e9f4f8904fa \
+    --hash=sha256:caef803d96f685d79adb87d67759ddb526f0f2185dcaf000c46a04754fa52a3d
     # via pyinventory-ynh
 pyjwt==2.10.1 \
     --hash=sha256:3cc5772eb20009233caf06e9d8a0577824723b44e6648ee0a2aedb6cf9381953 \
@@ -381,9 +381,9 @@ six==1.17.0 \
     --hash=sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274 \
     --hash=sha256:ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81
     # via python-dateutil
-sqlparse==0.5.3 \
-    --hash=sha256:09f67787f56a0b16ecdbde1bfc7f5d9c3371ca683cfeaa8e6ff60b4807ec9272 \
-    --hash=sha256:cf2196ed3418f3ba5de6af7e82c694a9fbdbfecccdfc72e281548517081f16ca
+sqlparse==0.5.4 \
+    --hash=sha256:4396a7d3cf1cd679c1be976cf3dc6e0a51d0111e87787e7a8d780e7d5a998f9e \
+    --hash=sha256:99a9f0314977b76d776a0fcb8554de91b9bb8a18560631d6bc48721d07023dcb
     # via
     #   django
     #   django-debug-toolbar
