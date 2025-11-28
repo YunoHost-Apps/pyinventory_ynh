@@ -4,5 +4,5 @@ Web based management to catalog things including state and location etc.
 """
 
 # See https://packaging.python.org/en/latest/specifications/version-specifiers/
-__version__ = '0.23.1+ynh1'
+__version__ = '0.23.2+ynh1'
 __author__ = 'Jens Diemer <pyinventory_ynh@jensdiemer.de>'
