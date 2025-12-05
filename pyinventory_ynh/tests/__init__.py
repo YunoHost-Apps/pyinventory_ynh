@@ -33,20 +33,13 @@ def pre_configure_tests() -> None:
     setup_logging(verbosity=MAX_LOG_LEVEL)
 
 
-def setup_ynh_tests() -> None:
-    # Import after "install_import_hook" to check type annotations:
-    import pyinventory_ynh
-
-    os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
-
+def create_local_test_files(*, runserver=False) -> CreateResults:
     print('Compile YunoHost files...')
     result: CreateResults = create_local_test(
         django_settings_path=get_project_root() / 'conf' / 'settings.py',
         destination=get_project_root() / 'local_test',
-        runserver=False,
+        runserver=runserver,
         extra_replacements={
-            '__DEBUG_ENABLED__': '0',  # "1" or "0" string
-            '__LOG_LEVEL__': 'INFO',
             '__ADMIN_EMAIL__': 'foo-bar@test.tld',
             '__DEFAULT_FROM_EMAIL__': 'django_app@test.tld',
             '__PATH__': 'app_path',  # Simulate installation into "/app_path/" !
@@ -54,6 +47,16 @@ def setup_ynh_tests() -> None:
     )
     print('Local test files created:')
     print(result)
+    return result
+
+
+def setup_ynh_tests() -> None:
+    # Import after "install_import_hook" to check type annotations:
+    import pyinventory_ynh
+
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
+
+    result = create_local_test_files(runserver=False)
 
     data_dir = str(result.data_dir_path)
     if data_dir not in sys.path:

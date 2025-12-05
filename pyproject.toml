@@ -11,8 +11,8 @@ authors = [
 # Until we can update to Django 5.2, we need to stay with Python <3.14
 requires-python = ">=3.11,<3.14"
 dependencies = [
-    "pyinventory>=0.23.0",  # https://github.com/jedie/PyInventory
-    "django_yunohost_integration",  # https://github.com/YunoHost-Apps/django_yunohost_integration
+    "pyinventory>=0.24.0",  # https://github.com/jedie/PyInventory
+    "django_yunohost_integration>=0.10.9",  # https://github.com/YunoHost-Apps/django_yunohost_integration
     #
     # Stay with Django <= 5.1, because >=5.2 requires postgresql >= 14
     # See: https://docs.djangoproject.com/en/dev/ref/databases/#postgresql-notes
@@ -162,7 +162,7 @@ upstream_url = "https://github.com/jedie/PyInventory"
 ynh_app_pkg_name = "pyinventory_ynh"
 ynh_app_url = "https://github.com/YunoHost-Apps/pyinventory_ynh"
 bug_tracker_url = "https://github.com/jedie/PyInventory/issues"
-upstream_version = "0.23.0"
+upstream_version = "0.24.0"
 ynh_suffix_version = "ynh2"
 package_description = "Web based management to catalog things including state and location etc."
 license = "GPL-3.0-or-later"

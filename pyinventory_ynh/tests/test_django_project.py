@@ -44,8 +44,8 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
 
         # config_panel.toml settings:
 
-        self.assertEqual(settings.DEBUG_ENABLED, '0')
-        self.assertEqual(settings.LOG_LEVEL, 'INFO')
+        self.assertEqual(settings.DEBUG_ENABLED, '1')
+        self.assertEqual(settings.LOG_LEVEL, 'DEBUG')
         self.assertEqual(settings.ADMIN_EMAIL, 'foo-bar@test.tld')
         self.assertEqual(settings.DEFAULT_FROM_EMAIL, 'django_app@test.tld')
 
@@ -67,7 +67,7 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
             settings.LOGGING['loggers']['django_yunohost_integration'],
             {
                 'handlers': ['log_file', 'mail_admins'],
-                'level': 'INFO',
+                'level': 'DEBUG',
                 'propagate': False,
             },
         )
@@ -139,7 +139,10 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
             parts=(
                 f'<title>Site administration | PyInventory v{upstream_version}</title>',
                 '<h1>Site administration</h1>',
-                f'<a href="/app_path/">PyInventory v{upstream_version}</a>',
+                (
+                    '<a href="/app_path/"><img src="/app_path/static/PyInventory_Logo.svg" alt="Logo">'
+                    f'PyInventory v{upstream_version}</a>'
+                ),
                 '<strong>Mr. Test User</strong>',
                 '<a href="/app_path/inventory/itemmodel/">Items</a>',
             ),
