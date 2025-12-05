@@ -12,7 +12,7 @@ authors = [
 requires-python = ">=3.11,<3.14"
 dependencies = [
     "pyinventory>=0.24.0",  # https://github.com/jedie/PyInventory
-    "django_yunohost_integration",  # https://github.com/YunoHost-Apps/django_yunohost_integration
+    "django_yunohost_integration>=0.10.9",  # https://github.com/YunoHost-Apps/django_yunohost_integration
     #
     # Stay with Django <= 5.1, because >=5.2 requires postgresql >= 14
     # See: https://docs.djangoproject.com/en/dev/ref/databases/#postgresql-notes

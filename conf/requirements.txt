@@ -174,9 +174,9 @@ django-tools==0.58.0 \
     # via
     #   django-yunohost-integration
     #   pyinventory
-django-yunohost-integration==0.10.8 \
-    --hash=sha256:2feddfd4db8813b5d8a8fac419f161be2a516c53beea3e940177e38d3136ac1c \
-    --hash=sha256:abb696a2750de6993d2cc48266f100f6ac0414422346691b37e68dfb37cf9566
+django-yunohost-integration==0.10.9 \
+    --hash=sha256:dd3cdaba637423813d6be2abe050c8f5c7c5d9f75f3cd8038253648be7fc7ce8 \
+    --hash=sha256:f093a922a350a6af66eb245b805d9162defd605e750f8e45d76e64909b1f4438
     # via pyinventory-ynh
 docstring-parser==0.17.0 \
     --hash=sha256:583de4a309722b3315439bb31d64ba3eebada841f2e2cee23b99df001434c912 \
