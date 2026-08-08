@@ -12,12 +12,18 @@ source /usr/share/yunohost/helpers
 #=================================================
 # RESTORE THE APP MAIN DIR
 #=================================================
-ynh_script_progression "Restoring the $app files..."
+ynh_script_progression "Restoring $install_dir..."
+# /var/www/$app/
+ynh_restore "$install_dir"
 
-ynh_restore_everything
+ynh_script_progression "Restoring $data_dir..."
+# /home/yunohost.app/$app/
+ynh_restore "$data_dir"
+
 
 # See conf/gunicorn.conf.py
 if [ -f "$data_dir/gunicorn.pid" ]; then ynh_safe_rm "$data_dir/gunicorn.pid"; fi
+
 
 ynh_script_progression "Set $app file permissions..."
 myynh_fix_file_permissions
@@ -38,14 +44,18 @@ ynh_psql_db_shell < ./db.sql
 #=================================================
 ynh_script_progression "Restoring system configurations related to $app..."
 
-systemctl enable $app.service --quiet
-
 # Use logrotate to manage application logfile(s)
 ynh_config_add_logrotate "$log_file"
 
 ynh_script_progression "Integrating service in YunoHost..."
 
 yunohost service add --description $app $app
+
+ynh_script_progression "Configuring systemd service '$app'..."
+
+# https://yunohost.org/en/packaging_apps_helpers#ynh-add-systemd-config
+# https://github.com/YunoHost/yunohost/blob/dev/helpers/systemd
+ynh_config_add_systemd
 
 #=================================================
 # START APP
