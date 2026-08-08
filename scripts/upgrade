@@ -77,8 +77,8 @@ cd "$data_dir" || exit
 # Just for debugging:
 ./manage.py diffsettings
 
-./manage.py migrate --no-input 2>&1
-./manage.py collectstatic --no-input 2>&1
+./manage.py migrate --no-input --skip-checks
+./manage.py collectstatic --no-input --skip-checks
 
 # Create/update Django superuser (set unusable password, because auth done via SSOwat):
 ./manage.py create_superuser --username="$admin" --email="$(ynh_user_get_info --username="$admin" --key=mail)"
