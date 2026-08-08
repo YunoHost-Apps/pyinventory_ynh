@@ -34,7 +34,7 @@ source /usr/share/yunohost/helpers
 ynh_script_progression "Storing installation settings..."
 
 # Logging:
-log_file="/var/log/$app/$app.log"
+myynh_setup_log_file
 ynh_app_setting_set --key=log_file --value="$log_file"
 
 # Redis:
