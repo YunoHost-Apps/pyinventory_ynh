@@ -55,7 +55,7 @@ ynh_config_add_systemd
 # PYTHON VIRTUALENV
 #=================================================
 ynh_script_progression "Setup Python virtualenv for $app ..."
-cp ../conf/requirements.txt "$data_dir/requirements.txt"
+cp ../conf/pylock.toml "$data_dir/pylock.toml"
 myynh_setup_python_venv
 
 #=================================================

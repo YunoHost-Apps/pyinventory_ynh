@@ -42,21 +42,33 @@ log_file="${log_path}/${app}.log"
 #=================================================
 
 myynh_setup_python_venv() {
-    ynh_print_info "Setup Python virtualenv for $app ..."
+    ynh_print_info "Get latest uv via pipx for $app ..."
 
-    # Create a virtualenv
-    ynh_exec_as_app python3 -m venv --upgrade-deps "$data_dir/.venv"
+    which pipx
+    ynh_exec_as_app pipx install uv --force
+    ynh_exec_as_app pipx upgrade uv --force
+    which uv
+    uv --version
 
-    # Print some version information:
+    ynh_print_info "Install/upgrade Python 3.14.x via uv"
+    uv python install --upgrade python3.14
+    uv python list
+
+    export VIRTUAL_ENV="$data_dir/.venv"
+    export UV_VENV="$data_dir/.venv"
+
+    ynh_print_info "Create a virtualenv"
+    ynh_exec_as_app uv venv --python python3.14 --clear "$data_dir/.venv"
     ynh_print_info "venv Python version: $($data_dir/.venv/bin/python3 -VV)"
-    ynh_print_info "venv Pip version: $($data_dir/.venv/bin/python3 -m pip -V)"
 
-    ynh_print_info "Install $app dependencies in virtualenv..."
-    ynh_exec_as_app $data_dir/.venv/bin/pip3 install --upgrade pip wheel setuptools
+    ynh_exec_as_app uv pip sync "$data_dir/pylock.toml"
 
-    ynh_print_info "Install $app requirements into Python virtualenv..."
+    # Django installed?
+    ynh_print_info "venv django-admin --version: $($data_dir/.venv/bin/django-admin --version)"
 
-    ynh_exec_as_app $data_dir/.venv/bin/pip3 install -r "$data_dir/requirements.txt"
+    # The Django app worked in the venv?
+    ynh_print_info "manage.py --version: $($data_dir/manage.py --version)"
+    ynh_print_info "manage.py check: $($data_dir/manage.py check)"
 }
 
 myynh_setup_log_file() {
