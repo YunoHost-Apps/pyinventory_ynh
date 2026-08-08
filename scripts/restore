@@ -5,24 +5,16 @@
 #=================================================
 
 source ../settings/scripts/_common.sh
+
+# https://doc.yunohost.org/en/dev/packaging/scripts/helpers_v2.1
 source /usr/share/yunohost/helpers
-
-#=================================================
-# STANDARD RESTORATION STEPS
-#=================================================
-# RESTORE THE NGINX CONFIGURATION
-#=================================================
-ynh_script_progression "Restoring the NGINX web server configuration..."
-
-ynh_restore "/etc/nginx/conf.d/$domain.d/$app.conf"
 
 #=================================================
 # RESTORE THE APP MAIN DIR
 #=================================================
-ynh_script_progression "Restoring $app main directory..."
+ynh_script_progression "Restoring the $app files..."
 
-ynh_restore "$install_dir"
-ynh_restore "$data_dir"
+ynh_restore_everything
 
 # See conf/gunicorn.conf.py
 if [ -f "$data_dir/gunicorn.pid" ]; then ynh_safe_rm "$data_dir/gunicorn.pid"; fi
@@ -30,20 +22,8 @@ if [ -f "$data_dir/gunicorn.pid" ]; then ynh_safe_rm "$data_dir/gunicorn.pid"; f
 ynh_script_progression "Set $app file permissions..."
 myynh_fix_file_permissions
 
-#=================================================
-# RESTORE THE LOGROTATE CONFIGURATION
-#=================================================
-ynh_script_progression "Setup logging..."
-
-myynh_setup_log_file
-ynh_restore "/etc/logrotate.d/$app"
-
-#=================================================
-# PYTHON VIRTUALENV
-# Maybe the backup contains a other Python version
-#=================================================
-
 ynh_script_progression "Setup Python virtualenv for $app ..."
+# # Maybe the backup contains a other Python version
 myynh_setup_python_venv
 
 #=================================================
@@ -54,25 +34,18 @@ ynh_script_progression "Restoring the PostgreSQL database..."
 ynh_psql_db_shell < ./db.sql
 
 #=================================================
-# RESTORE SYSTEMD
+# RESTORE SYSTEM CONFIGURATIONS
 #=================================================
-ynh_script_progression "Restoring the systemd $app configuration..."
+ynh_script_progression "Restoring system configurations related to $app..."
 
-ynh_restore "/etc/systemd/system/$app.service"
 systemctl enable $app.service --quiet
 
-#=================================================
-# INTEGRATE SERVICE IN YUNOHOST
-#=================================================
+# Use logrotate to manage application logfile(s)
+ynh_config_add_logrotate "$log_file"
+
 ynh_script_progression "Integrating service in YunoHost..."
 
 yunohost service add --description $app $app
-
-#=================================================
-# SECURE FILES AND DIRECTORIES
-#=================================================
-ynh_script_progression "Set $app file permissions..."
-myynh_fix_file_permissions
 
 #=================================================
 # START APP
@@ -81,9 +54,6 @@ ynh_script_progression "Starting systemd service '$app'..."
 
 ynh_systemctl --service=$app --action="start" --log_path="$log_file"
 
-#=================================================
-# RELOAD NGINX
-#=================================================
 ynh_script_progression "Reloading nginx web server..."
 
 ynh_systemctl --service="nginx" --action="reload"

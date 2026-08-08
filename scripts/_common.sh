@@ -57,28 +57,30 @@ myynh_setup_python_venv() {
     # The major Python version that should be upgrades and used:
     export UV_PYTHON="3.14"
 
-    # Go to /home/yunohost.app/$app/
-    cd "$data_dir"
+    (
+        # Go to /home/yunohost.app/$app/ in a subshell for all following commands:
+        cd "$data_dir"
 
-    # For debugging, list that all needed files are present:
-    ls -la
+        # For debugging, list that all needed files are present:
+        ls -la
 
-    ynh_print_info "Install/upgrade Python $UV_PYTHON via uv"
-    ynh_exec_as_app uv python install --upgrade $UV_PYTHON 2>&1
-    ynh_exec_as_app uv python list
+        ynh_print_info "Install/upgrade Python $UV_PYTHON via uv"
+        ynh_exec_as_app uv python install --upgrade $UV_PYTHON 2>&1
+        ynh_exec_as_app uv python list
 
-    ynh_print_info "Create a virtualenv"
-    ynh_exec_as_app uv venv --python $UV_PYTHON --clear "$data_dir/.venv" 2>&1
-    ynh_print_info "Install Python packages from pylock.toml in virtualenv"
-    ynh_exec_as_app uv pip sync "$data_dir/pylock.toml" 2>&1
+        ynh_print_info "Create a virtualenv"
+        ynh_exec_as_app uv venv --python $UV_PYTHON --clear "$data_dir/.venv" 2>&1
+        ynh_print_info "Install Python packages from pylock.toml in virtualenv"
+        ynh_exec_as_app uv pip sync "$data_dir/pylock.toml" 2>&1
 
-    ynh_print_info "venv Python version: $($data_dir/.venv/bin/python3 -VV)"
-    ynh_print_info "venv django-admin --version: $($data_dir/.venv/bin/django-admin --version)"
-    ynh_print_info "venv gunicorn --version: $($data_dir/.venv/bin/gunicorn --version)"
+        ynh_print_info "venv Python version: $($data_dir/.venv/bin/python3 -VV)"
+        ynh_print_info "venv django-admin --version: $($data_dir/.venv/bin/django-admin --version)"
+        ynh_print_info "venv gunicorn --version: $($data_dir/.venv/bin/gunicorn --version)"
 
-    # The Django app worked in the venv?
-    ynh_print_info "manage.py --version: $($data_dir/manage.py --version)"
-    ynh_print_info "manage.py check: $($data_dir/manage.py check)"
+        # The Django app worked in the venv?
+        ynh_print_info "manage.py --version: $($data_dir/manage.py --version)"
+        ynh_print_info "manage.py check: $($data_dir/manage.py check)"
+    )
 }
 
 myynh_setup_log_file() {
