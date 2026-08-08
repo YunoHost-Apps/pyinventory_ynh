@@ -1,10 +1,14 @@
 #!/bin/bash
 
+# https://doc.yunohost.org/en/dev/packaging/scripts/helpers_v2.1
+
 #=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
 
 source _common.sh
+
+# https://doc.yunohost.org/en/dev/packaging/scripts/helpers_v2.1
 source /usr/share/yunohost/helpers
 
 # Install parameters are automatically saved as settings
