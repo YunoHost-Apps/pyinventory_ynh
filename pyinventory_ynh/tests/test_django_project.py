@@ -44,8 +44,8 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
 
         # config_panel.toml settings:
 
-        self.assertEqual(settings.DEBUG_ENABLED, '1')
-        self.assertEqual(settings.LOG_LEVEL, 'DEBUG')
+        self.assertEqual(settings.DEBUG_ENABLED, '0')
+        self.assertEqual(settings.LOG_LEVEL, 'INFO')
         self.assertEqual(settings.ADMIN_EMAIL, 'foo-bar@test.tld')
         self.assertEqual(settings.DEFAULT_FROM_EMAIL, 'django_app@test.tld')
 
@@ -64,10 +64,22 @@ class DjangoYnhTestCase(HtmlAssertionMixin, TestCase):
         log_filename = settings.LOGGING['handlers']['log_file']['filename']
         self.assertTrue(log_filename.endswith('/local_test/var_log_pyinventory.log'), log_filename)
         self.assertEqual(
+            tuple(settings.LOGGING['loggers'].keys()),
+            ('', 'django', 'axes', 'django_yunohost_integration', 'inventory'),
+        )
+        self.assertEqual(
             settings.LOGGING['loggers']['django_yunohost_integration'],
             {
                 'handlers': ['log_file', 'mail_admins'],
-                'level': 'DEBUG',
+                'level': 'INFO',
+                'propagate': False,
+            },
+        )
+        self.assertEqual(
+            settings.LOGGING['loggers']['inventory'],
+            {
+                'handlers': ['log_file', 'mail_admins'],
+                'level': 'INFO',
                 'propagate': False,
             },
         )
