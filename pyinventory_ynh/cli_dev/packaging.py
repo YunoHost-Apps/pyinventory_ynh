@@ -37,31 +37,30 @@ def pip_audit(verbosity: TyroVerbosityArgType):
 @app.command
 def update(verbosity: TyroVerbosityArgType):
     """
-    Update "requirements*.txt" dependencies files
+    Update "conf/pylock.toml" dependencies file used in YunoHost installation.
     """
     setup_logging(verbosity=verbosity)
 
     tools_executor = ToolsExecutor(cwd=get_project_root())
-    tools_executor.verbose_check_call('pip', 'install', '-U', 'pip')
-    tools_executor.verbose_check_call('pip', 'install', '-U', 'uv')
     tools_executor.verbose_check_call('uv', 'lock', '--upgrade')
-
-    run_pip_audit(base_path=get_project_root(), verbosity=verbosity)
+    tools_executor.verbose_check_call('uv', 'audit')
 
     # Install new dependencies in current .venv:
     tools_executor.verbose_check_call('uv', 'sync')
 
-    # Update conf/requirements.txt
+    # Update conf/pylock.toml
     tools_executor.verbose_check_call(
         'uv',
         'export',
+        '--format',
+        'pylock.toml',  # https://peps.python.org/pep-0751/
         '--no-header',
         '--frozen',
         '--no-editable',
         '--no-emit-project',
         '--no-dev',
-        '-o',
-        'conf/requirements.txt',
+        '--output-file',
+        'conf/pylock.toml',
     )
 
 

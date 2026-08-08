@@ -21,7 +21,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@main
         with:
-          python-version: '3.11'
+          python-version: '3.13'
 
       - name: 'Clone YunoHost apps package linter'
         run: |
@@ -30,7 +30,7 @@ jobs:
       - name: 'Install requirements'
         run: |
           python3 -m pip install --upgrade pip
-          python3 -m pip install --upgrade toml jsonschema pyparsing six
+          python3 -m pip install -r ~/package_linter/requirements.txt
 
       - name: 'Run linter'
         run: |

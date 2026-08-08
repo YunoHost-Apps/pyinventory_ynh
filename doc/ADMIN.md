@@ -73,7 +73,8 @@ usage: ./dev-cli.py [-h] {coverage,install,lint,local-test,mypy,nox,pip-audit,pu
 │              Run pip-audit check against current requirements files                    │
 │   • publish  Build and upload this project to PyPi                                     │
 │   • test     Run unittests                                                             │
-│   • update   Update "requirements*.txt" dependencies files                             │
+│   • update   Update "conf/pylock.toml" dependencies file used in YunoHost              │
+│              installation.                                                             │
 │   • update-test-snapshot-files                                                         │
 │              Update all test snapshot files (by remove and recreate all snapshot       │
 │              files)                                                                    │
