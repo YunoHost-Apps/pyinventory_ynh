@@ -1,45 +1,57 @@
 #!/bin/bash
 
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
 source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
-
-ynh_print_info "Declaring files to be backed up..."
 
 #=================================================
 # BACKUP THE APP MAIN DIR
 #=================================================
 
+ynh_script_progression "Backup $install_dir files..."
+
 # /var/www/$app/
 ynh_backup "$install_dir"
+
+ynh_script_progression "Backup $data_dir files..."
 
 # /home/yunohost.app/$app/
 ynh_backup "$data_dir"
 
 #=================================================
-# BACKUP THE NGINX CONFIGURATION
+# BACKUP SYSTEM CONFIGURATION
 #=================================================
 
+# Backup the NGINX configuration
 ynh_backup "/etc/nginx/conf.d/$domain.d/$app.conf"
+
+# Backup the systemd service unit
+ynh_backup "/etc/systemd/system/$app.service"
+
+# Backup the logrotate configuration
+ynh_backup "/etc/logrotate.d/$app"
+
+# Backup the Fail2Ban config
+ynh_backup "/etc/fail2ban/jail.d/$app.conf"
+ynh_backup "/etc/fail2ban/filter.d/$app.conf"
+
+#=================================================
+# BACKUP VARIOUS FILES
+#=================================================
+
+ynh_backup "/etc/sudoers.d/$app"
+
+ynh_backup "$(dirname "$log_file")"
 
 #=================================================
 # BACKUP THE PostgreSQL DATABASE
 #=================================================
+ynh_print_info "Backing up the PostgreSQL database..."
 
 ynh_psql_dump_db > db.sql
-
-#=================================================
-# SPECIFIC BACKUP
-#=================================================
-# BACKUP LOGROTATE
-#=================================================
-
-ynh_backup "/etc/logrotate.d/$app"
-
-#=================================================
-# BACKUP SYSTEMD
-#=================================================
-
-ynh_backup "/etc/systemd/system/$app.service"
 
 #=================================================
 # END OF SCRIPT

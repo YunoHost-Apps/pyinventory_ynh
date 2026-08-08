@@ -9,7 +9,7 @@ authors = [
 ]
 
 # Match: https://github.com/jedie/PyInventory/blob/main/pyproject.toml
-requires-python = ">=3.12"
+requires-python = ">=3.14"  # (YunoHost installation will install Python via uv)
 dependencies = [
     "pyinventory>=0.25.0",  # https://github.com/jedie/PyInventory
     "django_yunohost_integration>=0.11.0",  # https://github.com/YunoHost-Apps/django_yunohost_integration

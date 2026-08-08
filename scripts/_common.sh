@@ -60,8 +60,6 @@ myynh_setup_python_venv() {
     cd "$data_dir"
 
     ynh_print_info "Install/upgrade Python $UV_PYTHON via uv"
-    ynh_exec_as_app env
-    ynh_exec_as_app pwd
     ynh_exec_as_app uv python install --upgrade $UV_PYTHON 2>&1
     ynh_exec_as_app uv python list
 

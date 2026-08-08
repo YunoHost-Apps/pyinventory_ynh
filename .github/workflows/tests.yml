@@ -17,7 +17,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.14', '3.13', '3.12']
+        # We can install Python via uv on YunoHost, so test only with this version ;)
+        # But leave it open to add more versions in the future if needed.
+        python-version: ['3.14']
     steps:
     - name: Checkout
       run: |

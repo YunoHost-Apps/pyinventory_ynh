@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
 source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
 
@@ -25,6 +29,14 @@ if [ -f "$data_dir/gunicorn.pid" ]; then ynh_safe_rm "$data_dir/gunicorn.pid"; f
 
 ynh_script_progression "Set $app file permissions..."
 myynh_fix_file_permissions
+
+#=================================================
+# RESTORE THE LOGROTATE CONFIGURATION
+#=================================================
+ynh_script_progression "Setup logging..."
+
+myynh_setup_log_file
+ynh_restore "/etc/logrotate.d/$app"
 
 #=================================================
 # PYTHON VIRTUALENV
@@ -55,14 +67,6 @@ systemctl enable $app.service --quiet
 ynh_script_progression "Integrating service in YunoHost..."
 
 yunohost service add --description $app $app
-
-#=================================================
-# RESTORE THE LOGROTATE CONFIGURATION
-#=================================================
-ynh_script_progression "Setup logging..."
-
-myynh_setup_log_file
-ynh_restore "/etc/logrotate.d/$app"
 
 #=================================================
 # SECURE FILES AND DIRECTORIES
