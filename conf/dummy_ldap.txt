@@ -1,0 +1,6 @@
+This file avoids an error for the YunoHost linter, that considers that not LDAP is needed..
+.. to have here the ldap config string `'dc=yunohost,dc=org'` will silent the linder ;)
+
+LDAP integration is done via:
+
+    https://github.com/YunoHost-Apps/django_yunohost_integration
