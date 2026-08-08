@@ -1,3 +1,5 @@
+#:schema https://raw.githubusercontent.com/YunoHost/apps/master/schemas/config_panel.v1.schema.json
+
 # https://yunohost.org/en/packaging_config_panels
 # https://github.com/YunoHost/example_ynh/blob/master/config_panel.toml.example
 
@@ -32,7 +34,7 @@ services = ["__APP__"]
         bind = "debug_enabled:__DATA_DIR__/settings.py"
 
         [main.config.log_level]
-        type = "string"
+        type = "select"
         ask = "Log Level"
         choices = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
         default = "WARNING"
