@@ -16,3 +16,6 @@ __pycache__
 
 secret.txt
 /local_test/
+
+# Don't check the current development lock file into the repository:
+uv.lock

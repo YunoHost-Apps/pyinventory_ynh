@@ -34,7 +34,7 @@ jobs:
         git fetch origin master
 
     - name: 'Set up Python ${{ matrix.python-version }}'
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@main
       # https://github.com/marketplace/actions/setup-python
       with:
         python-version: '${{ matrix.python-version }}'
@@ -63,7 +63,7 @@ jobs:
         ./dev-cli.py coverage
 
     - name: 'Upload coverage report'
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@main
       # https://github.com/marketplace/actions/codecov
       with:
         fail_ci_if_error: false

@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from bx_py_utils.auto_doc import assert_readme_block
+from cli_base.cli_tools.test_utils.assertion import assert_in
 from cli_base.cli_tools.test_utils.rich_test_utils import NoColorEnvRich, invoke
 from django_yunohost_integration.path_utils import get_project_root
 from manageprojects.tests.base import BaseTestCase
@@ -24,8 +25,8 @@ class ReadmeTestCase(BaseTestCase):
         project_root = get_project_root()
         with NoColorEnvRich():
             stdout = invoke(cli_bin=project_root / 'dev-cli.py', args=['--help'], strip_line_prefix='usage: ')
-        self.assert_in_content(
-            got=stdout,
+        assert_in(
+            content=stdout,
             parts=(
                 'usage: ./dev-cli.py [-h]',
                 ' lint ',

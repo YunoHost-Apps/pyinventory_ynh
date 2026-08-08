@@ -10,7 +10,7 @@ from cli_base.cli_tools.verbosity import MAX_LOG_LEVEL, setup_logging
 from django.core.management.commands.test import Command as DjangoTestCommand
 from django_yunohost_integration.local_test import CreateResults, create_local_test
 from django_yunohost_integration.path_utils import get_project_root
-from rich import print  # noqa
+from rich import print
 from typeguard import install_import_hook
 
 
@@ -23,7 +23,7 @@ def pre_configure_tests() -> None:
 
     # Hacky way to display more "assert"-Context in failing tests:
     _MIN_MAX_DIFF = unittest.util._MAX_LENGTH - unittest.util._MIN_DIFF_LEN
-    unittest.util._MAX_LENGTH = int(os.environ.get('UNITTEST_MAX_LENGTH', 300))
+    unittest.util._MAX_LENGTH = int(os.environ.get('UNITTEST_MAX_LENGTH') or 2000)
     unittest.util._MIN_DIFF_LEN = unittest.util._MAX_LENGTH - _MIN_MAX_DIFF
 
     # Deny any request via docket/urllib3 because tests they should mock all requests:
@@ -33,13 +33,20 @@ def pre_configure_tests() -> None:
     setup_logging(verbosity=MAX_LOG_LEVEL)
 
 
-def create_local_test_files(*, runserver=False) -> CreateResults:
+def setup_ynh_tests() -> None:
+    # Import after "install_import_hook" to check type annotations:
+    import pyinventory_ynh
+
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
+
     print('Compile YunoHost files...')
     result: CreateResults = create_local_test(
         django_settings_path=get_project_root() / 'conf' / 'settings.py',
         destination=get_project_root() / 'local_test',
-        runserver=runserver,
+        runserver=False,
         extra_replacements={
+            '__DEBUG_ENABLED__': '0',  # "1" or "0" string
+            '__LOG_LEVEL__': 'INFO',
             '__ADMIN_EMAIL__': 'foo-bar@test.tld',
             '__DEFAULT_FROM_EMAIL__': 'django_app@test.tld',
             '__PATH__': 'app_path',  # Simulate installation into "/app_path/" !
@@ -47,16 +54,6 @@ def create_local_test_files(*, runserver=False) -> CreateResults:
     )
     print('Local test files created:')
     print(result)
-    return result
-
-
-def setup_ynh_tests() -> None:
-    # Import after "install_import_hook" to check type annotations:
-    import pyinventory_ynh
-
-    os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
-
-    result = create_local_test_files(runserver=False)
 
     data_dir = str(result.data_dir_path)
     if data_dir not in sys.path:
