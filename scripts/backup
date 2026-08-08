@@ -34,8 +34,6 @@ ynh_backup "/etc/logrotate.d/$app"
 # BACKUP VARIOUS FILES
 #=================================================
 
-ynh_backup "/etc/sudoers.d/$app"
-
 ynh_backup "$(dirname "$log_file")"
 
 #=================================================
