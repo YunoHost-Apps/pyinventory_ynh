@@ -57,7 +57,11 @@ myynh_setup_python_venv() {
     # The major Python version that should be upgrades and used:
     export UV_PYTHON="3.14"
 
+    # Go to /home/yunohost.app/$app/
     cd "$data_dir"
+
+    # For debugging, list that all needed files are present:
+    ls -la
 
     ynh_print_info "Install/upgrade Python $UV_PYTHON via uv"
     ynh_exec_as_app uv python install --upgrade $UV_PYTHON 2>&1
