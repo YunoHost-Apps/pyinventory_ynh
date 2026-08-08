@@ -11,12 +11,8 @@ source /usr/share/yunohost/helpers
 # BACKUP THE APP MAIN DIR
 #=================================================
 
-ynh_script_progression "Backup $install_dir files..."
-
 # /var/www/$app/
 ynh_backup "$install_dir"
-
-ynh_script_progression "Backup $data_dir files..."
 
 # /home/yunohost.app/$app/
 ynh_backup "$data_dir"
@@ -49,7 +45,6 @@ ynh_backup "$(dirname "$log_file")"
 #=================================================
 # BACKUP THE PostgreSQL DATABASE
 #=================================================
-ynh_print_info "Backing up the PostgreSQL database..."
 
 ynh_psql_dump_db > db.sql
 
