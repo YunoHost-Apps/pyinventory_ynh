@@ -1,9 +1,13 @@
 #!/bin/bash
 
-source ../settings/scripts/_common.sh
-source /usr/share/yunohost/helpers
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
 
-ynh_print_info "Declaring files to be backed up..."
+source ../settings/scripts/_common.sh
+
+# https://doc.yunohost.org/en/dev/packaging/scripts/helpers_v2.1
+source /usr/share/yunohost/helpers
 
 #=================================================
 # BACKUP THE APP MAIN DIR
@@ -16,30 +20,16 @@ ynh_backup "$install_dir"
 ynh_backup "$data_dir"
 
 #=================================================
-# BACKUP THE NGINX CONFIGURATION
+# BACKUP VARIOUS FILES
 #=================================================
 
-ynh_backup "/etc/nginx/conf.d/$domain.d/$app.conf"
+ynh_backup "$(dirname "$log_file")"
 
 #=================================================
 # BACKUP THE PostgreSQL DATABASE
 #=================================================
 
 ynh_psql_dump_db > db.sql
-
-#=================================================
-# SPECIFIC BACKUP
-#=================================================
-# BACKUP LOGROTATE
-#=================================================
-
-ynh_backup "/etc/logrotate.d/$app"
-
-#=================================================
-# BACKUP SYSTEMD
-#=================================================
-
-ynh_backup "/etc/systemd/system/$app.service"
 
 #=================================================
 # END OF SCRIPT

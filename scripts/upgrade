@@ -5,6 +5,8 @@
 #=================================================
 
 source _common.sh
+
+# https://doc.yunohost.org/en/dev/packaging/scripts/helpers_v2.1
 source /usr/share/yunohost/helpers
 
 #-------------------------------------------------
@@ -31,13 +33,6 @@ if [ -z "$default_from_email" ]; then
 fi
 
 #=================================================
-# CLEANUP OLD FILES
-#=================================================
-# old: "$data_dir/venv" -> cleanup
-# now: "$data_dir/.venv"
-ynh_safe_rm "$data_dir/venv"
-
-#=================================================
 # STOP SYSTEMD SERVICE
 #=================================================
 ynh_script_progression "Stopping systemd service '$app'..."
@@ -52,13 +47,6 @@ ynh_script_progression "Configuring systemd service '$app'..."
 ynh_config_add_systemd
 
 #=================================================
-# PYTHON VIRTUALENV
-#=================================================
-ynh_script_progression "Setup Python virtualenv for $app ..."
-cp ../conf/requirements.txt "$data_dir/requirements.txt"
-myynh_setup_python_venv
-
-#=================================================
 # copy config files
 # ================================================
 ynh_script_progression "Create project configuration files..."
@@ -71,7 +59,15 @@ chmod -c +x "$data_dir/manage.py"
 ynh_config_add --template="settings.py" --destination="$data_dir/settings.py"
 ynh_config_add --template="setup_user.py" --destination="$data_dir/setup_user.py"
 ynh_config_add --template="urls.py" --destination="$data_dir/urls.py"
+ynh_config_add --template="uv.toml" --destination="$data_dir/uv.toml"
 ynh_config_add --template="wsgi.py" --destination="$data_dir/wsgi.py"
+
+#=================================================
+# PYTHON VIRTUALENV
+#=================================================
+ynh_script_progression "Setup Python virtualenv for $app ..."
+cp ../conf/pylock.toml "$data_dir/pylock.toml"
+myynh_setup_python_venv
 
 #=================================================
 # MIGRATE APP
@@ -83,8 +79,8 @@ cd "$data_dir" || exit
 # Just for debugging:
 ./manage.py diffsettings
 
-./manage.py migrate --no-input
-./manage.py collectstatic --no-input
+./manage.py migrate --no-input --skip-checks
+./manage.py collectstatic --no-input --skip-checks
 
 # Create/update Django superuser (set unusable password, because auth done via SSOwat):
 ./manage.py create_superuser --username="$admin" --email="$(ynh_user_get_info --username="$admin" --key=mail)"

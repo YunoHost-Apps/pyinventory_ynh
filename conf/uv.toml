@@ -1,0 +1,6 @@
+# https://docs.astral.sh/uv/reference/settings/#configuration
+cache-dir = "__DATA_DIR__/.uv_cache"
+cache-keys = [{ file = "pylock.toml" }]
+
+[pip]
+verify-hashes = true

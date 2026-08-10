@@ -1,3 +1,5 @@
+#:schema https://raw.githubusercontent.com/YunoHost/apps/master/schemas/config_panel.v1.schema.json
+
 # https://yunohost.org/en/packaging_config_panels
 # https://github.com/YunoHost/example_ynh/blob/master/config_panel.toml.example
 
@@ -15,16 +17,13 @@ services = ["__APP__"]
         ask = "from email"
         type = "email"
         help = "Default email address to use for various automated emails."
-        #
-        # We can't use "__DATA_DIR__" in bind value, because of this bug:
-        # https://github.com/YunoHost/issues/issues/2283
-        bind = "default_from_email:/home/yunohost.app/__APP__/settings.py"
+        bind = "default_from_email:__DATA_DIR__/settings.py"
 
         [main.config.admin_email]
         ask = "ADMIN email"
         type = "email"
         help = "EMail address for error emails."
-        bind = "admin_email:/home/yunohost.app/__APP__/settings.py"
+        bind = "admin_email:__DATA_DIR__/settings.py"
 
         [main.config.debug_enabled]
         ask = "DEBUG mode"
@@ -32,11 +31,11 @@ services = ["__APP__"]
         yes = "1"
         no = "0"
         help = "Enable DEBUG mode? (Should be never enabled in production!)"
-        bind = "debug_enabled:/home/yunohost.app/__APP__/settings.py"
+        bind = "debug_enabled:__DATA_DIR__/settings.py"
 
         [main.config.log_level]
-        type = "string"
+        type = "select"
         ask = "Log Level"
         choices = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
         default = "WARNING"
-        bind = "log_level:/home/yunohost.app/__APP__/settings.py"
+        bind = "log_level:__DATA_DIR__/settings.py"

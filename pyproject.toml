@@ -8,17 +8,12 @@ authors = [
     {name = 'Jens Diemer', email = 'pyinventory_ynh@jensdiemer.de'}
 ]
 
-# Until we can update to Django 5.2, we need to stay with Python <3.14
-requires-python = ">=3.11,<3.14"
+# Match: https://github.com/jedie/PyInventory/blob/main/pyproject.toml
+requires-python = ">=3.14"  # (YunoHost installation will install Python via uv)
 dependencies = [
-    "pyinventory>=0.24.0",  # https://github.com/jedie/PyInventory
-    "django_yunohost_integration>=0.10.9",  # https://github.com/YunoHost-Apps/django_yunohost_integration
-    #
-    # Stay with Django <= 5.1, because >=5.2 requires postgresql >= 14
-    # See: https://docs.djangoproject.com/en/dev/ref/databases/#postgresql-notes
-    # But current YunoHost v12.x postgresql version is 13.x
-    "Django<5.2",
-    #
+    "pyinventory>=0.25.0",  # https://github.com/jedie/PyInventory
+    "django_yunohost_integration>=0.11.0",  # https://github.com/YunoHost-Apps/django_yunohost_integration
+    "Django",  # https://www.djangoproject.com/
     'gunicorn',
     'psycopg[binary]', # https://github.com/psycopg/psycopg
     'django-redis',
@@ -44,12 +39,34 @@ dev = [
     "typeguard",  # https://github.com/agronholm/typeguard/
 ]
 
+
+[tool.uv]
+# Don't install bleed-edge versions of dependencies, to avoid undetected issues and supply chain attacks.
+exclude-newer = "1 week"
+
+[tool.uv.exclude-newer-package]
+# Exclude own packages from the "exclude-newer" rule and
+# add external packages temporarily to fix known issues or current CVEs
+cryptography = "2026-08-08T12:00:00Z"
+# Own projects:
+pyinventory = "2026-08-08T13:00:00Z"
+django_yunohost_integration = "2026-08-08T15:00:00Z"
+django-tools = "2026-08-08T12:00:00Z"
+manage_django_project = "2026-08-08T12:22:00Z"
+cmd2 = "2026-08-08T12:00:00Z"
+
+
+[tool.cli_base.pip_audit]
+strict=true
+require_hashes=true
+ignore-vuln=[
+    # e.g.: "CVE-2026-1234",
+]
+
+
 [project.urls]
 Documentation = "https://github.com/YunoHost-Apps/pyinventory_ynh"
 Source = "https://github.com/YunoHost-Apps/pyinventory_ynh"
-
-[project.scripts]
-pyinventory_ynh_dev = "pyinventory_ynh.cli_dev:main"
 
 
 [ynh-integration]
@@ -66,14 +83,6 @@ include = ["pyinventory_ynh*"]
 
 [tool.setuptools.dynamic]
 version = {attr = "pyinventory_ynh.__version__"}
-
-
-[tool.cli_base.pip_audit]
-# https://github.com/jedie/cli-base-utilities/blob/main/docs/pip_audit.md
-requirements=["requirements.dev.txt"]
-strict=true
-require_hashes=true
-ignore-vuln=[]
 
 
 [tool.ruff]
@@ -103,12 +112,14 @@ quote-style = "single"
 
 
 [tool.coverage.run]
+# https://coverage.readthedocs.io/en/latest/config.html#run
 branch = true
 parallel = true
 concurrency = ["multiprocessing"]
 source = ['.']
 command_line = './dev-cli.py test'
 disable_warnings = ["couldnt-parse"]
+data_file = ".coverage_data/.coverage"
 
 [tool.coverage.report]
 omit = ['.*', '*/tests/*']
@@ -147,6 +158,7 @@ applied_migrations = [
     "ae399b9", # 2025-09-21T09:34:36+02:00
     "38082ef", # 2025-10-16T10:28:32+02:00
     "c425447", # 2025-11-02T17:01:35+01:00
+    "ee2e451", # 2026-08-08T13:51:46+02:00
 ]
 
 [manageprojects.cookiecutter_context.cookiecutter]
@@ -167,12 +179,3 @@ ynh_suffix_version = "ynh2"
 package_description = "Web based management to catalog things including state and location etc."
 license = "GPL-3.0-or-later"
 _template = "https://github.com/jedie/cookiecutter_templates/"
-applied_migrations = [
-    "877e2ec", # 2023-08-17T20:54:24+02:00
-    "be3f649", # 2023-08-22T19:36:57+02:00
-    "c1a9d97", # 2023-11-01T19:59:17+01:00
-    "0a5d693", # 2023-11-25T15:06:21+01:00
-    "6b89813", # 2023-11-25T15:23:07+01:00
-    "4abd4c0", # 2023-11-25T15:59:31+01:00
-    "2f9fd7b", # 2023-11-26T20:13:32+01:00
-]
