@@ -40,30 +40,31 @@ ynh_script_progression "Restoring the PostgreSQL database..."
 ynh_psql_db_shell < ./db.sql
 
 #=================================================
-# RESTORE SYSTEM CONFIGURATIONS
+# REAPPLY SYSTEM CONFIGURATIONS
 #=================================================
-ynh_script_progression "Restoring system configurations related to $app..."
+ynh_script_progression "Upgrading system configurations related to $app..."
 
-# Use logrotate to manage application logfile(s)
+ynh_config_add_nginx
+ynh_config_add_systemd
 ynh_config_add_logrotate "$log_file"
-
-ynh_script_progression "Integrating service in YunoHost..."
-
 yunohost service add --description $app $app
 
-ynh_script_progression "Configuring systemd service '$app'..."
-
-# https://yunohost.org/en/packaging_apps_helpers#ynh-add-systemd-config
-# https://github.com/YunoHost/yunohost/blob/dev/helpers/systemd
-ynh_config_add_systemd
+#=================================================
+# SECURE FILES AND DIRECTORIES
+#=================================================
+ynh_script_progression "Set $app file permissions..."
+myynh_fix_file_permissions
 
 #=================================================
-# START APP
+# Start the app server via systemd
 #=================================================
 ynh_script_progression "Starting systemd service '$app'..."
 
-ynh_systemctl --service=$app --action="start" --log_path="$log_file"
+ynh_systemctl --service=$app --action="start" --log_path=systemd
 
+#=================================================
+# RELOAD NGINX
+#=================================================
 ynh_script_progression "Reloading nginx web server..."
 
 ynh_systemctl --service="nginx" --action="reload"
