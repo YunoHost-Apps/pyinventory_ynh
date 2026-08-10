@@ -40,13 +40,22 @@ ynh_script_progression "Restoring the PostgreSQL database..."
 ynh_psql_db_shell < ./db.sql
 
 #=================================================
+# SETUP LOG FILE
+#=================================================
+ynh_script_progression "Setup logging..."
+
+myynh_setup_log_file
+
+# Use logrotate to manage application logfile(s)
+ynh_config_add_logrotate "$log_file"
+
+#=================================================
 # REAPPLY SYSTEM CONFIGURATIONS
 #=================================================
 ynh_script_progression "Upgrading system configurations related to $app..."
 
 ynh_config_add_nginx
 ynh_config_add_systemd
-ynh_config_add_logrotate "$log_file"
 yunohost service add --description $app $app
 
 #=================================================
